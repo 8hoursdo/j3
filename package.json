@@ -1,0 +1,16 @@
+{
+  "name": "j3",
+  "description": "An Useful Javascript Library for Building Website.",
+  "version": "0.0.1",
+  "author": "Fossil Jue <imzshh@gmail.com>",
+  "repository": {"type": "git", "url": "git://github.com/imzshh/j3.git"},
+  "dependencies": {
+  },
+  "devDependencies": {
+    "zappa" : ">= 0.3.3"
+  },
+  "main": "./lib/j3.js",
+  "contributors": [
+    "Fossil Jue <imzshh@gmail.com>"
+  ]
+}

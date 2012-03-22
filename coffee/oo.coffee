@@ -1,0 +1,29 @@
+ext = j3.ext = (original, extend) ->
+  for prop of extend
+    original[prop] = extend[prop]
+  return
+
+j3.cls = (members, base) ->
+  if base then ctorOfBase = base.prototype.ctor
+
+  ctorOfCls = members.ctor
+
+  if ctorOfBase
+    if ctorOfCls
+      members.ctor = ->
+        ctorOfBase.apply this, arguments
+        ctorOfCls.apply this, arguments
+    else
+      members.ctor = ctorOfBase
+  else if !ctorOfCls
+    member.ctor = ->
+
+  ctor = members.ctor
+  proto = ctor.prototype
+  if base then @ext proto, base.prototype
+  @ext proto, members
+  if @has members, 'toString' then proto.toString = member.toString
+
+  ctor.base = ->
+    base
+  ctor

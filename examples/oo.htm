@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>oo</title>
+    <script type="text/javascript" src="../build/js/j3.js"></script>
+</head>
+<body>
+<div>
+    <input type="button" value="f.hi()" onclick="f.hi()" />
+    <input type="button" value="f.hello()" onclick="f.hello()" />
+</div>
+<script type="text/javascript">
+var People = j3.cls({
+    ctor : function(name)
+    {
+        this._name = name;
+    },
+    
+    hello : function()
+    {
+        alert("My name is " + this._name);
+    }
+});
+
+var Fossil = j3.cls({
+    hi : function()
+    {
+        alert("Hi!");
+        Fossil.base().prototype.hello.call(this);
+    },
+    
+    hello : function()
+    {
+        alert("Hello! I'm " + this._name);
+    }
+}, People);
+
+var f = new Fossil("Fossil");
+</script>
+</body>
+</html>
