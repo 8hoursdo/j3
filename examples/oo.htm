@@ -22,7 +22,7 @@ var People = j3.cls({
     }
 });
 
-var Fossil = j3.cls({
+var Fossil = j3.cls(People, {
     hi : function()
     {
         alert("Hi!");
@@ -33,7 +33,7 @@ var Fossil = j3.cls({
     {
         alert("Hello! I'm " + this._name);
     }
-}, People);
+});
 
 var f = new Fossil("Fossil");
 </script>

@@ -3,7 +3,12 @@ ext = j3.ext = (original, extend) ->
     original[prop] = extend[prop]
   return
 
-j3.cls = (members, base) ->
+j3.cls = (base, members) ->
+  # j3.cls(members)
+  if arguments.length == 1
+    members = base
+    base = null
+
   if base then ctorOfBase = base.prototype.ctor
 
   ctorOfCls = members.ctor
