@@ -21,7 +21,7 @@ j3.List = j3.cls
   insertNode : (node, target) ->
     node.list = this
 
-    if !@first
+    if !@_first
       # empty list
       node.prev = node.next = null
       @_first = @_last = node
