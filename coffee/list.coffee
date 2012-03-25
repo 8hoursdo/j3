@@ -1,6 +1,7 @@
 j3.List = j3.cls
   ctor : ->
     @_count = 0
+    return
     
   firstNode : ->
     @_firstNode
@@ -118,6 +119,21 @@ j3.List = j3.cls
   getByIndex : (index) ->
     node = @getNodeByIndex index
     node.value if node
+
+  toString : ->
+    sb = new j3.StringBuilder
+    sb.append '['
+
+    node = @_first
+    if node
+      sb.append node.value.toString()
+      while node
+        sb.append ','
+        sb.append node.value.toString()
+        node = node.next
+
+    sb.append ']'
+    sb.toString()
 
   forEach : (callback, context, arg) ->
     node = @_first
