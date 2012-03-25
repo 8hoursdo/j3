@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>event manager</title>
+    <script type="text/javascript" src="../build/js/j3.js"></script>
+</head>
+<body>
+<script type="text/javascript">
+var Dog = function(name){
+  this.name = name;
+};
+j3.ext(Dog.prototype, j3.EventManager);
+
+var coffee = new Dog('coffee');
+coffee.on('angry', function(sender){
+      alert(sender.name + ' is angry!');
+    });
+
+coffee.on('sleepy', function(){
+      alert(this.master + ", it's time to sleep.");
+    });
+var master = 'Fossil'
+coffee.fire('angry', coffee);
+coffee.fire('sleepy', coffee, this);
+</script>
+</body>
+</html>
