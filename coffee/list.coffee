@@ -133,3 +133,12 @@ j3.List = j3.cls
         return node.value
       node = node.next
     return
+
+  doWhile : (callback, context, arg) ->
+    node = @_first
+    while node
+      if not callback.call context, node.value, arg
+        return node.value
+      node = node.next
+    return
+
