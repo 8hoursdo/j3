@@ -27,7 +27,7 @@ j3.cls = (base, members) ->
   proto = ctor.prototype
   if base then @ext proto, base.prototype
   @ext proto, members
-  if @has members, 'toString' then proto.toString = member.toString
+  if @has members, 'toString' then proto.toString = members.toString
 
   ctor.base = ->
     base
