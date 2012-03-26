@@ -3,7 +3,9 @@ j3.EventManager =
     if not @_eventHandlers
       @_eventHandlers = {}
 
-    handlerList = @_eventHandlers[name] ?= new j3.List
+    handlerList = @_eventHandlers[name]
+    if not handlerList
+      @_eventHandlers[name] = handlerList = new j3.List
 
     handlerList.insert handler : handler, context : context
     this
