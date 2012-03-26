@@ -3,11 +3,19 @@ j3.EventManager =
     if not @_eventHandlers
       @_eventHandlers = {}
 
-    handlerList = @_eventHandlers[name]
-    if not handlerList
-      @_eventHandlers[name] = handlerList = new j3.List
 
-    handlerList.insert handler : handler, context : context
+    if arguments.length == 1
+      handlers = name
+      for handlerName of handlers
+        handlerList = @_eventHandlers[handlerName]
+        if not handlerList
+          @_eventHandlers[handlerName] = handlerList = new j3.List
+        handlerList.insert handler : handlers[handlerName], context : null
+    else
+      handlerList = @_eventHandlers[name]
+      if not handlerList
+        @_eventHandlers[name] = handlerList = new j3.List
+      handlerList.insert handler : handler, context : context
     this
 
   un : (name, handler, context) ->
