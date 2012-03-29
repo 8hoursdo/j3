@@ -12,7 +12,7 @@ j3.View = do ->
 
   _viewCreated = ->
     # get the dom element of view
-    @el = j3.$ @id
+    @el = $ '#' + @id
 
     if @children
       node = @children.first()
@@ -36,13 +36,13 @@ j3.View = do ->
       @_options = options
 
       # generate an client id automatic if it's not specified
-      @id = options.id or ('jv_' + (++_idSeed))
+      @id = options.id or ('v_' + (++_idSeed))
 
       # parent view of this view.
       @parent = options.parent
 
       # container of this view, it should be a dom element
-      @ctnr = j3.$ options.ctnr
+      @ctnr = $ options.ctnr
 
       # override this method to set properties of view
       @onInit && @onInit options
@@ -58,39 +58,19 @@ j3.View = do ->
       if not @parent or _creatingStack == 0
         buffer = new j3.StringBuilder
         @render buffer
-        j3.append @ctnr, buffer.toString()
+        @ctnr.append buffer.toString()
 
         _viewCreated.call this
 
       delete @_options
 
-    templateBegin : _.template '<div id="<%=id%>" class="<%=css%>">'
-    templateEnd : _.template '</div>'
-
     render : (buffer) ->
-      data = @getViewData()
-
-      @renderBegin buffer, data
-
-      if @innerHTML
-        buffer.append @innerHTML
-      else if @children
-        @renderChildren buffer
-
-      @renderEnd buffer, data
+      @onRender buffer, @getViewData()
       return
 
-    renderBegin : (buffer, data) ->
-      buffer.append @templateBegin data
-      
-    renderEnd : (buffer, data) ->
-      buffer.append @templateEnd data
-
-    renderChildren : (buffer) ->
-      node = @children.first()
-      while node
-        node.value.render buffer
-        node = node.next
+    onRender : (buffer, data) ->
+      buffer.append @template data
+      return
 
     getViewData : ->
       id : @id
