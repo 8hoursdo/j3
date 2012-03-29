@@ -11,6 +11,7 @@ task 'build', 'build j3 libarary', (options) ->
     ,'event-manager'
     ,'view'
     ,'container-view'
+    ,'button'
   ]
 
   fs = require 'fs'

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>button</title>
+    <script type="text/javascript" src="../vender/jquery.js"></script>
+    <script type="text/javascript" src="../vender/underscore.js"></script>
+    <script type="text/javascript" src="../build/js/j3.js"></script>
+</head>
+<body>
+<div id='normal'></div>
+<div id='primary'></div>
+<div id='disabled'>
+    <input type="checkbox" id="chkSetDisabled" checked="checked" />
+</div>
+<div id='click'></div>
+<script type="text/javascript">
+    $(function () {
+        new j3.Button({ ctnr: '#normal', text: 'normal' });
+        new j3.Button({ ctnr: '#primary', text: 'primary', primary: true });
+        var btn1 = new j3.Button({ ctnr: '#disabled', text: 'normal disabled', disabled: true });
+        var btn2 = new j3.Button({ ctnr: '#disabled', text: 'primary disabled', primary: true, disabled: true });
+        new j3.Button({ ctnr: '#click', text: 'click me',
+            on: {
+                click: function (sender) {
+                    alert(sender.getText());
+                }
+            }
+        });
+
+        $('#chkSetDisabled').change(function () {
+            btn1.setDisabled(this.checked);
+            btn2.setDisabled(this.checked);
+        });
+    });
+</script>
+</body>
+</html>
