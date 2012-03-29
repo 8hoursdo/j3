@@ -18,7 +18,7 @@ j3.EventManager =
       handlerList.insert handler : handler, context : context
     this
 
-  un : (name, handler, context) ->
+  off : (name, handler, context) ->
     if not @_eventHandlers then return this
 
     handlerList = @_eventHandlers[name]
