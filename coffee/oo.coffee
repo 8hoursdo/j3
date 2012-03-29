@@ -19,7 +19,8 @@ j3.cls = (base, members) ->
         ctorOfBase.apply this, arguments
         ctorOfCls.apply this, arguments
     else
-      members.ctor = ctorOfBase
+      members.ctor = ->
+        ctorOfBase.apply this, arguments
   else if !ctorOfCls
     member.ctor = ->
 
