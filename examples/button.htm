@@ -2,17 +2,18 @@
 <html>
 <head>
     <title>button</title>
+    <link rel="Stylesheet" href="../vender/bootstrap/css/bootstrap.min.css" />
     <script type="text/javascript" src="../vender/jquery.js"></script>
     <script type="text/javascript" src="../vender/underscore.js"></script>
     <script type="text/javascript" src="../build/js/j3.js"></script>
 </head>
 <body>
-<div id='normal'></div>
-<div id='primary'></div>
-<div id='disabled'>
+<p id='normal'></p>
+<p id='primary'></p>
+<p id='disabled'>
     <input type="checkbox" id="chkSetDisabled" checked="checked" />
-</div>
-<div id='click'></div>
+</p>
+<p id='click'></p>
 <script type="text/javascript">
     $(function () {
         new j3.Button({ ctnr: '#normal', text: 'normal' });

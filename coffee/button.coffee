@@ -32,7 +32,9 @@ j3.Button = j3.cls j3.View,
     @_disabled
 
   setDisabled : (value) ->
-    @el.attr 'disabled', value
+    @_disabled = !!value
+    @el.attr 'disabled', @_disabled
+    @el.toggleClass 'disabled'
 
 
 
