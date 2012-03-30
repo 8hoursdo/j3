@@ -1,6 +1,6 @@
 task 'build', 'build j3 libarary', (options) ->
   coffeeDir = __dirname + '/coffee'
-  outputDir = __dirname + '/build'
+  outputDir = __dirname + '/j3'
   coffeeFiles = [
     'j3'
     ,'oo'
@@ -13,6 +13,9 @@ task 'build', 'build j3 libarary', (options) ->
     ,'container-view'
     ,'button'
     ,'textbox'
+    ,'selector'
+    ,'dropdown'
+    ,'dropdown-list'
   ]
 
   fs = require 'fs'

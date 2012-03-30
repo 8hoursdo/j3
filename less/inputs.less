@@ -1,0 +1,19 @@
+.input {
+  margin:0;
+  padding:5px 5px;
+  border: 1px solid @inputBorderColor;
+  .border-radius(2px);
+  background-color: @inputBgColor;
+  line-height: @baseLineHeight;
+}
+
+.input:focus {
+  border-color:@inputActiveBorderColor;
+  outline: 0;
+}
+
+.input[readonly],
+.input[disabled] {
+  border-color: @inputBorderColor;
+  background-color: @inputDisabledBgColor;
+}

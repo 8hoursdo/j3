@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>dropdown list</title>
+    <link rel="Stylesheet" href="../j3/css/j3.css" />
+    <script type="text/javascript" src="../vender/jquery.js"></script>
+    <script type="text/javascript" src="../vender/underscore.js"></script>
+    <script type="text/javascript" src="../j3/js/j3.js"></script>
+</head>
+<body>
+<p id='ctnr1'></p>
+<script type="text/javascript">
+    $(function () {
+        var items = new j3.List;
+        items.insert({text:'c#'});
+        items.insert({text:'javascript'});
+        items.insert({text:'coffeescript'});
+        new j3.DropdownList({ctnr:'#ctnr1', items:items, value:'javascript'});
+    });
+</script>
+</body>
+</html>

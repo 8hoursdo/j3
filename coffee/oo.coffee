@@ -31,5 +31,5 @@ j3.cls = (base, members) ->
   if @has members, 'toString' then proto.toString = members.toString
 
   ctor.base = ->
-    base
+    base.prototype
   ctor

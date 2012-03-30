@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>oo</title>
-    <script type="text/javascript" src="../build/js/j3.js"></script>
+    <script type="text/javascript" src="../j3/js/j3.js"></script>
 </head>
 <body>
 <div>
@@ -26,7 +26,7 @@ var Fossil = j3.cls(People, {
     hi : function()
     {
         alert("Hi!");
-        Fossil.base().prototype.hello.call(this);
+        Fossil.base().hello.call(this);
     },
     
     hello : function()
