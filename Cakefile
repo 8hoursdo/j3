@@ -12,6 +12,7 @@ task 'build', 'build j3 libarary', (options) ->
     ,'view'
     ,'container-view'
     ,'button'
+    ,'textbox'
   ]
 
   fs = require 'fs'

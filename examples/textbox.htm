@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>textbox</title>
+    <link rel="Stylesheet" href="../vender/bootstrap/css/bootstrap.min.css" />
+    <script type="text/javascript" src="../vender/jquery.js"></script>
+    <script type="text/javascript" src="../vender/underscore.js"></script>
+    <script type="text/javascript" src="../build/js/j3.js"></script>
+</head>
+<body>
+<p id='text1'></p>
+<p id='text2'></p>
+<p id='text3'></p>
+<script type="text/javascript">
+    $(function () {
+        output1 = new j3.Textbox({ctnr:'#text2', readonly:true});
+        output2 = new j3.Textbox({ctnr:'#text3', readonly:true, multiline:true});
+        var input = new j3.Textbox({ctnr:'#text1',
+            on:{
+                change:function(sender){
+                    text = sender.getText();
+                    output1.setText(text);
+                    output2.setText(text);
+                }
+            }
+        });
+    });
+</script>
+</body>
+</html>
