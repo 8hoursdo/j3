@@ -1,14 +1,16 @@
 j3.Selector = j3.cls j3.View,
-  css : 'sel'
-
-  template : _.template '<div id="<%=id%>" class="<%=css%>"<%if(disabled){%> disabled="disabled"<%}%>><input type="text" class="<%=css%>-input" /><button type="button" class="<%=css%>-trigger"><i class="<%=cssTrigger%>"></i></button></div>'
+  template : _.template '<div id="<%=id%>" class="<%=css%>"<%if(disabled){%> disabled="disabled"<%}%>><div class="sel-lbl"></div><input type="text" class="sel-txt" /><button type="button" class="sel-trigger"><i class="<%=cssTrigger%>"></i></button></div>'
 
   onInit : (options) ->
     @_disabled = !!options.disabled
 
+  onCreated : () ->
+    @_elLabel = @el.find('.sel-lbl');
+    @_elText = @el.find('.sel-txt');
+
   getViewData : ->
     id : @id
-    css : @css +
+    css : 'sel' +
       (if @_disabled then ' disabled' else '')
     cssTrigger : @cssTrigger
     disabled : @_disabled
@@ -19,4 +21,10 @@ j3.Selector = j3.cls j3.View,
   setDisabled : (value) ->
     @_disabled = !!value
     @el.toggleClass 'disabled'
+
+  setLabel : (html) ->
+    @_elLabel.html html
+
+  setText : (text) ->
+    @_elText.attr 'value', text
 

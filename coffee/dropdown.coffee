@@ -2,6 +2,7 @@ j3.Dropdown = j3.cls j3.Selector,
   cssTrigger : 'icon-drp-down'
 
   onCreated : ->
+    j3.Dropdown.base().onCreated.call this
     @el.find('button').on 'click', =>
       @toggle()
     return

@@ -107,7 +107,7 @@ j3.List = j3.cls
   contains : (value) ->
     null != @findNode value
 
-  getNodeByIndex : (index) ->
+  getNodeAt : (index) ->
     if index < 0 or index > @_count
       return null
 
@@ -116,8 +116,8 @@ j3.List = j3.cls
       node = node.next
     node
       
-  getByIndex : (index) ->
-    node = @getNodeByIndex index
+  getAt : (index) ->
+    node = @getNodeAt index
     node.value if node
 
   toString : ->

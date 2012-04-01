@@ -175,6 +175,12 @@ input[type="search"]:focus {
   height: 28px;
   overflow: hidden;
 }
+.sel-lbl {
+  display: inline-block;
+}
+.sel-txt {
+  display: none;
+}
 .sel-trigger {
   margin: 0;
   padding: 0;

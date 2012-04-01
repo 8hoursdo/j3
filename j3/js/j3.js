@@ -150,9 +150,10 @@
   }
 
   (function() {
-    var _tempDiv;
+    var dom, _tempDiv;
     _tempDiv = document.createElement('div');
-    return j3.append = function(target, el) {
+    dom = j3.Dom = {};
+    dom.append = function(target, el) {
       var els;
       if (!target) return;
       if (typeof el === 'string') {
@@ -167,6 +168,22 @@
         return target.appendChild(_tempDiv.firstChild);
       }
       return target.appendChild(el);
+    };
+    return dom.indexOf = function(el) {
+      debugger;
+      var childNode, index, p, _i, _len, _ref;
+      p = el.parentNode;
+      if (!p) return -1;
+      index = 0;
+      _ref = p.childNodes;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        childNode = _ref[_i];
+        if (childNode.nodeType === 1) {
+          if (childNode === el) return index;
+          ++index;
+        }
+      }
+      return -1;
     };
   })();
 
@@ -273,7 +290,7 @@
     contains: function(value) {
       return null !== this.findNode(value);
     },
-    getNodeByIndex: function(index) {
+    getNodeAt: function(index) {
       var node;
       if (index < 0 || index > this._count) return null;
       node = this._first;
@@ -282,9 +299,9 @@
       }
       return node;
     },
-    getByIndex: function(index) {
+    getAt: function(index) {
       var node;
-      node = this.getNodeByIndex(index);
+      node = this.getNodeAt(index);
       if (node) return node.value;
     },
     toString: function() {
@@ -579,15 +596,18 @@
   });
 
   j3.Selector = j3.cls(j3.View, {
-    css: 'sel',
-    template: _.template('<div id="<%=id%>" class="<%=css%>"<%if(disabled){%> disabled="disabled"<%}%>><input type="text" class="<%=css%>-input" /><button type="button" class="<%=css%>-trigger"><i class="<%=cssTrigger%>"></i></button></div>'),
+    template: _.template('<div id="<%=id%>" class="<%=css%>"<%if(disabled){%> disabled="disabled"<%}%>><div class="sel-lbl"></div><input type="text" class="sel-txt" /><button type="button" class="sel-trigger"><i class="<%=cssTrigger%>"></i></button></div>'),
     onInit: function(options) {
       return this._disabled = !!options.disabled;
+    },
+    onCreated: function() {
+      this._elLabel = this.el.find('.sel-lbl');
+      return this._elText = this.el.find('.sel-txt');
     },
     getViewData: function() {
       return {
         id: this.id,
-        css: this.css + (this._disabled ? ' disabled' : ''),
+        css: 'sel' + (this._disabled ? ' disabled' : ''),
         cssTrigger: this.cssTrigger,
         disabled: this._disabled
       };
@@ -598,6 +618,12 @@
     setDisabled: function(value) {
       this._disabled = !!value;
       return this.el.toggleClass('disabled');
+    },
+    setLabel: function(html) {
+      return this._elLabel.html(html);
+    },
+    setText: function(text) {
+      return this._elText.attr('value', text);
     }
   });
 
@@ -605,6 +631,7 @@
     cssTrigger: 'icon-drp-down',
     onCreated: function() {
       var _this = this;
+      j3.Dropdown.base().onCreated.call(this);
       this.el.find('button').on('click', function() {
         return _this.toggle();
       });
@@ -667,10 +694,14 @@
         }
       }
       this._items = list;
-      return this._value = options.value;
+      return this._selectedValue = options.value;
+    },
+    onCreated: function() {
+      j3.DropdownList.base().onCreated.call(this);
+      return this.setSelectedValue(this._selectedValue);
     },
     onCreateDropdownBox: function(elBox) {
-      var buffer,
+      var buffer, drplist,
         _this = this;
       buffer = new j3.StringBuilder;
       buffer.append('<ul class="drp-list">');
@@ -681,8 +712,10 @@
       });
       buffer.append('</ul>');
       elBox.append(buffer.toString());
-      return elBox.on('click a', function(evt) {
-        return alert(evt.target);
+      drplist = this;
+      return elBox.on('click li', function(evt) {
+        drplist.setSelectedIndex(j3.Dom.indexOf(this));
+        return drplist.close();
       });
     },
     getItems: function() {
@@ -690,6 +723,31 @@
     },
     setItems: function(items) {
       return this._items = items;
+    },
+    setSelectedValue: function(value) {
+      var index,
+        _this = this;
+      index = 0;
+      this._items.tryUntil(function(item) {
+        if (item.value === value) {
+          return true;
+        } else {
+          ++index;
+          return false;
+        }
+      });
+      return this.setSelectedIndex(index);
+    },
+    setSelectedIndex: function(index) {
+      var item, oldIndex;
+      alert(index);
+      if (index < 0 && index >= this._items.count()) return;
+      oldIndex = this._selectedIndex;
+      if (oldIndex === index) return;
+      item = this._items.getAt(index);
+      this.setLabel(item.text);
+      this.setText(item.text);
+      return this._selectedIndex = index;
     }
   });
 
