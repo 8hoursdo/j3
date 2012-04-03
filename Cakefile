@@ -6,6 +6,8 @@ task 'build', 'build j3 libarary', (options) ->
     ,'oo'
     ,'user-agent'
     ,'string-builder'
+    ,'date-time'
+    ,'string'
     ,'dom'
     ,'list'
     ,'event-manager'
@@ -13,9 +15,11 @@ task 'build', 'build j3 libarary', (options) ->
     ,'container-view'
     ,'button'
     ,'textbox'
+    ,'calendar'
     ,'selector'
     ,'dropdown'
     ,'dropdown-list'
+    ,'date-selector'
   ]
 
   fs = require 'fs'
@@ -30,3 +34,16 @@ task 'build', 'build j3 libarary', (options) ->
   outputFile = "#{outputDir}/js/j3.js"
   fs.writeFile outputFile, output
   console.log "builded: #{outputFile}"
+  
+  # build lang files
+  fs.mkdir outputDir + '/js/lang'
+  langFiles = [
+    'zh-cn'
+    ,'en-us'
+  ]
+  for eachFile in langFiles
+    filename = "#{coffeeDir}/lang/#{eachFile}.coffee"
+    content = fs.readFileSync filename, 'utf-8'
+    outputFile = "#{outputDir}/js/lang/#{eachFile}.js"
+    fs.writeFile outputFile, coffeescript.compile content, bare:true
+    console.log "builded: #{outputFile}"

@@ -1,25 +1,26 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>dropdown list</title>
+    <meta charset="UTF-8" />
+    <title>date selector</title>
     <link rel="Stylesheet" href="../j3/css/j3.css" />
     <script type="text/javascript" src="../vender/jquery.js"></script>
     <script type="text/javascript" src="../vender/underscore.js"></script>
     <script type="text/javascript" src="../j3/js/j3.js"></script>
+    <script type="text/javascript" src="../j3/js/lang/zh-cn.js"></script>
 </head>
 <body>
 <p id='ctnr1'></p>
+<p id='ctnr2'></p>
 <p id='log'></p>
 <script type="text/javascript">
     $(function () {
-        var items = new j3.List;
-        items.insert({text:'c#'});
-        items.insert({text:'javascript'});
-        items.insert({text:'coffeescript'});
-        new j3.DropdownList({ctnr:'#ctnr1', items:items, value:'javascript',
+        new j3.Calendar({ctnr:'#ctnr1', date:j3.DateTime.today().addDay(1)});
+
+        new j3.DateSelector({ctnr:'#ctnr2', date:j3.DateTime.today(),
             on : {
               change : function(sender, args){
-                $('#log').html('oldValue: ' + args.oldValue + '<br />' + 'curValue: ' + args.curValue);
+                $('#log').html('oldDate: ' + args.oldDate.toString() + '<br />' + 'oldDate: ' + args.oldDate.toString());
               }
             }
           });

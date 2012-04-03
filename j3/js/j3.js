@@ -149,42 +149,460 @@
     });
   }
 
-  (function() {
-    var dom, _tempDiv;
-    _tempDiv = document.createElement('div');
-    dom = j3.Dom = {};
-    dom.append = function(target, el) {
-      var els;
-      if (!target) return;
-      if (typeof el === 'string') {
-        _tempDiv.innerHTML = el;
-        if (_tempDiv.childNodes.length > 1) {
-          els = [];
-          while (_tempDiv.firstChild) {
-            els[els.length] = target.appendChild(_tempDiv.firstChild);
+  j3.DateTime = (function() {
+    var DateTime, _DAY, _HOUR, _MINUTE, _SECOND, _monthNames, _regParse1, _regParse2;
+    _SECOND = 1000;
+    _MINUTE = 60000;
+    _HOUR = 3600000;
+    _DAY = 86400000;
+    _monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    _regParse1 = /^(\d{4})-(\d{1,2})-(\d{1,2})(?: (\d{1,2}):(\d{1,2}):(\d{1,2})(?::(\d{1,3}))?)?$/;
+    _regParse2 = /^(\d{1,2})\/(\d{1,2})\/(\d{4})(?: (\d{1,2}):(\d{1,2}):(\d{1,2})(?::(\d{1,3}))?)?$/;
+    DateTime = j3.cls({
+      ctor: function(year, month, date, hours, minutes, seconds, ms) {
+        var argLen;
+        argLen = arguments.length;
+        if (argLen === 0) {
+          this._value = new Date;
+        } else if (argLen === 1) {
+          this._value = new Date(year);
+        } else {
+          month = month || 0;
+          date = date || 0;
+          hours = hours || 0;
+          minutes = minutes || 0;
+          seconds = seconds || 0;
+          ms = ms || 0;
+          this._value = new Date(year, month - 1, date, hours, minutes, seconds, ms);
+        }
+      },
+      getYear: function() {
+        return this._value.getFullYear();
+      },
+      getMonth: function() {
+        return this._value.getMonth() + 1;
+      },
+      getDay: function() {
+        return this._value.getDate();
+      },
+      getDayOfWeek: function() {
+        return this._value.getDay();
+      },
+      justDate: function() {
+        return new DateTime(this.getYear(), this.getMonth(), this.getDay());
+      },
+      justTime: function() {
+        return new DateTime(this._value.getTime() % _DAY);
+      },
+      addYear: function(years) {
+        return new DateTime(this._value.getFullYear + years, this._value.getMonth() + 1, this._value.getDate(), this._value.getHours(), this._value.getMinutes(), this._value.getSeconds(), this._value.getMilliseconds());
+      },
+      addMonth: function(months) {
+        var month, year;
+        month = this._value.getFullYear() * 12 + this._value.getMonth() + 1 + months;
+        year = parseInt(month / 12);
+        month %= 12;
+        return new DateTime(year, month, this._value.getDate(), this._value.getHours(), this._value.getMinutes(), this._value.getSeconds(), this._value.getMilliseconds());
+      },
+      addDay: function(days) {
+        return new DateTime(this._value.getTime() + _DAY * days);
+      },
+      addHour: function(hours) {
+        return new DateTime(this._value.getTime() + _HOUR * hours);
+      },
+      addMinute: function(minutes) {
+        return new DateTime(this._value.getTime() + _MINUTE * minutes);
+      },
+      toString: function(format) {
+        if (format == null) format = 'yyyy-MM-dd HH:mm:ss';
+        return DateTime.format(this._value, format);
+      },
+      getValue: function() {
+        return new Date(this._value.getTime());
+      },
+      equals: function(dateTime) {
+        if (!dateTime) return false;
+        return this._value.getTime() === dateTime._value.getTime();
+      },
+      clone: function() {
+        return new DateTime(this._value.getTime());
+      }
+    });
+    j3.ext(DateTime, {
+      format: function(value, format) {
+        var str, strDay, strHour, strMinute, strMonth, strSecond, strYear;
+        if (value instanceof DateTime) value = value.getValue();
+        if (typeof value === 'number') {
+          value = new Date(value);
+        } else if (!value instanceof Date) {
+          return '';
+        }
+        strYear = value.getFullYear().toString();
+        strMonth = (value.getMonth() + 1).toString();
+        strDay = value.getDate().toString();
+        strHour = value.getHours().toString();
+        strMinute = value.getMinutes().toString();
+        strSecond = value.getSeconds().toString();
+        str = format.replace('yyyy', strYear);
+        str = str.replace('MMM', _monthNames[value.getMonth()]);
+        str = str.replace('MM', strMonth.length === 1 ? '0' + strMonth : strMonth);
+        str = str.replace('dd', strDay.length === 1 ? '0' + strDay : strDay);
+        str = str.replace('HH', strHour.length === 1 ? '0' + strHour : strHour);
+        str = str.replace('mm', strMinute.length === 1 ? '0' + strMinute : strMinute);
+        str = str.replace('ss', strSecond.length === 1 ? '0' + strSecond : strSecond);
+        str = str.replace('yy', strYear.substr(2));
+        str = str.replace('M', strMonth);
+        str = str.replace('d', strDay);
+        str = str.replace('H', strHour);
+        str = str.replace('m', strMinute);
+        return str.replace('s', strSecond);
+      },
+      parse: function(str) {
+        var res;
+        res = _regParse1.exec(str);
+        if (res) {
+          return new DateTime(parseInt(res[1], 10), parseInt(res[2], 10), parseInt(res[3], 10), parseInt(res[4], 10), parseInt(res[5], 10), parseInt(res[6], 10), parseInt(res[7], 10));
+        }
+        res = _regParse2.exec(str);
+        if (res) {
+          return new DateTime(parseInt(res[3], 10), parseInt(res[1], 10), parseInt(res[2], 10), parseInt(res[4], 10), parseInt(res[5], 10), parseInt(res[6], 10), parseInt(res[7], 10));
+        }
+        return null;
+      },
+      now: function() {
+        return new DateTime;
+      },
+      today: function() {
+        return (new DateTime).justDate();
+      },
+      equals: function(dateTime1, dateTime2) {
+        if (dateTime1) return dateTime1.equals(dateTime2);
+        return !dateTime2;
+      }
+    });
+    return DateTime;
+  })();
+
+  j3.String = (function() {
+    var J3String, _regFormat, _regTime;
+    _regTime = /^\s+|\s+$/g;
+    _regFormat = /{(\d+)?}/g;
+    J3String = {
+      format: function(text) {
+        var args;
+        args = arguments;
+        if (args.length === 0) return '';
+        if (args.length === 1) return text;
+        return text.replace(_regFormat, function($0, $1) {
+          return args[parseInt($1) + 1];
+        });
+      },
+      include: function(s, s1, s2) {
+        if (s2 && s2.length) {
+          return (s2 + s + s2).indexOf(s2 + s1 + s2) > -1;
+        } else {
+          return s.indexOf(s1) > -1;
+        }
+      },
+      isNullOrEmpty: function(s) {
+        return typeof s === 'undefined' || s === null || s === '';
+      },
+      hyphenlize: function(s) {
+        var c, converted, i, len;
+        converted = '';
+        i = -1;
+        len = s.length;
+        while (++i < len) {
+          c = s.charAt(i);
+          if (c === c.toUpperCase()) {
+            converted += '-' + c.toLowerCase();
+          } else {
+            converted += c;
           }
-          return els;
         }
-        return target.appendChild(_tempDiv.firstChild);
+        return converted;
       }
-      return target.appendChild(el);
     };
-    return dom.indexOf = function(el) {
-      debugger;
-      var childNode, index, p, _i, _len, _ref;
-      p = el.parentNode;
-      if (!p) return -1;
-      index = 0;
-      _ref = p.childNodes;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        childNode = _ref[_i];
-        if (childNode.nodeType === 1) {
-          if (childNode === el) return index;
-          ++index;
+    if (String.prototype.trim) {
+      J3String.trim = function(s) {
+        if (this.isNullOrEmpty(s)) return '';
+        return s.trim();
+      };
+    } else {
+      J3String.trim = function(s) {
+        if (this.isNullOrEmpty(s)) return '';
+        return s.replace(_regTime, '');
+      };
+      String.prototype.trim = function() {
+        return s.replace(_regTime, '');
+      };
+    }
+    return J3String;
+  })();
+
+  j3.Dom = (function() {
+    var Dom, UA, __clientHeight_gecko, __clientHeight_ie, __clientHeight_opera, __clientWidth_gecko, __clientWidth_ie, __clientWidth_opera, __getStyle_ie, __getStyle_other, __height_ie, __height_other, __opacity_ie, __opacity_other, __position, __position_op_webkit, __width_ie, __width_other, _tempDiv;
+    UA = j3.UA;
+    _tempDiv = document.createElement('div');
+    Dom = {
+      append: function(target, el) {
+        var els;
+        if (!target) return;
+        if (typeof el === 'string') {
+          _tempDiv.innerHTML = el;
+          if (_tempDiv.childNodes.length > 1) {
+            els = [];
+            while (_tempDiv.firstChild) {
+              els[els.length] = target.appendChild(_tempDiv.firstChild);
+            }
+            return els;
+          }
+          return target.appendChild(_tempDiv.firstChild);
         }
+        return target.appendChild(el);
+      },
+      indexOf: function(el) {
+        var index, node, p, _i, _len, _ref;
+        p = el.parentNode;
+        if (!p) return -1;
+        index = 0;
+        _ref = p.childNodes;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          node = _ref[_i];
+          if (node.nodeType === 1) {
+            if (node === el) return index;
+            ++index;
+          }
+        }
+        return -1;
+      },
+      byIndex: function(el, index) {
+        var node, pi, _i, _len, _ref;
+        if (!el) return null;
+        pi = 0;
+        _ref = el.childNodes;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          node = _ref[_i];
+          if (node.nodeType === 1) {
+            if (pi === index) return node;
+            ++pi;
+          }
+        }
+        return null;
+      },
+      next: function(el) {
+        if (!el) return null;
+        el = el.nextSibling;
+        while (el) {
+          if (el.nodeType === 1) return el;
+          el = el.nextSibling;
+        }
+        return null;
+      },
+      previous: function(el) {
+        if (!el) return null;
+        el = el.previousSibling;
+        while (el) {
+          if (el.nodeType === 1) return el;
+          el = el.previousSibling;
+        }
+        return null;
+      },
+      offsetWidth: function(el, width) {
+        var delta;
+        if (arguments.length === 1) return el.offsetWidth;
+        if (width === -1) {
+          el.style.width = '';
+        } else {
+          delta = el.offsetWidth - this.width(el);
+          el.style.width = (width - delta) + 'px';
+        }
+      },
+      offsetHeight: function(el, height) {
+        var delta;
+        if (arguments.length === 1) return el.offsetHeight;
+        if (height === -1) {
+          el.style.height = '';
+        } else {
+          delta = el.offsetHeight - this.height(el);
+          el.style.height = (height - delta) + 'px';
+        }
+      },
+      place: function(el, left, top, clientAbs) {
+        var pos, s;
+        s = el.style;
+        s.left = s.top = '0';
+        pos = this.position(el, clientAbs);
+        if (typeof left !== 'undefined') s.left = (left - pos.left) + 'px';
+        if (typeof top !== 'undefined') s.top = (top - pos.top) + 'px';
       }
-      return -1;
     };
+    __width_ie = function(el) {
+      var borderLeft, borderRight, cs, paddingLeft, paddingRight;
+      cs = el.currentStyle;
+      borderLeft = parseInt(cs.borderLeftWidth) || 0;
+      borderRight = parseInt(cs.borderRightWidth) || 0;
+      paddingLeft = parseInt(cs.paddingLeft) || 0;
+      paddingRight = parseInt(cs.paddingRight) || 0;
+      return el.offsetWidth - borderLeft - borderRight - paddingLeft - paddingRight;
+    };
+    __height_ie = function(el) {
+      var borderBottom, borderTop, cs, paddingBottom, paddingTop;
+      cs = el.currentStyle;
+      borderTop = parseInt(cs.borderTopWidth) || 0;
+      borderBottom = parseInt(cs.borderBottomWidth) || 0;
+      paddingTop = parseInt(cs.paddingTop) || 0;
+      paddingBottom = parseInt(cs.paddingBottom) || 0;
+      return el.offsetHeight - borderTop - borderBottom - paddingTop - paddingBottom;
+    };
+    __width_other = function(el) {
+      return parseInt(document.defaultView.getComputedStyle(el, null).getPropertyValue('width'));
+    };
+    __height_other = function(el) {
+      return parseInt(document.defaultView.getComputedStyle(el, null).getPropertyValue('height'));
+    };
+    __position = function(el, clientAbs) {
+      var box, de, l, t;
+      if (el.parentNode === null || this.getStyle(el, 'display') === 'none') {
+        return null;
+      }
+      box = el.getBoundingClientRect();
+      l = box.left;
+      t = box.top;
+      if (UA.ie && UA.version === 7 && window === top) {
+        l -= 2;
+        t -= 2;
+      }
+      if (!clientAbs) {
+        de = document.documentElement;
+        l += de.scrollLeft;
+        t += de.scrollTop;
+      }
+      return {
+        left: l,
+        top: t
+      };
+    };
+    __position_op_webkit = function(el, clientAbs) {
+      var de, l, t;
+      if (el.parentNode === null || this.getStyle(el, 'display') === 'none') {
+        return null;
+      }
+      l = 0;
+      t = 0;
+      while (el) {
+        l += el.offsetLeft || 0;
+        t += el.offsetTop || 0;
+        if (el.offsetParent === document.body && this.getStyle(el, 'position') === 'absolute') {
+          break;
+        }
+        el = el.offsetParent;
+      }
+      if (clientAbs) {
+        de = document.documentElement;
+        l -= de.scrollLeft;
+        t -= de.scrollTop;
+      }
+      return {
+        left: l,
+        top: t
+      };
+    };
+    __opacity_ie = function(el, value) {
+      var filter;
+      if (arguments.length === 1) {
+        if (el.filters.length === 0) return 1;
+        filter = el.filters.item('alpha');
+        if (!filter) filter = el.filters.item('DXImageTransform.Microsoft.Alpha');
+        if (filter) {
+          return filter.opacity / 100;
+        } else {
+          return 1;
+        }
+      } else {
+        el.style.filter = "alpha(opacity=" + (value * 100) + ")";
+        if (!el.currentStyle.hasLayout) el.style.zoom = 1;
+      }
+    };
+    __opacity_other = function(el, value) {
+      if (arguments.length === 1) {
+        return document.defaultView.getComputedStyle(el, '').getPropertyValue('opacity');
+      } else {
+        el.style.opacity = value;
+        el.style['-moz-opacity'] = value;
+        return el.style['-khtml-opacity'] = value;
+      }
+    };
+    __getStyle_ie = function(el, styleName) {
+      if (styleName === 'opacity') {
+        return this.opacity(el);
+      } else {
+        return el.currentStyle[styleName];
+      }
+    };
+    __getStyle_other = function(el, styleName) {
+      var value;
+      if (styleName === 'opacity') return this.opacity(el);
+      value = el.style[styleName];
+      if (value) return value;
+      return document.defaultView.getComputedStyle(el, '').getPropertyValue(j3.String.hyphenlize(styleName));
+    };
+    __clientWidth_ie = function(wnd) {
+      if (wnd == null) wnd = window;
+      return wnd.document.documentElement.clientWidth;
+    };
+    __clientHeight_ie = function(wnd) {
+      if (wnd == null) wnd = window;
+      return wnd.document.documentElement.clientHeight;
+    };
+    __clientWidth_opera = function(wnd) {
+      if (wnd == null) wnd = window;
+      return wnd.document.body.clientWidth;
+    };
+    __clientWidth_gecko = function(wnd) {
+      if (wnd == null) wnd = window;
+      return wnd.innerWidth;
+    };
+    __clientHeight_gecko = __clientHeight_opera = function(wnd) {
+      if (wnd == null) wnd = window;
+      return wnd.innerHeight;
+    };
+    if (UA.ie) {
+      j3.ext(Dom, {
+        clientWidth: __clientWidth_ie,
+        clientHeight: __clientHeight_ie,
+        width: __width_ie,
+        height: __height_ie,
+        position: __position,
+        getStyle: __getStyle_ie,
+        opacity: __opacity_ie,
+        position: __position
+      });
+    } else {
+      if (UA.gecko) {
+        j3.ext(Dom, {
+          clientWidth: __clientWidth_gecko,
+          clientHeight: __clientHeight_gecko,
+          position: __position
+        });
+      } else {
+        j3.ext(Dom, {
+          clientWidth: __clientWidth_opera,
+          clientHeight: __clientHeight_opera,
+          position: __position_op_webkit
+        });
+      }
+      j3.ext(Dom, {
+        width: __width_other,
+        height: __height_other,
+        getStyle: __getStyle_other,
+        opacity: __opacity_other
+      });
+    }
+    if (UA.ie && UA.version >= 8 && Dom.position(document.documentElement).left === 2) {
+      UA.version = 7;
+    }
+    return Dom;
   })();
 
   j3.List = j3.cls({
@@ -595,8 +1013,133 @@
     }
   });
 
+  j3.Calendar = (function() {
+    var Calendar, __getFirstDateOfMonthView, __monthViewClick;
+    __getFirstDateOfMonthView = function(year, month, firstDayOfWeek) {
+      var startDate;
+      startDate = new j3.DateTime(year, month, 1);
+      startDate = startDate.addDay(0 - startDate.getDayOfWeek() + firstDayOfWeek);
+      if (startDate.getMonth() === month && startDate.getDay() > 1) {
+        startDate = startDate.addDay(-7);
+      }
+      return startDate;
+    };
+    __monthViewClick = function(evt) {
+      var calendar, cellIndex, clickedCell, clickedDate, rowIndex;
+      calendar = evt.data;
+      clickedCell = this.parentNode;
+      rowIndex = clickedCell.parentNode.rowIndex;
+      cellIndex = clickedCell.cellIndex;
+      clickedDate = calendar._firstDateOfMonthView.addDay((rowIndex - 1) * 7 + cellIndex);
+      return calendar.setCurrentDate(clickedDate);
+    };
+    Calendar = j3.cls(j3.View, {
+      onInit: function(options) {
+        var today;
+        if (options.firstDayOfWeek == null) options.firstDayOfWeek = 1;
+        this._firstDayOfWeek = options.firstDayOfWeek % 7;
+        this._date = options.date;
+        today = j3.DateTime.today();
+        if (options.year) {
+          this._year = options.year;
+        } else if (this._date) {
+          this._year = this._date.getYear();
+        } else {
+          this._year = today.getYear();
+        }
+        if (options.month) {
+          this._month = options.month;
+        } else if (this._date) {
+          this._month = this._date.getMonth();
+        } else {
+          this._month = today.getMonth();
+        }
+      },
+      onCreated: function() {
+        var _this = this;
+        this.el.find('.cld-month-view').delegate('a', 'click', this, __monthViewClick);
+        this.el.find('.cld-prev-month').on('click', function() {
+          _this._month--;
+          if (_this._month === 0) {
+            _this._year--;
+            _this._month = 12;
+          }
+          _this.refreshMonthView();
+          return _this.el.find('.cld-cur-year-month').html(_this._year + ' - ' + _this._month);
+        });
+        this.el.find('.cld-next-month').on('click', function() {
+          _this._month++;
+          if (_this._month === 13) {
+            _this._year++;
+            _this._month = 1;
+          }
+          _this.refreshMonthView();
+          return _this.el.find('.cld-cur-year-month').html(_this._year + ' - ' + _this._month);
+        });
+        return this.el.find('.cld-cur-year-month').html(this._year + ' - ' + this._month);
+      },
+      render: function(buffer) {
+        buffer.append('<div id="' + this.id + '" class="cld">');
+        buffer.append('<div class="cld-top">');
+        buffer.append('<a class="cld-next-month"></a>');
+        buffer.append('<a class="cld-prev-month"></a>');
+        buffer.append('<div class="cld-cur-year-month"></div>');
+        buffer.append('</div>');
+        buffer.append('<div class="cld-month-view">');
+        this.renderMonthView(buffer);
+        buffer.append('</div>');
+        buffer.append('</div>');
+      },
+      renderMonthView: function(buffer) {
+        var dayOfWeek, i, isCurDate, j, renderingDate, today;
+        buffer.append('<table><tr>');
+        for (i = 0; i < 7; i++) {
+          dayOfWeek = (this._firstDayOfWeek + i) % 7;
+          buffer.append('<th class="cld-weekday-"' + dayOfWeek + '>' + j3.Lang.dayNameAbb[dayOfWeek] + '</th>');
+        }
+        buffer.append('</tr>');
+        today = j3.DateTime.today();
+        this._firstDateOfMonthView = __getFirstDateOfMonthView(this._year, this._month, this._firstDayOfWeek);
+        this._lastDateOfMonthView = this._firstDateOfMonthView.addDay(42);
+        renderingDate = this._firstDateOfMonthView;
+        for (i = 0; i < 6; i++) {
+          buffer.append('<tr>');
+          for (j = 0; j < 7; j++) {
+            isCurDate = renderingDate.equals(this._date);
+            buffer.append('<td class="');
+            buffer.append('cld-weekday-' + renderingDate.getDayOfWeek());
+            if (renderingDate.equals(today)) buffer.append(' cld-today');
+            if (isCurDate) buffer.append(' active');
+            buffer.append('"><a>' + renderingDate.getDay() + '</a></td>');
+            renderingDate = renderingDate.addDay(1);
+          }
+          buffer.append('</tr>');
+        }
+        buffer.append('</table>');
+      },
+      refreshMonthView: function() {
+        var buffer;
+        buffer = new j3.StringBuilder;
+        this.renderMonthView(buffer);
+        return this.el.find('.cld-month-view').html(buffer.toString());
+      },
+      setCurrentDate: function(date) {
+        var oldDate;
+        if (j3.DateTime.equals(this._date, date)) return;
+        oldDate = this._date;
+        this._date = date;
+        this.refreshMonthView();
+        return this.fire('change', this, {
+          oldDate: oldDate,
+          curDate: date
+        });
+      }
+    });
+    return Calendar;
+  })();
+
   j3.Selector = j3.cls(j3.View, {
-    template: _.template('<div id="<%=id%>" class="<%=css%>"<%if(disabled){%> disabled="disabled"<%}%>><div class="sel-lbl"></div><input type="text" class="sel-txt" /><button type="button" class="sel-trigger"><i class="<%=cssTrigger%>"></i></button></div>'),
+    template: _.template('<div id="<%=id%>" class="<%=css%>"<%if(disabled){%> disabled="disabled"<%}%>><div class="sel-lbl"></div><input type="text" class="sel-txt" /><a class="sel-trigger"><i class="<%=cssTrigger%>"></i></a></div>'),
     onInit: function(options) {
       return this._disabled = !!options.disabled;
     },
@@ -632,7 +1175,7 @@
     onCreated: function() {
       var _this = this;
       j3.Dropdown.base().onCreated.call(this);
-      this.el.find('button').on('click', function() {
+      this.el.find('.sel-trigger').on('click', function() {
         return _this.toggle();
       });
     },
@@ -647,11 +1190,8 @@
       }
     },
     dropdown: function() {
-      var elBox, firstTime;
+      var elBox, firstTime, pos;
       firstTime = !this._elDropdownBox;
-      this.fire('beforeDropdown', this, {
-        firstTime: firstTime
-      });
       if (firstTime) {
         elBox = document.createElement('div');
         elBox.className = 'drp-box';
@@ -659,13 +1199,21 @@
         this.el.append(elBox);
         this.onCreateDropdownBox(this._elDropdownBox);
       }
+      this.fire('beforeDropdown', this, {
+        firstTime: firstTime
+      });
+      this.el.addClass('sel-active');
       this._elDropdownBox.show();
+      pos = j3.Dom.position(this.el[0]);
+      pos.top += j3.Dom.offsetHeight(this.el[0]);
+      j3.Dom.place(this._elDropdownBox[0], pos.left, pos.top + 2);
       this.fire('dropdown', this, {
         firstTime: firstTime
       });
       this._isDropdown = true;
     },
     close: function() {
+      this.el.removeClass('sel-active');
       this._elDropdownBox && this._elDropdownBox.hide();
       this.fire('close', this);
       this._isDropdown = false;
@@ -701,21 +1249,21 @@
       return this.setSelectedValue(this._selectedValue);
     },
     onCreateDropdownBox: function(elBox) {
-      var buffer, drplist,
+      var buffer,
         _this = this;
       buffer = new j3.StringBuilder;
       buffer.append('<ul class="drp-list">');
       this._items && this._items.forEach(function(item) {
         buffer.append('<li');
-        if (item.value === _this._value) buffer.append(' class="active"');
+        if (item.value === _this._selectedValue) buffer.append(' class="active"');
         return buffer.append('><a>' + item.text + '</a></li>');
       });
       buffer.append('</ul>');
       elBox.append(buffer.toString());
-      drplist = this;
-      return elBox.on('click li', function(evt) {
-        drplist.setSelectedIndex(j3.Dom.indexOf(this));
-        return drplist.close();
+      this._elDrpList = j3.Dom.byIndex(elBox[0], 0);
+      return elBox.delegate('li', 'click', this, function(evt) {
+        evt.data.setSelectedIndex(j3.Dom.indexOf(this));
+        return evt.data.close();
       });
     },
     getItems: function() {
@@ -739,15 +1287,50 @@
       return this.setSelectedIndex(index);
     },
     setSelectedIndex: function(index) {
-      var item, oldIndex;
-      alert(index);
+      var item, oldIndex, oldSelectedIndex, oldSelectedValue;
       if (index < 0 && index >= this._items.count()) return;
       oldIndex = this._selectedIndex;
       if (oldIndex === index) return;
+      if (this._elDrpList) {
+        $(j3.Dom.byIndex(this._elDrpList, oldIndex)).removeClass('active');
+        $(j3.Dom.byIndex(this._elDrpList, index)).addClass('active');
+      }
       item = this._items.getAt(index);
       this.setLabel(item.text);
       this.setText(item.text);
-      return this._selectedIndex = index;
+      oldSelectedValue = this._selectedValue;
+      oldSelectedIndex = this._selectedIndex;
+      this._selectedIndex = index;
+      this._selectedValue = item.value;
+      return this.fire('change', this, {
+        oldIndex: oldSelectedIndex,
+        oldValue: oldSelectedValue,
+        curIndex: this._selectedIndex,
+        curValue: this._selectedValue
+      });
+    }
+  });
+
+  j3.DateSelector = j3.cls(j3.Dropdown, {
+    cssTrigger: 'icon-calendar',
+    onInit: function(options) {
+      j3.DateSelector.base().onInit.call(this, options);
+      return this._date = options.date;
+    },
+    onCreated: function() {
+      j3.DateSelector.base().onCreated.call(this);
+      if (this._date) return this.setLabel(this._date.toString('yyyy-MM-dd'));
+    },
+    onCreateDropdownBox: function(elBox) {
+      var _this = this;
+      this._calendar = new j3.Calendar({
+        ctnr: elBox[0],
+        date: this._date
+      });
+      return this._calendar.on('change', function(sender, args) {
+        _this.setLabel(args.curDate.toString('yyyy-MM-dd'));
+        return _this.close();
+      });
     }
   });
 

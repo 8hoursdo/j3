@@ -1,0 +1,85 @@
+.cld-top {
+  height: 28px;
+  line-height: 28px;
+
+  .cld-next-month,
+  .cld-prev-month {
+    cursor: pointer;
+    display: inline-block;
+    width: 28px;
+    height: 28px;
+    background-image: url(../img/icons-color.png);
+    background-repeat: no-repeat; 
+  }
+
+  .cld-next-month {
+    float:right;
+    background-position: center (0 - ((50px - 28px)/2) - (50px * 17));
+  }
+
+  .cld-prev-month {
+    float:left;
+    background-position: center (0 - ((50px - 28px)/2) - (50px * 16));
+  }
+
+  .cld-cur-year-month {
+    text-align: center;
+  }
+}
+
+.cld-month-view {
+  table {
+    border-collapse: collapse;
+    border: 1px solid #fff;
+  }
+
+  th, td {
+    border: 1px solid #fff;
+    text-align: center;
+    padding: 0;
+    line-height: @baseLineHeight;
+    font-size: @baseFontSize;
+  }
+
+  td a {
+    display: block;
+    border: 1px solid #ddf4f8;
+    padding: 0 5px;
+    cursor: pointer;
+
+    &:hover {
+      .border-radius(2px);
+      background-color: @activeColor;
+      border-color: @activeColor;
+      color: #fff;
+    }
+  }
+
+  .cld-weekday-1 a,
+  .cld-weekday-2 a,
+  .cld-weekday-3 a,
+  .cld-weekday-4 a,
+  .cld-weekday-5 a {
+    background-color: #ddf4f8;
+  }
+
+  .cld-weekday-0 a,
+  .cld-weekday-6 a{
+    background-color: #f1f1f1;
+    border-color:     #f1f1f1;
+  }
+
+  .cld-today a {
+    .border-radius(2px);
+    border-color: @activeColor;
+  }
+
+  .active a {
+    .border-radius(2px);
+    background-color: @activeColor;
+    border-color: @activeColor;
+    color: #fff;
+  }
+}
+
+

@@ -4,28 +4,46 @@
   border: 1px solid @inputBorderColor;
   .border-radius(2px);
   background-color: @inputBgColor;
-  line-height: @baseLineHeight;
   height: 28px;
   overflow: hidden;
+  
 }
 
 .sel-lbl {
   display: inline-block;
+  margin: 0;
+  padding: 5px;
+  line-height: @baseLineHeight;
+  vertical-align: top;
 }
 
 .sel-txt {
   display: none;
+  border: none;
+  background: none;
+  margin: 0;
+  padding: 0 5px;
+  height: 28px;
+  vertical-align: top;
 }
 
 .sel-trigger {
+  display: inline-block;
   margin: 0;
-  padding: 0;
+  padding: 5px;
+  height: @baseLineHeight;
   border: none;
   background: none;
-  .square(28px);
+  vertical-align: top;
+
+  i {
+    display: inline-block;
+    padding: 0;
+    .square(@baseLineHeight);
+  }
 }
 
-.sel-focus {
+.sel-active {
   border-color:@inputActiveBorderColor;
 }
 
@@ -34,15 +52,20 @@
   background-color: @inputDisabledBgColor;
 }
 
-.sel input {
-  border: none;
-  background: none;
-  margin: 0;
-  padding: 5px;
-}
-
 .drp-box {
   position: absolute;
+  border: 1px solid @inputActiveBorderColor;
+  .border-radius(2px);
+  background: #fff;
 }
 
+.sel-trigger {
+  .icon-drp-down {
+    background: url(../img/icons-color.png) no-repeat center (0 - ((50px - @baseLineHeight)/2) - (50px * 14))
+  }
+
+  .icon-calendar {
+    background: url(../img/icons-color.png) no-repeat center (0 - ((50px - @baseLineHeight)/2) - (50px * 15))
+  }
+}
 

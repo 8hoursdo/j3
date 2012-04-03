@@ -10,8 +10,7 @@ J3_LESS = ./less/j3.less
 # BUILD J3 DIRECTORY
 # lessc & uglifyjs are required
 #
-
-build: css js img
+build: css js images
 
 css:
 	mkdir -p j3/img
@@ -24,7 +23,7 @@ js:
 	cake build
 	uglifyjs -nc ${J3_JS} > ${J3_JS_MIN}
 
-img:
+images:
 	cp img/* j3/img/
   
 

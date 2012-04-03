@@ -28,17 +28,18 @@ j3.DropdownList = j3.cls j3.Dropdown,
 
     @_items && @_items.forEach (item) =>
       buffer.append '<li'
-      if item.value == @_value
+      if item.value == @_selectedValue
         buffer.append ' class="active"'
       buffer.append '><a>' + item.text + '</a></li>'
 
     buffer.append '</ul>'
 
     elBox.append buffer.toString()
+    @_elDrpList = j3.Dom.byIndex elBox[0], 0
 
-    elBox.on 'click', (evt) ->
-      @setSelectedIndex j3.Dom.indexOf this
-      @close()
+    elBox.delegate 'li', 'click', this, (evt) ->
+      evt.data.setSelectedIndex j3.Dom.indexOf this
+      evt.data.close()
 
   getItems : () ->
     @_items
@@ -58,16 +59,29 @@ j3.DropdownList = j3.cls j3.Dropdown,
     @setSelectedIndex index
 
   setSelectedIndex : (index) ->
-    alert index
     if index < 0 && index >= @_items.count() then return
 
     oldIndex = @_selectedIndex
     if oldIndex == index then return
+
+    if @_elDrpList
+      $(j3.Dom.byIndex(@_elDrpList, oldIndex)).removeClass 'active'
+      $(j3.Dom.byIndex(@_elDrpList, index)).addClass 'active'
 
     item = @_items.getAt index
 
     @setLabel item.text
     @setText item.text
 
+    oldSelectedValue = @_selectedValue
+    oldSelectedIndex = @_selectedIndex
+
     @_selectedIndex = index
+    @_selectedValue = item.value
+
+    @fire 'change', this,
+      oldIndex : oldSelectedIndex
+      oldValue : oldSelectedValue
+      curIndex : @_selectedIndex
+      curValue : @_selectedValue
 
