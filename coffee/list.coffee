@@ -4,16 +4,16 @@ j3.List = j3.cls
     return
     
   firstNode : ->
-    @_firstNode
+    @_first
 
   first : ->
-    @_firstNode.value
+    @_first.value
 
   lastNode : ->
-    @_lastNode
+    @_last
 
   last : ->
-    @_lastNode.value
+    @_last.value
 
   count : ->
     @_count
