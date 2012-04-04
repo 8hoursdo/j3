@@ -10,6 +10,7 @@ task 'build', 'build j3 libarary', (options) ->
     ,'string'
     ,'dom'
     ,'list'
+    ,'event'
     ,'event-manager'
     ,'view'
     ,'container-view'
