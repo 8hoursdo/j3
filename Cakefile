@@ -31,6 +31,10 @@ task 'build', 'build j3 libarary', (options) ->
     scriptContent.push fs.readFileSync filename, 'utf-8'
   output = coffeescript.compile scriptContent.join ''
   
+  fs.mkdir outputDir + '/coffee'
+  outputFile = "#{outputDir}/coffee/j3.coffee"
+  fs.writeFile outputFile, scriptContent
+
   fs.mkdir outputDir + '/js'
   outputFile = "#{outputDir}/js/j3.js"
   fs.writeFile outputFile, output

@@ -12,7 +12,7 @@ j3.View = do ->
 
   _viewCreated = ->
     # get the dom element of view
-    @el = $ '#' + @id
+    @el = j3.$ @id
 
     if @children
       node = @children.first()
@@ -42,7 +42,7 @@ j3.View = do ->
       @parent = options.parent
 
       # container of this view, it should be a dom element
-      @ctnr = $ options.ctnr
+      @ctnr = j3.$ options.ctnr
 
       # override this method to set properties of view
       @onInit && @onInit options
@@ -58,7 +58,7 @@ j3.View = do ->
       if not @parent or _creatingStack == 0
         buffer = new j3.StringBuilder
         @render buffer
-        @ctnr.append buffer.toString()
+        j3.Dom.append @ctnr, buffer.toString()
 
         _viewCreated.call this
 

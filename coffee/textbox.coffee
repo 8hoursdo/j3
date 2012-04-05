@@ -27,17 +27,19 @@ j3.Textbox = j3.cls j3.View,
     return
 
   onCreated : ->
-    @el.focus =>
+    j3.on @el, 'focus', =>
       @fire 'focus', this
 
-    @el.blur =>
+    j3.on @el, 'blur', =>
       @fire 'blur', this
 
-    @el.keyup =>
-      text = @el.attr 'value'
+    j3.on @el, 'keyup', =>
+      text = @el.value
       if @getText != text
         @_text = text
         @fire 'change', this
+
+    return
 
   getText : ->
     @_text
@@ -47,7 +49,7 @@ j3.Textbox = j3.cls j3.View,
     if @_text == text then return
 
     @_text = text
-    @el.attr 'value', @_text
+    @el.value = @_text
     @fire 'change', this
 
   getDisabled : ->
@@ -55,15 +57,15 @@ j3.Textbox = j3.cls j3.View,
 
   setDisabled : (value) ->
     @_disabled = !!value
-    @el.attr 'disabled', @_disabled
-    @el.toggleClass 'disabled'
+    @el.disabled = @_disabled
+    j3.Dom.toggleCls @el, 'disabled'
 
   getReadonly : ->
     @_readonly
 
-  setDisabled : (value) ->
+  setReadonly : (value) ->
     @_readonly = !!value
-    @el.attr 'readonly', @_readonly
+    @el.readonly = @_readonly
 
 
 

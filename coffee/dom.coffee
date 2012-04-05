@@ -3,6 +3,61 @@ j3.Dom = do ->
   _tempDiv = document.createElement 'div'
 
   Dom =
+    hasCls : (el, cls) ->
+      j3.String.include el.className, cls, ' '
+
+    setCls : (el, cls) ->
+      el.className = cls.trim()
+      return
+
+    addCls : (el, cls) ->
+      if !@hasCls el, cls
+        el.className = el.className + ' ' + cls.trim()
+      return
+
+    removeCls : (el, cls) ->
+      el.className = el.className.replace new RegExp('(^|\\s)' + cls + '(?:\\s|$)'), '$1'
+      return
+
+    replaceCls : (el, cls1, cls2) ->
+      if @hasCls el, cls2
+        cls2 = ' '
+      else
+        cls2 = ' ' + cls2 + ' '
+      el.className = (' ' + el.className + ' ').replace(' ' + cls1 + ' ', cls2).trim()
+
+      return
+
+    toggleCls : (el, cls1, cls2) ->
+      hasCls1 = @hasCls el, cls1
+      if arguments.length == 1
+        if hasCls1
+          @removeCls el, cls1
+        else
+          @addCls el, cls1
+      else
+        if hasCls1
+          @replaceCls el, cls1, cls2
+        else
+          @replaceCls el, cls2, cls1
+
+      return
+
+    visible : (el, value) ->
+      if arguments.length == 1
+        @getStyle el, 'display' != 'none'
+      else if value
+        @show el
+      else
+        @hide el
+
+    show : (el) ->
+      el.style.display = ''
+      return
+
+    hide : (el) ->
+      el.style.display = 'none'
+
     append : (target, el) ->
       if not target then return
 
@@ -16,6 +71,21 @@ j3.Dom = do ->
         return target.appendChild _tempDiv.firstChild
 
       target.appendChild el
+
+    parent : (el, selector) ->
+      if arguments.length == 1 then return el.parentNode
+
+      if 0 is selector.indexOf '.'
+        selector = selector.substr 1
+        while el
+          if @hasCls el, selector then return el
+          el = el.parentNode
+      else
+        selector = selector.toUpperCase()
+        while el
+          if el.tagName is selector then return el
+          el = el.parentNode
+      return null
 
     indexOf : (el) ->
       p = el.parentNode
@@ -37,6 +107,9 @@ j3.Dom = do ->
           if pi == index then return node
           ++pi
       return null
+
+    firstChild : (el) ->
+      @byIndex el, 0
 
     next : (el) ->
       if !el then return null
@@ -81,9 +154,9 @@ j3.Dom = do ->
       s.left = s.top = '0'
       pos = @position el, clientAbs
 
-      if typeof left isnt 'undefined'
+      if not j3.isUndefined left
         s.left = (left - pos.left) + 'px'
-      if typeof top isnt 'undefined'
+      if not j3.isUndefined top
         s.top = (top - pos.top) + 'px'
       return
 

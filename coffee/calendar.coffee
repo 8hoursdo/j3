@@ -7,13 +7,15 @@ j3.Calendar = do ->
     startDate
 
   __monthViewClick = (evt) ->
-    calendar = evt.data
-    clickedCell = this.parentNode
+    el = evt.src()
+    if el.tagName != 'A' then return
+
+    clickedCell = el.parentNode
     rowIndex = clickedCell.parentNode.rowIndex
     cellIndex = clickedCell.cellIndex
 
-    clickedDate = calendar._firstDateOfMonthView.addDay (rowIndex - 1) * 7 + cellIndex
-    calendar.setCurrentDate clickedDate
+    clickedDate = @_firstDateOfMonthView.addDay (rowIndex - 1) * 7 + cellIndex
+    @setCurrentDate clickedDate
 
   Calendar = j3.cls j3.View,
     onInit : (options) ->
@@ -36,29 +38,6 @@ j3.Calendar = do ->
       else
         @_month = today.getMonth()
       return
-
-    onCreated : ->
-      @el.find('.cld-month-view').delegate 'a', 'click', this, __monthViewClick
-
-      @el.find('.cld-prev-month').on 'click', =>
-        @_month--
-        if @_month == 0
-          @_year--
-          @_month = 12
-        @refreshMonthView()
-        @el.find('.cld-cur-year-month').html @_year + ' - ' + @_month
-
-      @el.find('.cld-next-month').on 'click', =>
-        @_month++
-        if @_month == 13
-          @_year++
-          @_month = 1
-        @refreshMonthView()
-        @el.find('.cld-cur-year-month').html @_year + ' - ' + @_month
-
-      @el.find('.cld-cur-year-month').html @_year + ' - ' + @_month
-
-
 
     render : (buffer) ->
       buffer.append '<div id="' + @id + '" class="cld">'
@@ -108,11 +87,41 @@ j3.Calendar = do ->
 
       buffer.append '</table>'
       return
+
+    onCreated : ->
+      Dom = j3.Dom
+      @_elCldTop = Dom.firstChild @el
+      @_elNextMonth = Dom.firstChild @_elCldTop
+      @_elPrevMonth = Dom.next @_elNextMonth
+      @_elCurYearMonth = Dom.next @_elPrevMonth
+
+      @_elMonthView = Dom.next @_elCldTop
+
+
+      j3.on @_elMonthView, 'click', this, __monthViewClick
+
+      j3.on @_elPrevMonth, 'click', this, ->
+        @_month--
+        if @_month == 0
+          @_year--
+          @_month = 12
+        @refreshMonthView()
+        @_elCurYearMonth.innerHTML = @_year + ' - ' + @_month
+
+      j3.on @_elNextMonth, 'click', this, ->
+        @_month++
+        if @_month == 13
+          @_year++
+          @_month = 1
+        @refreshMonthView()
+        @_elCurYearMonth.innerHTML = @_year + ' - ' + @_month
+
+      @_elCurYearMonth.innerHTML = @_year + ' - ' + @_month
     
     refreshMonthView : ->
       buffer = new j3.StringBuilder
       @renderMonthView buffer
-      @el.find('.cld-month-view').html buffer.toString()
+      @_elMonthView.innerHTML = buffer.toString()
 
     setCurrentDate : (date) ->
       if j3.DateTime.equals @_date, date then return

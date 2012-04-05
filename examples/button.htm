@@ -3,8 +3,7 @@
 <head>
     <title>button</title>
     <link rel="Stylesheet" href="../j3/css/j3.css" />
-    <script type="text/javascript" src="../vender/jquery.js"></script>
-    <script type="text/javascript" src="../vender/underscore.js"></script>
+   <script type="text/javascript" src="../vender/underscore.js"></script>
     <script type="text/javascript" src="../j3/js/j3.js"></script>
 </head>
 <body>
@@ -15,12 +14,12 @@
 </p>
 <p id='click'></p>
 <script type="text/javascript">
-    $(function () {
-        new j3.Button({ ctnr: '#normal', text: 'normal' });
-        new j3.Button({ ctnr: '#primary', text: 'primary', primary: true });
-        var btn1 = new j3.Button({ ctnr: '#disabled', text: 'normal disabled', disabled: true });
-        var btn2 = new j3.Button({ ctnr: '#disabled', text: 'primary disabled', primary: true, disabled: true });
-        new j3.Button({ ctnr: '#click', text: 'click me',
+    j3.ready(function () {
+        new j3.Button({ ctnr: 'normal', text: 'normal' });
+        new j3.Button({ ctnr: 'primary', text: 'primary', primary: true });
+        var btn1 = new j3.Button({ ctnr: 'disabled', text: 'normal disabled', disabled: true });
+        var btn2 = new j3.Button({ ctnr: 'disabled', text: 'primary disabled', primary: true, disabled: true });
+        new j3.Button({ ctnr: 'click', text: 'click me',
             on: {
                 click: function (sender) {
                     alert(sender.getText());
@@ -28,7 +27,7 @@
             }
         });
 
-        $('#chkSetDisabled').change(function () {
+        j3.on(j3.$('chkSetDisabled'), 'change', function () {
             btn1.setDisabled(this.checked);
             btn2.setDisabled(this.checked);
         });

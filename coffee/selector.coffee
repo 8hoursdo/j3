@@ -5,8 +5,12 @@ j3.Selector = j3.cls j3.View,
     @_disabled = !!options.disabled
 
   onCreated : () ->
-    @_elLabel = @el.find('.sel-lbl')
-    @_elText = @el.find('.sel-txt')
+    @_elLabel = j3.Dom.byIndex @el, 0
+    @_elText = j3.Dom.next @_elLabel
+    @_elTrigger = j3.Dom.next @_elText
+
+    j3.on @_elTrigger, 'click', =>
+      @onTriggerClick && @onTriggerClick()
 
   getViewData : ->
     id : @id
@@ -20,11 +24,11 @@ j3.Selector = j3.cls j3.View,
 
   setDisabled : (value) ->
     @_disabled = !!value
-    @el.toggleClass 'disabled'
+    j3.Dom.toggleCls @el, 'disabled'
 
   setLabel : (html) ->
-    @_elLabel.html html
+    @_elLabel.innerHTML = html
 
   setText : (text) ->
-    @_elText.attr 'value', text
+    @_elText.value = text
 

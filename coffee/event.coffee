@@ -1,4 +1,50 @@
 do (j3) ->
+  Event = (@event) ->
+
+  if j3.UA.ie
+    j3.ext Event.prototype,
+      src : ->
+        @event.srcElement
+      button : ->
+        switch @event.button
+          when 1 then return 1
+          when 2 then return 3
+          when 4 then return 2
+          else return 0
+      leftButton : ->
+        @event.button is 1
+      rightButton : ->
+        @event.button is 2
+      middleButton : ->
+        @event.button is 4
+      pageX : ->
+        @event.clientX + document.documentElement.scrollLeft
+      pageY : ->
+        @event.clientY + document.documentElement.scrollTop
+      stop : ->
+        @event.returnValue = false
+        @event.cancelBubble = true
+  else
+    j3.ext Event.prototype,
+      src : ->
+        @event.target
+      button : ->
+        @event.which
+      leftButton : ->
+        @event.which is 1
+      rightButton : ->
+        @event.which is 3
+      middleButton : ->
+        @event.which is 2
+      pageX : ->
+        @event.pageX
+      pageY : ->
+        @event.pageY
+      stop : ->
+        @event.preventDefault()
+        @event.stopPropagation()
+    
+
   _handlerInfoList = new j3.List
   _readyHandlerList = new j3.List
 
@@ -16,13 +62,16 @@ do (j3) ->
 
     return
 
-  j3.on = (el, eventName, handler, context) ->
+  j3.on = (el, eventName, context, handler) ->
+    if arguments.length == 3
+      handler = context
+
     handlerInfo =
       e : el
       n : eventName
       h : handler
       c : context
-      f : if arguments.length == 3 then handler else -> handler.call context, arguments[0]
+      f : -> handler.call context, new Event arguments[0]
 
     _handlerInfoList.insert handlerInfo
 
@@ -33,7 +82,10 @@ do (j3) ->
 
     return
 
-  j3.un = (el, eventName, handler, context) ->
+  j3.un = (el, eventName, context, handler) ->
+    if arguments.length == 3
+      handler = context
+
     node = _handlerInfoList.firstNode()
     while node
       info = node.value
@@ -47,8 +99,8 @@ do (j3) ->
 
     return
 
-  j3.ready = (handler, context) ->
-    f = if arguments.length == 1 then handler else -> handler.call context, arguments[0]
+  j3.ready = (context, handler) ->
+    f = if arguments.length == 1 then context else -> handler.call context, arguments[0]
 
     _readyHandlerList.insert f
 

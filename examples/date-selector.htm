@@ -4,7 +4,6 @@
     <meta charset="UTF-8" />
     <title>date selector</title>
     <link rel="Stylesheet" href="../j3/css/j3.css" />
-    <script type="text/javascript" src="../vender/jquery.js"></script>
     <script type="text/javascript" src="../vender/underscore.js"></script>
     <script type="text/javascript" src="../j3/js/j3.js"></script>
     <script type="text/javascript" src="../j3/js/lang/zh-cn.js"></script>
@@ -14,13 +13,13 @@
 <p id='ctnr2'></p>
 <p id='log'></p>
 <script type="text/javascript">
-    $(function () {
-        new j3.Calendar({ctnr:'#ctnr1', date:j3.DateTime.today().addDay(1)});
+    j3.ready(function () {
+        new j3.Calendar({ctnr:'ctnr1', date:j3.DateTime.today().addDay(1)});
 
-        new j3.DateSelector({ctnr:'#ctnr2', date:j3.DateTime.today(),
+        new j3.DateSelector({ctnr:'ctnr2', date:j3.DateTime.today(),
             on : {
               change : function(sender, args){
-                $('#log').html('oldDate: ' + args.oldDate.toString() + '<br />' + 'oldDate: ' + args.oldDate.toString());
+                j3.$('log').innerHTML = 'oldDate: ' + args.oldDate.toString() + '<br />' + 'oldDate: ' + args.oldDate.toString();
               }
             }
           });

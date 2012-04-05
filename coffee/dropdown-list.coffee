@@ -1,4 +1,6 @@
 j3.DropdownList = j3.cls j3.Dropdown,
+  _selectedIndex : -1
+
   onInit : (options) ->
     j3.DropdownList.base().onInit.call this, options
 
@@ -34,12 +36,12 @@ j3.DropdownList = j3.cls j3.Dropdown,
 
     buffer.append '</ul>'
 
-    elBox.append buffer.toString()
-    @_elDrpList = j3.Dom.byIndex elBox[0], 0
+    j3.Dom.append elBox, buffer.toString()
+    @_elDrpList = j3.Dom.byIndex elBox, 0
 
-    elBox.delegate 'li', 'click', this, (evt) ->
-      evt.data.setSelectedIndex j3.Dom.indexOf this
-      evt.data.close()
+    j3.on @_elDrpList, 'click', this, (evt) ->
+      @setSelectedIndex j3.Dom.indexOf j3.Dom.parent evt.src(), 'li'
+      @close()
 
   getItems : () ->
     @_items
@@ -56,6 +58,7 @@ j3.DropdownList = j3.cls j3.Dropdown,
         ++index
         return false
 
+    if index == @_items.count() then index = -1
     @setSelectedIndex index
 
   setSelectedIndex : (index) ->
@@ -64,9 +67,11 @@ j3.DropdownList = j3.cls j3.Dropdown,
     oldIndex = @_selectedIndex
     if oldIndex == index then return
 
+    Dom = j3.Dom
     if @_elDrpList
-      $(j3.Dom.byIndex(@_elDrpList, oldIndex)).removeClass 'active'
-      $(j3.Dom.byIndex(@_elDrpList, index)).addClass 'active'
+      if oldIndex != -1
+        Dom.removeCls Dom.byIndex(@_elDrpList, oldIndex), 'active'
+      Dom.addCls Dom.byIndex(@_elDrpList, index), 'active'
 
     item = @_items.getAt index
 

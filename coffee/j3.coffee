@@ -8,11 +8,10 @@ j3.version = '0.0.1'
 j3.has = (obj, prop) ->
   obj.hasOwnProperty prop
 
-j3.$ = root.jQuery or (query) ->
-  if typeof query is 'string'
-    if (query.indexOf '#') == 0
-      return document.getElementById query.substr 1
-    else
-      return null
+j3.isUndefined = (obj) ->
+  typeof obj is 'undefined'
 
-  return query
+j3.$ = (id) ->
+  if typeof id is 'string'
+    return document.getElementById id
+  return id

@@ -3,7 +3,6 @@
 <head>
     <title>textbox</title>
     <link rel="Stylesheet" href="../j3/css/j3.css" />
-    <script type="text/javascript" src="../vender/jquery.js"></script>
     <script type="text/javascript" src="../vender/underscore.js"></script>
     <script type="text/javascript" src="../j3/js/j3.js"></script>
 </head>
@@ -14,10 +13,10 @@
 <p>Password:</p>
 <p id='text4'></p>
 <script type="text/javascript">
-    $(function () {
-        var output1 = new j3.Textbox({ctnr:'#text2', readonly:true});
-        var output2 = new j3.Textbox({ctnr:'#text3', readonly:true, multiline:true});
-        var input = new j3.Textbox({ctnr:'#text1',
+    j3.ready(function () {
+        var output1 = new j3.Textbox({ctnr:'text2', readonly:true});
+        var output2 = new j3.Textbox({ctnr:'text3', readonly:true, multiline:true});
+        var input = new j3.Textbox({ctnr:'text1',
             on:{
                 change:function(sender){
                     text = sender.getText();
@@ -27,7 +26,7 @@
             }
         });
 
-        var pasword = new j3.Textbox({ctnr:'#text4', type:'password'});
+        var pasword = new j3.Textbox({ctnr:'text4', type:'password'});
     });
 </script>
 </body>

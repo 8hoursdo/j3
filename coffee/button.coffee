@@ -18,7 +18,7 @@ j3.Button = j3.cls j3.View,
     disabled : @_disabled
 
   onCreated : ->
-    @el.click =>
+    j3.on @el, 'click', =>
       @fire 'click', this
 
   getText : ->
@@ -33,8 +33,8 @@ j3.Button = j3.cls j3.View,
 
   setDisabled : (value) ->
     @_disabled = !!value
-    @el.attr 'disabled', @_disabled
-    @el.toggleClass 'disabled'
+    @el.disabled = @_disabled
+    j3.Dom.toggleCls @el, 'disabled'
 
 
 
