@@ -7,7 +7,7 @@ j3.DropdownList = j3.cls j3.Dropdown,
     items = options.items
     list = new j3.List
     if items
-      if _.isArray items
+      if j3.isArray items
         for eachItem in items
           eachItem.value ?= eachItem.text
           list.insert eachItem

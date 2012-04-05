@@ -4,7 +4,7 @@ j3.Dom = do ->
 
   Dom =
     hasCls : (el, cls) ->
-      j3.String.include el.className, cls, ' '
+      j3.include el.className, cls, ' '
 
     setCls : (el, cls) ->
       el.className = cls.trim()
@@ -265,7 +265,7 @@ j3.Dom = do ->
     value = el.style[styleName]
     if value then return value
 
-    document.defaultView.getComputedStyle(el, '').getPropertyValue j3.String.hyphenlize styleName
+    document.defaultView.getComputedStyle(el, '').getPropertyValue j3.hyphenlize styleName
 
   __clientWidth_ie = (wnd) ->
     wnd ?= window

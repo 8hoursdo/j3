@@ -1,5 +1,5 @@
 j3.Selector = j3.cls j3.View,
-  template : _.template '<div id="<%=id%>" class="<%=css%>"<%if(disabled){%> disabled="disabled"<%}%>><div class="sel-lbl"></div><input type="text" class="sel-txt" /><a class="sel-trigger"><i class="<%=cssTrigger%>"></i></a></div>'
+  template : j3.template '<div id="<%=id%>" class="<%=css%>"<%if(disabled){%> disabled="disabled"<%}%>><div class="sel-lbl"></div><input type="text" class="sel-txt" /><a class="sel-trigger"><i class="<%=cssTrigger%>"></i></a></div>'
 
   onInit : (options) ->
     @_disabled = !!options.disabled

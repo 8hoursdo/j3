@@ -1,48 +1,52 @@
-j3.String = do ->
-  _regTime = /^\s+|\s+$/g
+_regTrim = /^\s+|\s+$/g
 
+_regFormat = /{(\d+)?}/g
 
-  _regFormat = /{(\d+)?}/g
+j3.ext j3,
+  format : (text) ->
+    args = arguments
+    if args.length == 0 then return ''
+    if args.length == 1 then return text
+    text.replace _regFormat, ($0, $1) -> args[parseInt($1) + 1]
 
-  J3String =
-    format : (text) ->
-      args = arguments
-      if args.length == 0 then return ''
-      
-      if args.length == 1 then return text
+  include : (s, s1, s2) ->
+    if s2 && s2.length
+      return (s2 + s + s2).indexOf(s2 + s1 + s2) > -1
+    else
+      return s.indexOf(s1) > -1
 
-      text.replace _regFormat, ($0, $1) -> args[parseInt($1) + 1]
+  isNullOrEmpty : (s) ->
+    typeof s is 'undefined' or s is null or s is ''
 
-    include : (s, s1, s2) ->
-      if s2 && s2.length
-        return (s2 + s + s2).indexOf(s2 + s1 + s2) > -1
+  hyphenlize : (s) ->
+    converted = ''
+    i = -1
+    len = s.length
+    while ++i < len
+      c = s.charAt i
+      if c == c.toUpperCase()
+        converted += '-' + c.toLowerCase()
       else
-        return s.indexOf(s1) > -1
+        converted += c
+    converted
 
-    isNullOrEmpty : (s) ->
-      typeof s is 'undefined' or s is null or s is ''
+  htmlEncode : (s) ->
+    if @isNullOrEmpty s then return ''
 
-    hyphenlize : (s) ->
-      converted = ''
-      i = -1
-      len = s.length
-      while ++i < len
-        c = s.charAt i
-        if c == c.toUpperCase()
-          converted += '-' + c.toLowerCase()
-        else
-          converted += c
-      converted
+    s.replace(/&/g, '&amp;')
+     .replace(/</g, '&lt;')
+     .replace(/>/g, '&gt;')
+     .replace(/"/g, '&quot;')
+     .replace(/'/g, '&#x27;')
+     .replace(/\//g, '&#x2F;')
 
-  if String.prototype.trim
-    J3String.trim = (s) ->
-      if @isNullOrEmpty s then return ''
-      s.trim()
-  else
-    J3String.trim = (s) ->
-      if @isNullOrEmpty s then return ''
-      s.replace _regTime, ''
+if String.prototype.trim
+  j3.trim = (s) ->
+    if @isNullOrEmpty s then return ''
+    s.trim()
+else
+  j3.trim = (s) ->
+    if @isNullOrEmpty s then return ''
+    s.replace _regTime, ''
 
-    String.prototype.trim = -> s.replace _regTime, ''
-
-  J3String
+  String.prototype.trim = -> s.replace _regTrim, ''

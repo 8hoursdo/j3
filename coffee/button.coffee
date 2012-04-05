@@ -1,7 +1,7 @@
 j3.Button = j3.cls j3.View,
   css : 'btn'
 
-  template : _.template '<button type="<%=primary ? "submit" : "button"%>" id="<%=id%>" class="<%=css%>"<%if(disabled){%> disabled="disabled"<%}%>><%=text%></button>'
+  template : j3.template '<button type="<%=primary ? "submit" : "button"%>" id="<%=id%>" class="<%=css%>"<%if(disabled){%> disabled="disabled"<%}%>><%=text%></button>'
 
   onInit : (options) ->
     @_text = options.text || ''

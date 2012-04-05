@@ -8,6 +8,7 @@ task 'build', 'build j3 libarary', (options) ->
     ,'string-builder'
     ,'date-time'
     ,'string'
+    ,'template'
     ,'dom'
     ,'list'
     ,'event'
