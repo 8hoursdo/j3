@@ -25,6 +25,8 @@ task 'build', 'build j3 libarary', (options) ->
   ]
 
   fs = require 'fs'
+  fs.mkdir outputDir
+
   coffeescript = require 'coffee-script'
   scriptContent = []
   for eachFile in coffeeFiles
