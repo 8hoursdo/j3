@@ -30,7 +30,7 @@ j3.Dom = do ->
 
     toggleCls : (el, cls1, cls2) ->
       hasCls1 = @hasCls el, cls1
-      if arguments.length == 1
+      if arguments.length == 2
         if hasCls1
           @removeCls el, cls1
         else
