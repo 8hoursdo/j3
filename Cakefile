@@ -22,6 +22,7 @@ task 'build', 'build j3 libarary', (options) ->
     ,'dropdown'
     ,'dropdown-list'
     ,'date-selector'
+    ,'switch'
   ]
 
   fs = require 'fs'

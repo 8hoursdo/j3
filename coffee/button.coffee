@@ -18,7 +18,7 @@ j3.Button = j3.cls j3.View,
     disabled : @_disabled
 
   onCreated : ->
-    j3.on @el, 'click', =>
+    j3.on @el, 'click', this, ->
       @fire 'click', this
 
   getText : ->
