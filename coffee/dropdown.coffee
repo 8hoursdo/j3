@@ -1,6 +1,11 @@
 j3.Dropdown = j3.cls j3.Selector,
   cssTrigger : 'icon-drp-down'
 
+  onInit : (options) ->
+    j3.Dropdown.base().onInit.call this, options
+
+    if !j3.isUndefined options.boxWidth then @_boxWidth = parseInt options.boxWidth
+
   onTriggerClick : ->
     if @_isDropdown then @close() else @dropdown()
     return
@@ -9,6 +14,8 @@ j3.Dropdown = j3.cls j3.Selector,
     @_isDropdown
 
   dropdown : ->
+    Dom = j3.Dom
+
     firstTime = !@_elDropdownBox
 
     if firstTime
@@ -16,18 +23,28 @@ j3.Dropdown = j3.cls j3.Selector,
       elBox.className = 'drp-box'
 
       @_elDropdownBox = elBox
-      j3.Dom.append @el, elBox
+      Dom.append @el, elBox
       @onCreateDropdownBox @_elDropdownBox
 
     @fire 'beforeDropdown', this, firstTime:firstTime
 
-    j3.Dom.addCls @el, 'sel-active'
-    j3.Dom.show @_elDropdownBox
+    Dom.addCls @el, 'sel-active'
+    Dom.show @_elDropdownBox
 
     # change position of drp-box
-    pos = j3.Dom.position @el
-    pos.top += j3.Dom.offsetHeight @el
-    j3.Dom.place @_elDropdownBox, pos.left, pos.top + 2
+    pos = Dom.position @el
+    pos.top += Dom.offsetHeight @el
+    Dom.place @_elDropdownBox, pos.left, pos.top + 2
+
+    # change size of drp-box
+    if @_boxWidth > 0
+      Dom.offsetWidth @_elDropdownBox, @_boxWidth
+    else
+      @_elDropdownBox.style.width = ""
+      widthEl = Dom.offsetWidth @el
+      widthBox = Dom.offsetWidth @_elDropdownBox
+      if widthBox < widthEl
+        Dom.offsetWidth @_elDropdownBox, widthEl
 
     @fire 'dropdown', this, firstTime:firstTime
     @_isDropdown = true
