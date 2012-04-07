@@ -16,7 +16,7 @@ j3.Dom = do ->
       return
 
     removeCls : (el, cls) ->
-      el.className = el.className.replace new RegExp('(^|\\s)' + cls + '(?:\\s|$)'), '$1'
+      el.className = el.className.replace(new RegExp('(^|\\s)' + cls + '(?:\\s|$)'), '$1').trim()
       return
 
     replaceCls : (el, cls1, cls2) ->
