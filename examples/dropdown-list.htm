@@ -6,7 +6,7 @@
     <script type="text/javascript" src="../j3/js/j3.js"></script>
 </head>
 <body>
-<p id='ctnr1'></p>
+<p id='ctnr1' style="width:150px"></p>
 <p id='log'></p>
 <script type="text/javascript">
     j3.ready(function () {
@@ -15,6 +15,7 @@
         items.insert({text:'javascript'});
         items.insert({text:'coffeescript'});
         new j3.DropdownList({ctnr:'ctnr1', items:items, value:'javascript',
+            fill: 1,
             on : {
               change : function(sender, args){
                 j3.$('log').innerHTML = ('oldValue: ' + args.oldValue + '<br />' + 'curValue: ' + args.curValue);

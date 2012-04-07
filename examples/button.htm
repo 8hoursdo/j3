@@ -12,6 +12,7 @@
     <input type="checkbox" id="chkSetDisabled" checked="checked" />
 </p>
 <p id='click'></p>
+<p id="layout" style="width:150px"></p>
 <script type="text/javascript">
     j3.ready(function () {
         new j3.Button({ ctnr: 'normal', text: 'normal' });
@@ -25,6 +26,8 @@
                 }
             }
         });
+
+        new j3.Button({ctnr: 'layout', text: 'layout', fill: 1});
 
         j3.on(j3.$('chkSetDisabled'), 'change', function () {
             btn1.setDisabled(this.checked);

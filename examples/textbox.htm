@@ -6,16 +6,18 @@
     <script type="text/javascript" src="../j3/js/j3.js"></script>
 </head>
 <body>
-<p id='text1'></p>
-<p id='text2'></p>
-<p id='text3'></p>
-<p>Password:</p>
-<p id='text4'></p>
+<div style="width:300px">
+  <p id='text1'></p>
+  <p id='text2'></p>
+  <p id='text3'></p>
+  <p>Password:</p>
+  <p id='text4'></p>
+</div>
 <script type="text/javascript">
     j3.ready(function () {
-        var output1 = new j3.Textbox({ctnr:'text2', readonly:true});
-        var output2 = new j3.Textbox({ctnr:'text3', readonly:true, multiline:true});
-        var input = new j3.Textbox({ctnr:'text1',
+        var output1 = new j3.Textbox({ctnr:'text2', readonly:true, fill:1});
+        var output2 = new j3.Textbox({ctnr:'text3', readonly:true, multiline:true, fill:1});
+        var input = new j3.Textbox({ctnr:'text1', fill:1,
             on:{
                 change:function(sender){
                     text = sender.getText();
@@ -25,7 +27,7 @@
             }
         });
 
-        var pasword = new j3.Textbox({ctnr:'text4', type:'password'});
+        var pasword = new j3.Textbox({ctnr:'text4', type:'password', fill:1});
     });
 </script>
 </body>

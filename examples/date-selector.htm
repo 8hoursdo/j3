@@ -9,13 +9,14 @@
 </head>
 <body>
 <p id='ctnr1'></p>
-<p id='ctnr2'></p>
+<p id='ctnr2' style="width:150px"></p>
 <p id='log'></p>
 <script type="text/javascript">
     j3.ready(function () {
         new j3.Calendar({ctnr:'ctnr1', date:j3.DateTime.today().addDay(1)});
 
         new j3.DateSelector({ctnr:'ctnr2', date:j3.DateTime.today(),
+            fill: 1,
             on : {
               change : function(sender, args){
                 j3.$('log').innerHTML = 'oldDate: ' + args.oldDate.toString() + '<br />' + 'oldDate: ' + args.oldDate.toString();

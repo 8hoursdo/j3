@@ -32,3 +32,9 @@ j3.Selector = j3.cls j3.View,
   setText : (text) ->
     @_elText.value = text
 
+  onSetWidth : (width) ->
+    Dom = j3.Dom
+    widthLabel = Dom.offsetWidth @_elLabel
+    widthCur = Dom.offsetWidth @el
+    Dom.offsetWidth @_elLabel, widthLabel + width - widthCur
+
