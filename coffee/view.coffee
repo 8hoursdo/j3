@@ -124,7 +124,7 @@ j3.View = do ->
 
     width : (width, delayLayout) ->
       # get width
-      if arguments.length == 1 then return @_width
+      if arguments.length == 0 then return @_width
 
       # set width
       @_width = width
@@ -137,7 +137,7 @@ j3.View = do ->
 
     height : (height, delayLayout) ->
       # get height
-      if arguments.length == 1 then return @_height
+      if arguments.length == 0 then return @_height
 
       # set height
       @_height = height
