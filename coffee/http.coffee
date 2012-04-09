@@ -44,7 +44,6 @@ do (j3) ->
     url = req.url
     async = req.async isnt false
     headers = req.headers
-    alert req.method
 
     xhr.open req.method, req.url, async, req.username, req.password
 
@@ -76,7 +75,7 @@ do (j3) ->
   for method in ['get', 'post', 'put', 'delete']
     j3[method] = do (method) ->
       (url, data, callback, context, options) ->
-        if arguments.length is 4
+        if arguments.length < 5
           options = context
           context = callback
           callback = data
