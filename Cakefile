@@ -13,6 +13,7 @@ task 'build', 'build j3 libarary', (options) ->
     ,'list'
     ,'event'
     ,'event-manager'
+    ,'http'
     ,'view'
     ,'container-view'
     ,'button'
