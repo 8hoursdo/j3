@@ -1,0 +1,80 @@
+do (j3) ->
+  rEncodeString = /\\|\r|\n|\t|"/g
+
+  mEncodeString =
+    '\\' : '\\\\'
+    '\r' : '\\n'
+    '\n' : '\\n'
+    '\t' : '\\t'
+    '"' : '\\"'
+
+  fEncodeString = (match) -> mEncodeString[match]
+
+  __stringToJson = (obj, buffer) ->
+    buffer.append '"'
+    buffer.append obj.replace rEncodeString, fEncodeString
+    buffer.append '"'
+
+  __arrayToJson = (obj, buffer) ->
+    buffer.append '['
+
+    firstItem = yes
+    for item in obj
+      if firstItem
+        firstItem = no
+      else
+        buffer.append ','
+
+      __toJson item, buffer
+    buffer.append ']'
+
+  __objectToJson = (obj, buffer) ->
+    if j3.isFunction obj.toJson then return obj.toJson buffer
+
+    buffer.append '{'
+
+    firstItem = yes
+    for key of obj
+      if firstItem
+        firstItem = no
+      else
+        buffer.append ','
+
+      __stringToJson key, buffer
+      buffer.append ':'
+      __toJson obj[key], buffer
+
+    buffer.append '}'
+
+
+  __toJson = (obj, buffer) ->
+    typeOfObj = typeof obj
+    switch typeOfObj
+      when 'string'
+        buffer.append '"'
+        buffer.append obj.replace rEncodeString, fEncodeString
+        buffer.append '"'
+      when 'number', 'boolean'
+        buffer.append obj.toString()
+      when 'object'
+        if j3.isArray obj
+          __arrayToJson obj, buffer
+        else if j3.isDate obj
+          buffer.append "\"/Date(#{obj.getTime()})/\""
+        else if j3.isNull obj
+          buffer.append 'null'
+        else
+          __objectToJson obj, buffer
+      when 'undefined'
+        buffer.append 'undefined'
+      else
+        __stringToJson obj, buffer
+    return
+
+  j3.toJson = (obj, buffer) ->
+    if arguments.length == 2
+      __toJson obj, buffer
+    else
+      buffer = new j3.StringBuilder
+      __toJson obj, buffer
+      buffer.toString()

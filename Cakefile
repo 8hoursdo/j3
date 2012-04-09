@@ -11,6 +11,7 @@ task 'build', 'build j3 libarary', (options) ->
     ,'template'
     ,'dom'
     ,'list'
+    ,'json'
     ,'event'
     ,'event-manager'
     ,'http'
@@ -34,6 +35,7 @@ task 'build', 'build j3 libarary', (options) ->
   for eachFile in coffeeFiles
     filename = "#{coffeeDir}/#{eachFile}.coffee"
     scriptContent.push fs.readFileSync filename, 'utf-8'
+    scriptContent.push '\n'
   output = coffeescript.compile scriptContent.join ''
   
   fs.mkdir outputDir + '/coffee'

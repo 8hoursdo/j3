@@ -1,4 +1,6 @@
 do (j3) ->
+  if j3.isRunInServer() then return
+
   # the XMLHttpRequest factory
   if window.XMLHttpRequest
     __getXHR = -> new XMLHttpRequest
@@ -30,7 +32,7 @@ do (j3) ->
       when 'text'
         buffer.append data
       when 'json'
-        __serializeToJson buffer, data
+        j3.toJson data, buffer
       else
         __serializeToFormUrlencoded buffer, data
     return
@@ -72,8 +74,8 @@ do (j3) ->
     xhr
 
   # generate http functions
-  for method in ['get', 'post', 'put', 'delete']
-    j3[method] = do (method) ->
+  for method in ['GET', 'POST', 'PUT', 'DELETE']
+    j3[method.toLowerCase()] = do (method) ->
       (url, data, callback, context, options) ->
         if arguments.length < 5
           options = context

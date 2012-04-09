@@ -1,4 +1,6 @@
 j3.Dom = do ->
+  if j3.isRunInServer() then return null
+
   UA = j3.UA
   _tempDiv = document.createElement 'div'
 

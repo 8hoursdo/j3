@@ -11,7 +11,11 @@ j3.UA = do ->
     N_CHROME : 'Chrome'
     N_SAFARI : 'Safari'
 
-  ua = navigator.userAgent
+  if !this.navigator
+    o.name = 'server'
+    return o
+
+  ua = this.navigator.userAgent
   if ua.indexOf(o.N_IE) > -1
     o.ie = true
     o.name = o.N_IE

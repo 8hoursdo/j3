@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>textbox</title>
+    <link rel="Stylesheet" href="../j3/css/j3.css" />
+    <script type="text/javascript" src="../j3/js/j3.js"></script>
+</head>
+<body>
+<div style="width:300px">
+</div>
+<script type="text/javascript">
+  j3.ready(function () {
+    var s = j3.toJson({s: "a\nb\tc\\d", a: true, b: 23, c: [null, '', new Date(), 23], d: { a: 1, b: 2 }, e: '123' });
+    alert(s);
+  });
+</script>
+</body>
+</html>

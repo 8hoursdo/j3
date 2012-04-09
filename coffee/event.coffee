@@ -1,4 +1,6 @@
 do (j3) ->
+  if j3.isRunInServer() then return
+
   Event = (@event) ->
 
   if j3.UA.ie
