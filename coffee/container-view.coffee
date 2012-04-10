@@ -18,7 +18,7 @@ j3.ContainerView = j3.cls j3.View,
     return
 
   renderChildren : (buffer) ->
-    node = @children.first()
+    node = @children.firstNode()
     while node
       node.value.render buffer
       node = node.next

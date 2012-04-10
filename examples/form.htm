@@ -1,0 +1,68 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>form</title>
+    <link rel="Stylesheet" href="../j3/css/j3.css" />
+    <script type="text/javascript" src="../j3/js/j3.js"></script>
+    <script type="text/javascript" src="../j3/js/lang/zh-cn.js"></script>
+</head>
+<body>
+<div id="ctnr" style="width:400px">
+</div>
+<script type="text/javascript">
+    j3.ready(function () {
+        var items = new j3.List;
+        items.insert({text:'c#'});
+        items.insert({text:'javascript'});
+        items.insert({text:'coffeescript'});
+
+        var form = new j3.Form({
+          ctnr : 'ctnr',
+          children : [
+            {
+              cls : j3.TextboxFormItem,
+              label : 'Account/Email',
+              controlFill : 1,
+              text : 'imzshh@gmail.com'
+            },
+            {
+              cls : j3.TextboxFormItem,
+              label : 'Password',
+              controlFill : 1,
+              type : 'password'
+            },
+            {
+              cls : j3.DateSelectorFormItem,
+              label : 'Day of Birth',
+              controlFill : 1,
+              date : new j3.DateTime(1985, 4, 12)
+            },
+            {
+              cls : j3.DropdownListFormItem,
+              label : 'Program Language',
+              controlFill : 1,
+              items : items,
+              value : 'coffeescript'
+            },
+            {
+              cls : j3.TextboxFormItem,
+              label : 'Description',
+              controlFill : 1,
+              multiline : true
+            },
+            {
+              cls : j3.FormActions,
+              children : [
+                {
+                  cls : j3.Button,
+                  text : 'Register',
+                  primary : true
+                }
+              ]
+            }
+          ]
+        });
+    });
+</script>
+</body>
+</html>

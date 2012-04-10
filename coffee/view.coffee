@@ -15,7 +15,7 @@ j3.View = do ->
     @el = j3.$ @id
 
     if @children
-      node = @children.first()
+      node = @children.firstNode()
       while node
         _viewCreated.call node.value
         node = node.next
@@ -27,6 +27,8 @@ j3.View = do ->
     @onCreated && @onCreated options
 
     options.on && this.on options.on
+    delete @_options
+    return
 
   view = j3.cls
     ctor : (options) ->
@@ -73,8 +75,9 @@ j3.View = do ->
         _viewCreated.call this
 
         if not @parent then @layout()
+        else if _creatingStack == 0 then @parent.addChild this
 
-      delete @_options
+      return
 
     render : (buffer) ->
       @onRender buffer, @getViewData()
@@ -87,6 +90,23 @@ j3.View = do ->
     getViewData : ->
       id : @id
       css : @css
+
+    getChildren : ->
+      if not @children then @children = new j3.List
+      @children
+
+    addChild : (child) ->
+      @getChildren().insert child
+
+    createChildren : (options) ->
+      if not options.children then return
+
+      for eachOption in options.children
+        if not j3.isFunction eachOption.cls then continue
+
+        eachOption.parent = this
+        child = new eachOption.cls eachOption
+        @getChildren().insert child
 
     layout : ->
       if @_layouting then return
@@ -116,7 +136,7 @@ j3.View = do ->
     layoutChildren : ->
       if !@children then return
 
-      node = children.firstNode()
+      node = @children.firstNode()
       while node
         node.value.layout()
         node = node.next
