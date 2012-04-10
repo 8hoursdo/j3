@@ -11,6 +11,9 @@ j3.DateTime = do ->
   # parse date time like this: 12/31/2008 18:08:08
   _regParse2 = /^(\d{1,2})\/(\d{1,2})\/(\d{4})(?: (\d{1,2}):(\d{1,2}):(\d{1,2})(?::(\d{1,3}))?)?$/
 
+  _FORMAT_LOACL = 'yyyy-MM-dd HH:mm:ss'
+  _FORMAT_UTC = 'yyyy-MM-ddTHH:mm:ssZ'
+
   # class members of DateTime
   DateTime = j3.cls
     ctor : (year, month, date, hours, minutes, seconds, ms) ->
@@ -78,8 +81,11 @@ j3.DateTime = do ->
       new DateTime @_value.getTime() + _MINUTE * minutes
 
     toString : (format) ->
-      format ?= 'yyyy-MM-dd HH:mm:ss'
+      format ?= _FORMAT_LOACL
       DateTime.format @_value, format
+
+    toUTCString : ->
+      DateTime.format @_value, _FORMAT_UTC, yes
 
     getValue : ->
       new Date @_value.getTime()
@@ -92,7 +98,23 @@ j3.DateTime = do ->
       new DateTime @_value.getTime()
       
   j3.ext DateTime,
-    format : (value, format) ->
+    UTC : (year, month, date, hours, minutes, seconds, ms) ->
+      argLen = arguments.length
+      if argLen == 0
+        time = (new Date).getTime()
+      else if argLen == 1
+        time = year
+      else
+        month = month || 0
+        date = date || 0
+        hours = hours || 0
+        minutes = minutes || 0
+        seconds = seconds || 0
+        ms = ms || 0
+        time = Date.UTC(year, (month - 1), date, hours, minutes, seconds, ms).getTime()
+      new DateTime time
+
+    format : (value, format, isUTC) ->
       if value instanceof DateTime
         value = value.getValue()
       if typeof value is 'number'
@@ -100,12 +122,22 @@ j3.DateTime = do ->
       else if not value instanceof Date
         return ''
 
-      strYear = value.getFullYear().toString()
-      strMonth = (value.getMonth() + 1).toString()
-      strDay = value.getDate().toString()
-      strHour = value.getHours().toString()
-      strMinute = value.getMinutes().toString()
-      strSecond = value.getSeconds().toString()
+      format ?= _FORMAT_LOACL
+
+      if isUTC
+        strYear = value.getUTCFullYear().toString()
+        strMonth = (value.getUTCMonth() + 1).toString()
+        strDay = value.getUTCDate().toString()
+        strHour = value.getUTCHours().toString()
+        strMinute = value.getUTCMinutes().toString()
+        strSecond = value.getUTCSeconds().toString()
+      else
+        strYear = value.getFullYear().toString()
+        strMonth = (value.getMonth() + 1).toString()
+        strDay = value.getDate().toString()
+        strHour = value.getHours().toString()
+        strMinute = value.getMinutes().toString()
+        strSecond = value.getSeconds().toString()
 
       str = format.replace 'yyyy', strYear
       str = str.replace 'MMM', _monthNames[value.getMonth()]
@@ -121,6 +153,10 @@ j3.DateTime = do ->
       str = str.replace 'H', strHour
       str = str.replace 'm', strMinute
       str.replace 's', strSecond
+
+    formatUTC : (value, format) ->
+      format ?= _FORMAT_UTC
+      @format value, format, true
 
     parse : (str) ->
       res = _regParse1.exec str
