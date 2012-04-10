@@ -122,18 +122,23 @@ j3.List = j3.cls
 
   toString : ->
     sb = new j3.StringBuilder
+    @toJson sb
+    sb.toString()
+
+  toJson : (sb) ->
     sb.append '['
 
     node = @_first
     if node
-      sb.append node.value.toString()
+      j3.toJson node.value, sb
+      node = node.next
       while node
         sb.append ','
-        sb.append node.value.toString()
+        j3.toJson node.value, sb
         node = node.next
 
     sb.append ']'
-    sb.toString()
+    return
 
   forEach : (callback, context, arg) ->
     node = @_first
