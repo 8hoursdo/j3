@@ -14,10 +14,9 @@ j3.Switch = j3.cls j3.View,
   onCreated : ->
     j3.on @el, 'click', this, ->
       @checked !@checked()
-      
 
   checked : (checked) ->
-    if arguments.length == 0 then return @_checked
+    if j3.isUndefined checked then return @_checked
 
     if @_checked is !!checked then return
 
@@ -25,9 +24,3 @@ j3.Switch = j3.cls j3.View,
     @_checked = !!checked
 
     @fire 'change', this
-      
-      
-
-
-
-

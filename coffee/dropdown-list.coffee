@@ -49,6 +49,9 @@ j3.DropdownList = j3.cls j3.Dropdown,
   setItems : (items) ->
     @_items = items
 
+  getSelectedValue : ->
+    @_selectedValue
+
   setSelectedValue : (value) ->
     index = 0
     @_items.tryUntil (item) =>
@@ -60,6 +63,9 @@ j3.DropdownList = j3.cls j3.Dropdown,
 
     if index == @_items.count() then index = -1
     @setSelectedIndex index
+
+  getSelectedIndex : ->
+    @_selectedIndex
 
   setSelectedIndex : (index) ->
     if index < 0 && index >= @_items.count() then return

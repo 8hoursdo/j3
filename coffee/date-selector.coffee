@@ -1,20 +1,27 @@
-j3.DateSelector = j3.cls j3.Dropdown,
-  cssTrigger : 'icon-calendar'
+do (j3) ->
+  __calendar_change = (sender, args) ->
+    @close()
+    @setLabel args.curDate.toString('yyyy-MM-dd')
+    @fire 'change', this, oldDate : args.oldDate, curDate : args.curDate
 
-  onInit : (options) ->
-    j3.DateSelector.base().onInit.call this, options
+  j3.DateSelector = j3.cls j3.Dropdown,
+    cssTrigger : 'icon-calendar'
 
-    @_date = options.date
+    onInit : (options) ->
+      j3.DateSelector.base().onInit.call this, options
 
-  onCreated : ->
-    j3.DateSelector.base().onCreated.call this
+      @_date = options.date
 
-    if @_date
-      @setLabel @_date.toString('yyyy-MM-dd')
+    onCreated : ->
+      j3.DateSelector.base().onCreated.call this
 
-  onCreateDropdownBox : (elBox) ->
-    @_calendar = new j3.Calendar ctnr : elBox, date : @_date
-    @_calendar.on 'change', (sender, args) =>
-      @setLabel args.curDate.toString('yyyy-MM-dd')
-      @close()
-    
+      if @_date
+        @setLabel @_date.toString('yyyy-MM-dd')
+
+    onCreateDropdownBox : (elBox) ->
+      @_calendar = new j3.Calendar ctnr : elBox, date : @_date
+      @_calendar.on 'change', this, __calendar_change
+
+    getDate : ->
+      @_calendar.getCurrentDate()
+

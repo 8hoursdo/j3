@@ -123,6 +123,9 @@ j3.Calendar = do ->
       @renderMonthView buffer
       @_elMonthView.innerHTML = buffer.toString()
 
+    getCurrentDate : ->
+      @_date
+
     setCurrentDate : (date) ->
       if j3.DateTime.equals @_date, date then return
 

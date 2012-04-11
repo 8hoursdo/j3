@@ -7,7 +7,7 @@
     <script type="text/javascript" src="../j3/js/lang/zh-cn.js"></script>
 </head>
 <body>
-<div id="ctnr" style="width:400px">
+<div id="ctnr" style="width:450px">
 </div>
 <script type="text/javascript">
     j3.ready(function () {
@@ -23,7 +23,7 @@
               cls : j3.TextboxFormItem,
               label : 'Account/Email',
               controlFill : 1,
-              text : 'imzshh@gmail.com'
+              value : 'imzshh@gmail.com'
             },
             {
               cls : j3.TextboxFormItem,
@@ -32,10 +32,15 @@
               type : 'password'
             },
             {
+              cls : j3.SwitchFormItem,
+              label : 'Subscribe Newsletters',
+              value : true
+            },
+            {
               cls : j3.DateSelectorFormItem,
               label : 'Day of Birth',
               controlFill : 1,
-              date : new j3.DateTime(1985, 4, 12)
+              value : new j3.DateTime(1985, 4, 12)
             },
             {
               cls : j3.DropdownListFormItem,
