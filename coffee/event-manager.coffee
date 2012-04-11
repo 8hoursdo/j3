@@ -1,5 +1,5 @@
 j3.EventManager =
-  on : (name, handler, context) ->
+  on : (name, context, handler) ->
     if not @_eventHandlers
       @_eventHandlers = {}
 
@@ -12,17 +12,25 @@ j3.EventManager =
           @_eventHandlers[handlerName] = handlerList = new j3.List
         handlerList.insert handler : handlers[handlerName], context : null
     else
+      if arguments.length == 2
+        handler = context
+        context = null
+
       handlerList = @_eventHandlers[name]
       if not handlerList
         @_eventHandlers[name] = handlerList = new j3.List
       handlerList.insert handler : handler, context : context
     this
 
-  un : (name, handler, context) ->
+  un : (name, context, handler) ->
     if not @_eventHandlers then return this
 
     handlerList = @_eventHandlers[name]
     if not handlerList then return this
+
+    if arguments.length == 2
+      handler = context
+      context = null
 
     handlerList.removeNode handlerList.findNode
       handler : handler
