@@ -68,13 +68,13 @@ do (j3) ->
       when 'undefined'
         buffer.append 'undefined'
       else
-        __stringToJson obj, buffer
+        __stringToJson obj.toString(), buffer
     return
 
   j3.toJson = (obj, buffer) ->
-    if arguments.length == 2
-      __toJson obj, buffer
-    else
+    if j3.isUndefined buffer
       buffer = new j3.StringBuilder
       __toJson obj, buffer
       buffer.toString()
+    else
+      __toJson obj, buffer

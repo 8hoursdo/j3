@@ -40,6 +40,9 @@ j3.View = do ->
       # generate an client id automatic if it's not specified
       @id = options.id or ('v_' + (++_idSeed))
 
+      # we use 'name' when bind data or send message
+      if !j3.isUndefined options.name then @name = options.name
+
       # parent view of this view.
       @parent = options.parent
 
@@ -105,7 +108,9 @@ j3.View = do ->
         if not j3.isFunction eachOption.cls then continue
 
         eachOption.parent = this
+        @onCreateChild && @onCreateChild eachOption
         child = new eachOption.cls eachOption
+        @onChildCreated && @onChildCreated child
         @getChildren().insert child
 
     layout : ->

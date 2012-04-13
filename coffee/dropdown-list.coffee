@@ -1,98 +1,113 @@
-j3.DropdownList = j3.cls j3.Dropdown,
-  _selectedIndex : -1
+do (j3) ->
+  __elDrpList_click = (evt) ->
+    @setSelectedIndex j3.Dom.indexOf j3.Dom.parent evt.src(), 'li'
+    @close()
 
-  onInit : (options) ->
-    j3.DropdownList.base().onInit.call this, options
+  j3.DropdownList = j3.cls j3.Dropdown,
+    _selectedIndex : -1
 
-    items = options.items
-    list = new j3.List
-    if items
-      if j3.isArray items
-        for eachItem in items
-          eachItem.value ?= eachItem.text
-          list.insert eachItem
-      else if items instanceof j3.List
-        items.forEach (item) ->
-          item.value ?= item.text
-          list.insert item
-        @_items = options.items
-    @_items = list
-    @_selectedValue = options.value
+    onInit : (options) ->
+      j3.DropdownList.base().onInit.call this, options
 
-  onCreated : ->
-    j3.DropdownList.base().onCreated.call this
+      items = options.items
+      list = new j3.List
+      if items
+        if j3.isArray items
+          for eachItem in items
+            eachItem.value ?= eachItem.text
+            list.insert eachItem
+        else if items instanceof j3.List
+          items.forEach (item) ->
+            item.value ?= item.text
+            list.insert item
+          @_items = options.items
+      @_items = list
+      @_selectedValue = options.value
 
-    @setSelectedValue @_selectedValue
+    onCreated : (options) ->
+      j3.DropdownList.base().onCreated.call this
 
-  onCreateDropdownBox : (elBox) ->
-    buffer = new j3.StringBuilder
-    buffer.append '<ul class="drp-list">'
+      @setSelectedValue @_selectedValue
+      @setDatasource options.datasource
 
-    @_items && @_items.forEach (item) =>
-      buffer.append '<li'
-      if item.value == @_selectedValue
-        buffer.append ' class="active"'
-      buffer.append '><a>' + item.text + '</a></li>'
+    onCreateDropdownBox : (elBox) ->
+      buffer = new j3.StringBuilder
+      buffer.append '<ul class="drp-list">'
 
-    buffer.append '</ul>'
+      @_items && @_items.forEach (item) =>
+        buffer.append '<li'
+        if item.value == @_selectedValue
+          buffer.append ' class="active"'
+        buffer.append '><a>' + item.text + '</a></li>'
 
-    j3.Dom.append elBox, buffer.toString()
-    @_elDrpList = j3.Dom.byIndex elBox, 0
+      buffer.append '</ul>'
 
-    j3.on @_elDrpList, 'click', this, (evt) ->
-      @setSelectedIndex j3.Dom.indexOf j3.Dom.parent evt.src(), 'li'
-      @close()
+      j3.Dom.append elBox, buffer.toString()
+      @_elDrpList = j3.Dom.byIndex elBox, 0
 
-  getItems : () ->
-    @_items
+      j3.on @_elDrpList, 'click', this, __elDrpList_click
 
-  setItems : (items) ->
-    @_items = items
+    getItems : () ->
+      @_items
 
-  getSelectedValue : ->
-    @_selectedValue
+    setItems : (items) ->
+      @_items = items
 
-  setSelectedValue : (value) ->
-    index = 0
-    @_items.tryUntil (item) =>
-      if item.value == value
-        return true
-      else
-        ++index
-        return false
+    getSelectedValue : ->
+      @_selectedValue
 
-    if index == @_items.count() then index = -1
-    @setSelectedIndex index
+    setSelectedValue : (value) ->
+      index = 0
+      @_items.tryUntil (item) =>
+        if item.value == value
+          return true
+        else
+          ++index
+          return false
 
-  getSelectedIndex : ->
-    @_selectedIndex
+      if index == @_items.count() then index = -1
+      @setSelectedIndex index
 
-  setSelectedIndex : (index) ->
-    if index < 0 && index >= @_items.count() then return
+    getSelectedIndex : ->
+      @_selectedIndex
 
-    oldIndex = @_selectedIndex
-    if oldIndex == index then return
+    setSelectedIndex : (index) ->
+      if index < 0 && index >= @_items.count() then return
 
-    Dom = j3.Dom
-    if @_elDrpList
-      if oldIndex != -1
-        Dom.removeCls Dom.byIndex(@_elDrpList, oldIndex), 'active'
-      Dom.addCls Dom.byIndex(@_elDrpList, index), 'active'
+      oldIndex = @_selectedIndex
+      if oldIndex == index then return
 
-    item = @_items.getAt index
+      Dom = j3.Dom
+      if @_elDrpList
+        if oldIndex isnt -1
+          Dom.removeCls Dom.byIndex(@_elDrpList, oldIndex), 'active'
+        if index isnt -1
+          Dom.addCls Dom.byIndex(@_elDrpList, index), 'active'
 
-    @setLabel item.text
-    @setText item.text
+      item = @_items.getAt index
 
-    oldSelectedValue = @_selectedValue
-    oldSelectedIndex = @_selectedIndex
+      @setLabel item.text
+      @setText item.text
 
-    @_selectedIndex = index
-    @_selectedValue = item.value
+      oldSelectedValue = @_selectedValue
+      oldSelectedIndex = @_selectedIndex
 
-    @fire 'change', this,
-      oldIndex : oldSelectedIndex
-      oldValue : oldSelectedValue
-      curIndex : @_selectedIndex
-      curValue : @_selectedValue
+      @_selectedIndex = index
+      @_selectedValue = item.value
+
+      @updateData()
+
+      @fire 'change', this,
+        oldIndex : oldSelectedIndex
+        oldValue : oldSelectedValue
+        curIndex : @_selectedIndex
+        curValue : @_selectedValue
+
+    onUpdateData : ->
+      @_datasource.set @name, @_selectedValue
+
+    onUpdateView : ->
+      @setSelectedValue @_datasource.get @name
+
+  j3.ext j3.DropdownList.prototype, j3.DataView
 

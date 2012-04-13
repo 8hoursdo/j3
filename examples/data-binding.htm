@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>data binding</title>
+    <link rel="Stylesheet" href="../j3/css/j3.css" />
+    <script type="text/javascript" src="../j3/js/j3.js"></script>
+</head>
+<body>
+<div style="width:300px">
+  <p id='text1'></p>
+  <p id='text2'></p>
+</div>
+<script type="text/javascript">
+    j3.ready(function () {
+        var user = new j3.Model({name:'fossil'});
+
+        var input = new j3.Textbox({ctnr:'text1', fill:1, datasource:user, name:'name'});
+        var output = new j3.Textbox({ctnr:'text2', readonly:true, fill:1, datasource:user, name:'name'});
+
+    });
+</script>
+</body>
+</html>

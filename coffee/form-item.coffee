@@ -18,6 +18,8 @@ do (j3) ->
         text : options.value
         multiline : options.multiline
         type : options.type
+        name : options.name
+        datasource : options.datasource
         fill : options.controlFill
         on : options.on
         parent : this
@@ -35,6 +37,8 @@ do (j3) ->
       @_dropdownList = new j3.DropdownList
         items : options.items
         value : options.value
+        name : options.name
+        datasource : options.datasource
         fill : options.controlFill
         on : options.on
         parent : this
@@ -52,6 +56,8 @@ do (j3) ->
       @_dateSelector = new j3.DateSelector
         date : options.value
         fill : options.controlFill
+        name : options.name
+        datasource : options.datasource
         on : options.on
         parent : this
 
@@ -67,6 +73,8 @@ do (j3) ->
     createChildren : (options) ->
       @_switch = new j3.Switch
         checked : options.value
+        name : options.name
+        datasource : options.datasource
         on : options.on
         parent : this
 

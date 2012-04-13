@@ -87,6 +87,14 @@ j3.DateTime = do ->
     toUTCString : ->
       DateTime.format @_value, _FORMAT_UTC, yes
 
+    toJson : (buffer) ->
+      if j3.isUndefined buffer
+        buffer = new j3.StringBuilder
+      buffer.append '"'
+      buffer.append @toUTCString()
+      buffer.append '"'
+      
+
     getValue : ->
       new Date @_value.getTime()
 

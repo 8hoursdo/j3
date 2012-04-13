@@ -1,26 +1,43 @@
-j3.Switch = j3.cls j3.View,
-  css : 'swt'
+do (j3) ->
+  __switch_click = ->
+    @checked !@checked()
 
-  template : j3.template '<div id="<%=id%>" class="<%=css%>"><a href="javascript:;"><span class="swt-on">YES</span><span class="swt-btn"></span><span class="swt-off">NO</span></a></div>'
+  j3.Switch = j3.cls j3.View,
+    css : 'swt'
 
-  onInit : (options) ->
-    @_checked = !!options.checked
+    template : j3.template '<div id="<%=id%>" class="<%=css%>"><a href="javascript:;"><span class="swt-on">YES</span><span class="swt-btn"></span><span class="swt-off">NO</span></a></div>'
 
-  getViewData : ->
-    id : @id
-    css : @css +
-      (if @_checked then ' ' +@css + '-checked' else '')
+    onInit : (options) ->
+      @_name = options.name
+      @_checked = !!options.checked
 
-  onCreated : ->
-    j3.on @el, 'click', this, ->
-      @checked !@checked()
+    getViewData : ->
+      id : @id
+      css : @css +
+        (if @_checked then ' ' +@css + '-checked' else '')
 
-  checked : (checked) ->
-    if j3.isUndefined checked then return @_checked
+    onCreated : (options) ->
+      j3.on @el, 'click', this, __switch_click
 
-    if @_checked is !!checked then return
+      @setDatasource options.datasource
 
-    j3.Dom.toggleCls @el, @css + '-checked'
-    @_checked = !!checked
+    checked : (checked) ->
+      if j3.isUndefined checked then return @_checked
 
-    @fire 'change', this
+      if @_checked is !!checked then return
+
+      j3.Dom.toggleCls @el, @css + '-checked'
+      @_checked = !!checked
+
+      @updateData()
+
+      @fire 'change', this
+
+    onUpdateData : ->
+      @_datasource.set @_name, @_checked
+
+    onUpdateView : ->
+      @checked @_datasource.get @_name
+
+  j3.ext j3.Switch.prototype, j3.DataView
+

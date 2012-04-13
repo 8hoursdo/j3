@@ -14,6 +14,7 @@ do (j3) ->
     onInit : (options) ->
       @_method = options.method || 'GET'
       @_target = options.target || 'ajax'
+      @_datasource = options.datasource
 
     getViewData : ->
       id : @id
@@ -22,3 +23,15 @@ do (j3) ->
 
     onCreated : ->
       j3.on @el, 'submit', this, __form_submit
+
+    onCreateChild : (options) ->
+      options.form = @
+      if @_datasource && not options.datasource then options.datasource = @_datasource
+
+    getDatasource : ->
+      @_datasource
+
+    action : (name, src) ->
+      @fire 'action', this, name : name, src : src
+
+  j3.ext j3.Form.prototype, j3.DataView

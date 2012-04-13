@@ -1,72 +1,93 @@
-j3.Textbox = j3.cls j3.View,
-  css : 'input'
+do (j3) ->
+  __textbox_focus = ->
+    @fire 'focus', this
 
-  templateInput : j3.template '<input type="<%=type%>" id="<%=id%>" class="<%=css%>"<%if(disabled){%> disabled="disabled"<%}%><%if(readonly){%> readonly="readonly"<%}%> value="<%-text%>" />'
-  templateTextarea : j3.template '<textarea id="<%=id%>" class="<%=css%>"<%if(disabled){%> disabled="disabled"<%}%><%if(readonly){%> readonly="readonly"<%}%>><%-text%></textarea>'
+  __textbox_blur = ->
+    @fire 'blur', this
 
-  onInit : (options) ->
-    @_text = options.text || ''
-    @_primary = !!options.primary
-    @_disabled = !!options.disabled
-    @_readonly = !!options.readonly
-    @_type = options.type || 'text'
-    @_multiline = @_type == 'text' && !!options.multiline
+  __textbox_keyup = ->
+    text = @el.value
+    if @getText != text
+      @_text = text
 
-  getViewData : ->
-    id : @id
-    css : @css +
-      (if @_disabled then ' disabled' else '')
-    text : @_text
-    disabled : @_disabled
-    readonly : @_readonly
-    type : @_type
+      @updateData()
+      @fire 'change', this
+    
 
-  onRender : (buffer) ->
-    if @_multiline then template = @templateTextarea else template = @templateInput
-    buffer.append template @getViewData()
-    return
+  j3.Textbox = j3.cls j3.View,
+    css : 'input'
 
-  onCreated : ->
-    j3.on @el, 'focus', =>
-      @fire 'focus', this
+    templateInput : j3.template '<input type="<%=type%>" id="<%=id%>" class="<%=css%>" name="<%=name%>"<%if(disabled){%> disabled="disabled"<%}%><%if(readonly){%> readonly="readonly"<%}%> value="<%-text%>" />'
+    templateTextarea : j3.template '<textarea id="<%=id%>" class="<%=css%>" name="<%=name%>"<%if(disabled){%> disabled="disabled"<%}%><%if(readonly){%> readonly="readonly"<%}%>><%-text%></textarea>'
 
-    j3.on @el, 'blur', =>
-      @fire 'blur', this
+    onInit : (options) ->
+      @_text = options.text || ''
+      @_primary = !!options.primary
+      @_disabled = !!options.disabled
+      @_readonly = !!options.readonly
+      @_type = options.type || 'text'
+      @_multiline = @_type == 'text' && !!options.multiline
 
-    j3.on @el, 'keyup', =>
-      text = @el.value
-      if @getText != text
-        @_text = text
-        @fire 'change', this
+    getViewData : ->
+      id : @id
+      css : @css +
+        (if @_disabled then ' disabled' else '')
+      text : @_text
+      disabled : @_disabled
+      readonly : @_readonly
+      type : @_type
+      name : @_name
 
-    return
+    onRender : (buffer) ->
+      if @_multiline then template = @templateTextarea else template = @templateInput
+      buffer.append template @getViewData()
+      return
 
-  getText : ->
-    @_text
+    onCreated : (options) ->
+      j3.on @el, 'focus', this, __textbox_focus
 
-  setText : (text) ->
-    text = text || ''
-    if @_text == text then return
+      j3.on @el, 'blur', this, __textbox_blur
 
-    @_text = text
-    @el.value = @_text
-    @fire 'change', this
+      j3.on @el, 'keyup', this, __textbox_keyup
 
-  getDisabled : ->
-    @_disabled
+      @setDatasource options.datasource
 
-  setDisabled : (value) ->
-    @_disabled = !!value
-    @el.disabled = @_disabled
-    j3.Dom.toggleCls @el, 'disabled'
+      return
 
-  getReadonly : ->
-    @_readonly
+    getText : ->
+      @_text
 
-  setReadonly : (value) ->
-    @_readonly = !!value
-    @el.readonly = @_readonly
+    setText : (text) ->
+      text = text || ''
+      if @_text == text then return
 
+      @_text = text
+      @el.value = @_text
 
+      @updateData()
 
+      @fire 'change', this
+
+    getDisabled : ->
+      @_disabled
+
+    setDisabled : (value) ->
+      @_disabled = !!value
+      @el.disabled = @_disabled
+      j3.Dom.toggleCls @el, 'disabled'
+
+    getReadonly : ->
+      @_readonly
+
+    setReadonly : (value) ->
+      @_readonly = !!value
+      @el.readonly = @_readonly
+
+    onUpdateData : ->
+      @_datasource.set @name, @_text
+
+    onUpdateView : ->
+      @setText @_datasource.get @name
+
+  j3.ext j3.Textbox.prototype, j3.DataView
 

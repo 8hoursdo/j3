@@ -9,8 +9,16 @@
 <body>
 <div id="ctnr" style="width:450px">
 </div>
+<div id="data"></div>
 <script type="text/javascript">
     j3.ready(function () {
+        var userModel = new j3.Model({
+            account : 'imzshh@163.com',
+            subscribe : true,
+            birthday : new j3.DateTime(1985, 4, 12),
+            'program-language' : 'coffeescript'
+          });
+
         var items = new j3.List;
         items.insert({text:'c#'});
         items.insert({text:'javascript'});
@@ -18,42 +26,45 @@
 
         var form = new j3.Form({
           ctnr : 'ctnr',
+          datasource : userModel,
           children : [
             {
               cls : j3.TextboxFormItem,
               label : 'Account/Email',
               controlFill : 1,
-              value : 'imzshh@gmail.com'
+              name : 'account',
             },
             {
               cls : j3.TextboxFormItem,
               label : 'Password',
               controlFill : 1,
-              type : 'password'
+              type : 'password',
+              name : 'password',
             },
             {
               cls : j3.SwitchFormItem,
               label : 'Subscribe Newsletters',
-              value : true
+              name : 'subscribe',
             },
             {
               cls : j3.DateSelectorFormItem,
               label : 'Day of Birth',
               controlFill : 1,
-              value : new j3.DateTime(1985, 4, 12)
+              name : 'birthday'
             },
             {
               cls : j3.DropdownListFormItem,
               label : 'Program Language',
               controlFill : 1,
               items : items,
-              value : 'coffeescript'
+              name : 'program-language'
             },
             {
               cls : j3.TextboxFormItem,
               label : 'Description',
               controlFill : 1,
-              multiline : true
+              multiline : true,
+              name : 'description'
             },
             {
               cls : j3.FormActions,
@@ -61,11 +72,21 @@
                 {
                   cls : j3.Button,
                   text : 'Register',
-                  primary : true
+                  primary : true,
+                  name : 'register'
                 }
               ]
             }
-          ]
+          ],
+          on : {
+            action : function(sender, args){
+              if(args.name == 'register')
+              {
+                j3.$('data').innerHTML = sender.getDatasource().toJson();
+              }         
+            }
+          }
+
         });
     });
 </script>
