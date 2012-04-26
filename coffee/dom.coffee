@@ -134,7 +134,7 @@ j3.Dom = do ->
     offsetWidth : (el, width) ->
       if arguments.length == 1 then return el.offsetWidth
 
-      if width == -1
+      if j3.isUndefined(width) or width == -1
         el.style.width = ''
       else
         delta = el.offsetWidth - @width el
@@ -144,7 +144,7 @@ j3.Dom = do ->
     offsetHeight : (el, height) ->
       if arguments.length == 1 then return el.offsetHeight
 
-      if height == -1
+      if j3.isUndefined(height) or height == -1
         el.style.height = ''
       else
         delta = el.offsetHeight - @height el

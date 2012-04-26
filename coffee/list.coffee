@@ -140,25 +140,49 @@ j3.List = j3.cls
     sb.append ']'
     return
 
-  forEach : (callback, context, arg) ->
+  forEach : (context, args, callback) ->
+    if !args && !callback
+      callback = context
+      context = null
+      args = null
+    else if !callback
+      callback = args
+      args = null
+
     node = @_first
     while node
-      callback.call context, node.value, arg
+      callback.call context, node.value, args
       node = node.next
     return
 
-  tryUntil : (callback, context, arg) ->
+  tryUntil : (context, args, callback) ->
+    if !args && !callback
+      callback = context
+      context = null
+      args = null
+    else if !callback
+      callback = args
+      args = null
+
     node = @_first
     while node
-      if callback.call context, node.value, arg
+      if callback.call context, node.value, args
         return node.value
       node = node.next
     return
 
-  doWhile : (callback, context, arg) ->
+  doWhile : (context, args, callback) ->
+    if !args && !callback
+      callback = context
+      context = null
+      args = null
+    else if !callback
+      callback = args
+      args = null
+
     node = @_first
     while node
-      if not callback.call context, node.value, arg
+      if not callback.call context, node.value, args
         return node.value
       node = node.next
     return

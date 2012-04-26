@@ -5,14 +5,8 @@ do (j3) ->
   __textbox_blur = ->
     @fire 'blur', this
 
-  __textbox_keyup = ->
-    text = @el.value
-    if @getText != text
-      @_text = text
-
-      @updateData()
-      @fire 'change', this
-    
+  __textbox_change = ->
+    @setText @el.value
 
   j3.Textbox = j3.cls j3.View,
     css : 'input'
@@ -36,7 +30,7 @@ do (j3) ->
       disabled : @_disabled
       readonly : @_readonly
       type : @_type
-      name : @_name
+      name : @name
 
     onRender : (buffer) ->
       if @_multiline then template = @templateTextarea else template = @templateInput
@@ -48,7 +42,9 @@ do (j3) ->
 
       j3.on @el, 'blur', this, __textbox_blur
 
-      j3.on @el, 'keyup', this, __textbox_keyup
+      j3.on @el, 'keyup', this, __textbox_change
+
+      j3.on @el, 'change', this, __textbox_change
 
       @setDatasource options.datasource
 

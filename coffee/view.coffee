@@ -2,13 +2,19 @@
 # You can override these methods:
 #  - onInit
 #  - onCreate
-j3.View = do ->
+j3.View = do (j3) ->
   # the seed for generating client id automaticlly
   _idSeed = 0
 
   # if this is great than 0 when a view is creating,
   # we can know that this view is created during another view is creating.
   _creatingStack = 0
+
+  # a dictionary of views with specified id, indexed by the id
+  _views = {}
+
+  j3.getView = (id) ->
+    _views[id]
 
   _viewCreated = ->
     # get the dom element of view
@@ -37,6 +43,9 @@ j3.View = do ->
       options ?= {}
       @_options = options
 
+      if options.id
+        _views[options.id] = @
+        
       # generate an client id automatic if it's not specified
       @id = options.id or ('v_' + (++_idSeed))
 
@@ -48,6 +57,8 @@ j3.View = do ->
 
       # container of this view, it should be a dom element
       @ctnr = j3.$ options.ctnr
+
+      if not @ctnr then @ctnr = document.body
 
       # override this method to set properties of view
       @onInit && @onInit options
@@ -177,6 +188,12 @@ j3.View = do ->
 
     onSetHeight : (height) ->
       j3.Dom.offsetHeight @el, height
+
+    show : ->
+      j3.Dom.show @el
+
+    hide : ->
+      j3.Dom.hide @el
 
   j3.ext view.prototype, j3.EventManager
 

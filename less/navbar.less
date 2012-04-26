@@ -1,0 +1,50 @@
+.navbar {
+  height: @navbarHeight;
+  background: #fff;
+  border-bottom: 1px solid @boxBorderColor;
+
+}
+
+.navbar .nav {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  
+  li {
+    float: left;
+    height: @navbarHeight;
+
+    a {
+      position: relative;
+      display: inline-block;
+      padding: 0 15px;
+      line-height: @navbarHeight + 1px;
+      color: lighten(@textColor, 20%);
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: none;
+        color: @textColor;
+      }
+    }
+
+    &.active a {
+      background: url(../img/top-nav-active.gif) no-repeat center bottom;
+      color: @textColor;
+    }
+  }
+}
+
+.navbar .brand {
+  float: left;
+  padding: 0 20px 0 5px;
+  height: @navbarHeight;
+  line-height: @navbarHeight;
+  color: @activeColor;
+  font-size: 16px;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: none;
+  }
+}

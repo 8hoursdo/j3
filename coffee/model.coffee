@@ -8,6 +8,11 @@ do (j3) ->
     has : (name) ->
       @_data.hasOwnProperty name
 
+    getData : ->
+      data = {}
+      if @_data then j3.ext data, @_data
+      data
+
     get : (name) ->
       @_data[name]
 
@@ -35,7 +40,7 @@ do (j3) ->
           changedData[name] = value
           @_data[name] = value
 
-      @notifyDataChange()
+      @updateViews()
 
       @fire 'change', this,
         changedData : changedData

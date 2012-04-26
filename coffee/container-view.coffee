@@ -1,4 +1,8 @@
 j3.ContainerView = j3.cls j3.View,
+  templateBegin : j3.template '<div id="<%=id%>" class="<%=css%>">'
+
+  templateEnd : j3.template '</div>'
+  
   onRender : (buffer, data) ->
     @renderBegin buffer, data
 

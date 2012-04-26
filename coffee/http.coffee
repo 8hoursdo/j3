@@ -8,7 +8,7 @@ do (j3) ->
     __getXHR = -> new ActiveXObject 'MSXML2.XmlHttp'
 
 
-  __serializeToFormUrlencoded = (buffer, data) ->
+  __serializeToFormUrlencoded = (data, buffer) ->
     if not data then return
 
     firstItem = yes
@@ -17,28 +17,31 @@ do (j3) ->
         if not firstItem
           buffer.append '&'
         else
-          firstItem = yes
+          firstItem = no
 
         buffer.append encodeURIComponent name
         buffer.append '='
         buffer.append encodeURIComponent data[name]
 
-  __serializeToJson = (buffer, data) ->
-    
-
   # serialize the body to be send
-  __serializeBody = (buffer, data, contentType) ->
-    switch contentType
+  __serializeBody = (buffer, data, dataType) ->
+    switch dataType
       when 'text'
         buffer.append data
       when 'json'
         j3.toJson data, buffer
       else
-        __serializeToFormUrlencoded buffer, data
+        __serializeToFormUrlencoded data, buffer
     return
 
   __parseResponse = (xhr) ->
-    
+    contentType = xhr.getResponseHeader('Content-Type')
+    if !contentType then contentType = ''
+
+    if contentType.indexOf 'application/json' == 0
+      return j3.fromJson xhr.responseText
+
+    xhr.responseText
 
   # process the request
   __doRequest = (req) ->
@@ -50,6 +53,7 @@ do (j3) ->
     xhr.open req.method, req.url, async, req.username, req.password
 
     # set headers
+    xhr.setRequestHeader 'Content-Type', 'application/x-www-form-urlencoded'
     if headers
       for name of headers
         if headers.hasOwnProperty name
@@ -76,18 +80,33 @@ do (j3) ->
   # generate http functions
   for method in ['GET', 'POST', 'PUT', 'DELETE']
     j3[method.toLowerCase()] = do (method) ->
-      (url, data, callback, context, options) ->
-        if arguments.length < 5
-          options = context
-          context = callback
-          callback = data
-          data = null
+      # option
+      # url, context, callback
+      # url, data, context, callback
+      # url, data, dataType, context, callback
+      ->
+        url = arguments[0]
+        if j3.isObject url
+          options = url
+        else
+          options = {}
 
-        options = options || {}
-        options.method = method
-        options.data = data
-        options.url = url
-        options.callback = callback
-        options.context = context
+          if arguments.length == 3
+            context = arguments[1]
+            callback = arguments[2]
+            data = null
+            dataType = null
+          else if arguments.length == 4
+            data = arguments[1]
+            context = arguments[2]
+            callback = arguments[3]
+            dataType = 'form'
+
+          options.method = method
+          options.data = data
+          options.dataType = dataType
+          options.url = url
+          options.callback = callback
+          options.context = context
 
         __doRequest options

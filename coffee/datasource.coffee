@@ -19,7 +19,7 @@ j3.Datasource =
 
     @_views.remove view
 
-  notifyDataChange : ->
+  updateViews : ->
     if not @_views then return
 
     node = @_views.firstNode()

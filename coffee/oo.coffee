@@ -1,3 +1,14 @@
+j3.ns = (nameSpace) ->
+  names = nameSpace.split "."
+  
+  curNS = window
+
+  for name in names
+    if not curNS[name]
+      curNS[name] = {}
+    curNS = curNS[name]
+  curNS
+  
 ext = j3.ext = (original, extend) ->
   for prop of extend
     original[prop] = extend[prop]

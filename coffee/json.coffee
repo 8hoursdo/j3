@@ -78,3 +78,7 @@ do (j3) ->
       buffer.toString()
     else
       __toJson obj, buffer
+
+
+  j3.fromJson = (json) ->
+    eval "(#{json})"
