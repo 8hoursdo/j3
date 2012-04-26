@@ -57,8 +57,10 @@ j3.View = do (j3) ->
 
       # container of this view, it should be a dom element
       @ctnr = j3.$ options.ctnr
-
       if not @ctnr then @ctnr = document.body
+
+      # override the default css class if specified
+      if options.css then @css = options.css
 
       # override this method to set properties of view
       @onInit && @onInit options
@@ -116,13 +118,20 @@ j3.View = do (j3) ->
       if not options.children then return
 
       for eachOption in options.children
-        if not j3.isFunction eachOption.cls then continue
+        args =
+          index : _i
+          first : _i is 0
+          last : _i is (_len - 1)
 
         eachOption.parent = this
-        @onCreateChild && @onCreateChild eachOption
+        @onCreateChild && @onCreateChild eachOption, args
+
+        if not j3.isFunction eachOption.cls then continue
+
         child = new eachOption.cls eachOption
-        @onChildCreated && @onChildCreated child
+        @onChildCreated && @onChildCreated child, args
         @getChildren().insert child
+      return
 
     layout : ->
       if @_layouting then return

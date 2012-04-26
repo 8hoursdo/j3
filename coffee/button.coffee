@@ -7,18 +7,23 @@ j3.Button = j3.cls j3.View,
     @_text = options.text || ''
     @_primary = !!options.primary
     @_disabled = !!options.disabled
+    @_active = !!options.active
+    @_toggle = !!options.toggle
 
   getViewData : ->
     id : @id
     css : @css +
       (if @_primary then ' ' +@css + '-primary' else '') +
-      (if @_disabled then ' disabled' else '')
+      (if @_disabled then ' disabled' else '') +
+      (if @_active then ' active' else '')
     text : @_text
     primary : @_primary
     disabled : @_disabled
 
   onCreated : ->
     j3.on @el, 'click', this, ->
+      if @_toggle
+        @setActive not @getActive()
       @fire 'click', this
 
   getText : ->
@@ -34,7 +39,20 @@ j3.Button = j3.cls j3.View,
   setDisabled : (value) ->
     @_disabled = !!value
     @el.disabled = @_disabled
-    j3.Dom.toggleCls @el, 'disabled'
+    if @_disabled
+      j3.Dom.addCls @el, 'disabled'
+    else
+      j3.Dom.removeCls @el, 'disabled'
+
+  getActive : ->
+    @_active
+
+  setActive : (value) ->
+    @_active = !!value
+    if @_active
+      j3.Dom.addCls @el, 'active'
+    else
+      j3.Dom.removeCls @el, 'active'
 
 
 

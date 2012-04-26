@@ -16,6 +16,12 @@
   cursor: default;
 }
 
+.btn.active
+{
+  background-color: @btnActiveBgColor;
+  color: @btnActiveTextColor;
+}
+
 .btn-primary {
   border-color: @btnPrimaryBorderColor;
   background-color: @btnPrimaryBgColor;
@@ -28,4 +34,20 @@
   background-color: @btnDisabledPrimaryBgColor;
   color: @btnDisabledPrimaryTextColor;
   cursor: default;
+}
+
+.btn-grp{
+  .btn {
+    .border-radius(0);
+    border-right-width: 0;
+  }
+
+  .first {
+    .border-radius(3px 0 0 3px);
+  }
+
+  .last {
+    .border-radius(0 3px 3px 0);
+    border-right-width: 1px;
+  }
 }

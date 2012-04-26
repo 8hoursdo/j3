@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>button group</title>
+    <link rel="Stylesheet" href="../j3/css/j3.css" />
+    <script type="text/javascript" src="../j3/js/j3.js"></script>
+</head>
+<body>
+<div style="margin:50px auto; width:1000px;">
+  <p id="ctnr1"></p>
+  <p id="ctnr2"></p>
+  <p id="ctnr3"></p>
+</div>
+<script type="text/javascript">
+    j3.ready(function () {
+        var btnGrp1 = new j3.ButtonGroup({
+          ctnr : 'ctnr1',
+          children : [
+            {
+              text : 'New',
+              name : 'new'
+            },
+            {
+              text : 'Open',
+              name : 'open'
+            },
+            {
+              text : 'Save',
+              name : 'save'
+            }
+          ],
+          on : {
+            click : function(sender, args){
+              alert(sender.name);
+            }
+          }
+        });
+
+        var btnGrp2 = new j3.ButtonGroup({
+          ctnr : 'ctnr2',
+          toggle : 'radio',
+          children : [
+            {
+              text : 'Left',
+              name : 'left'
+            },
+            {
+              text : 'Center',
+              name : 'center'
+            },
+            {
+              text : 'Right',
+              name : 'right'
+            }
+          ],
+          on : {
+            click : function(sender, args){
+              alert(sender.name);
+            }
+          }
+        });
+
+        var btnGrp3 = new j3.ButtonGroup({
+          ctnr : 'ctnr3',
+          toggle : 'checkbox',
+          children : [
+            {
+              text : 'Strong',
+              name : 'strong'
+            },
+            {
+              text : 'Underline',
+              name : 'underline'
+            },
+            {
+              text : 'Strikeline',
+              name : 'strikeline'
+            }
+          ],
+          on : {
+            click : function(sender, args){
+              alert(sender.name);
+            }
+          }
+        });
+    });
+</script>
+</body>
+</html>
