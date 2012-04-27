@@ -20,6 +20,7 @@ task 'build', 'build j3 libarary', (options) ->
     'model'
     'collection'
     'view'
+    'popup'
     'container-view'
     'data-view'
     'button'

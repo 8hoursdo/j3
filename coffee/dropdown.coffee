@@ -28,6 +28,8 @@ j3.Dropdown = j3.cls j3.Selector,
 
     @fire 'beforeDropdown', this, firstTime:firstTime
 
+    j3.regPopup this
+
     Dom.addCls @el, 'sel-active'
     Dom.show @_elDropdownBox
 
