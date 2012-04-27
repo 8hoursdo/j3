@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>link list</title>
+    <link rel="Stylesheet" href="../j3/css/j3.css" />
+    <script type="text/javascript" src="../j3/js/j3.js"></script>
+</head>
+<body>
+<div id="ctnr1" style="margin:50px auto; width:1000px;">
+</div>
+<script type="text/javascript">
+    j3.ready(function () {
+      var txt = new j3.Textbox({ctnr:'ctnr1', text:'http://'});
+      var btn = new j3.Button({ctnr:'ctnr1', text:'Add'});
+
+
+      var links = new j3.Collection;
+      links.loadData([
+        {text:'google', url:'http://www.google.com/'},
+        {text:'twitter', url:'http://www.twitter.com/'},
+        {text:'facebook', url:'http://www.facebook.com/'}
+      ]);
+
+      linkList = new j3.LinkList({
+        ctnr : 'ctnr1',
+        linkTarget : '_blank',
+        datasource : links
+      });
+
+      btn.on('click', function(){
+        links.insert({text:txt.getText(), url:txt.getText()});
+      });
+    });
+</script>
+</body>
+</html>

@@ -1,10 +1,13 @@
 do (j3) ->
-  j3.NavList = j3.cls j3.View,
+  j3.LinkList = j3.cls j3.View,
+    css : 'link-list'
+
     onInit : (options) ->
+      @_linkTarget = options.linkTarget
       @setDatasource options.datasource
 
     onRender : (buffer) ->
-      buffer.append '<ul id="' + @id + '" class="nav">'
+      buffer.append '<ul id="' + @id + '" class="' + @css + '">'
       @renderList buffer
       buffer.append '</ul>'
 
@@ -13,7 +16,7 @@ do (j3) ->
       if not datasource then return
 
       activeModel = datasource.getActive()
-      datasource.forEach (model) ->
+      datasource.forEach (model) =>
         buffer.append '<li'
         if activeModel is model
           buffer.append ' class="active"'
@@ -23,6 +26,13 @@ do (j3) ->
         url = model.get 'url'
         if url
           buffer.append ' href="' + url + '"'
+
+        target = @_linkTarget
+        target = model.get 'target'
+        if not target then target = @_linkTarget
+        if target
+          buffer.append ' target="' + @_linkTarget + '"'
+
         buffer.append '>'
         buffer.append model.get 'text'
         buffer.append '</a>'
@@ -36,5 +46,5 @@ do (j3) ->
       @renderList buffer
       @el.innerHTML = buffer.toString()
 
-  j3.ext j3.NavList.prototype, j3.DataView
+  j3.ext j3.LinkList.prototype, j3.DataView
       

@@ -9,7 +9,13 @@
 
     a {
       display: block;
-      line-height: @baseLineHeight;
+      line-height: @baseLineHeight + 4px;
+      color: @activeColor;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
 
       i {
         display: inline-block;

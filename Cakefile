@@ -36,7 +36,7 @@ task 'build', 'build j3 libarary', (options) ->
     'form-item'
     'form-actions'
     'navbar'
-    'navlist'
+    'link-list'
     'location'
     'router'
     'application'
