@@ -32,8 +32,6 @@ do (j3) ->
         on : options.on
         parent : this
 
-      @getChildren().insert @_textbox
-
     textbox : ->
       @_textbox
 
@@ -52,8 +50,6 @@ do (j3) ->
         on : options.on
         parent : this
 
-      @getChildren().insert @_dropdownList
-
     dropdownList : ->
       @_dropdownList
 
@@ -71,8 +67,6 @@ do (j3) ->
         on : options.on
         parent : this
 
-      @getChildren().insert @_dateSelector
-
     dateSelector : ->
       @_dateSelector
 
@@ -88,8 +82,6 @@ do (j3) ->
         datasource : options.datasource
         on : options.on
         parent : this
-
-      @getChildren().insert @_switch
 
     switch : ->
       @_switch
