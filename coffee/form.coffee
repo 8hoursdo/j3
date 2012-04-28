@@ -18,7 +18,7 @@ do (j3) ->
       @_target = options.target || 'ajax'
       @_datasource = options.datasource
 
-    getViewData : ->
+    getTemplateData : ->
       id : @id
       css : @getCss()
       method : @_method

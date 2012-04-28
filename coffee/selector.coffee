@@ -14,7 +14,7 @@ j3.Selector = j3.cls j3.View,
     j3.on @_elTrigger, 'click', =>
       @onTriggerClick && @onTriggerClick()
 
-  getViewData : ->
+  getTemplateData : ->
     id : @id
     css : @getCss() +
       (if @_disabled then ' disabled' else '')

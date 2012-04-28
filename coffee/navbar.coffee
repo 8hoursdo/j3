@@ -5,7 +5,7 @@ do (j3) ->
     onInit : (options) ->
       @fixedTop = !!options.fixedTop
 
-    getViewData : ->
+    getTemplateData : ->
       id : @id
       css : @getCss() +
         (if @fixedTop then ' ' + @baseCss + '-fixed-top' else '')

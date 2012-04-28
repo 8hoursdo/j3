@@ -96,7 +96,7 @@ j3.View = do (j3) ->
       return
 
     render : (buffer) ->
-      @onRender buffer, @getViewData()
+      @onRender buffer, @getTemplateData()
       return
 
     onRender : (buffer, data) ->
@@ -109,7 +109,7 @@ j3.View = do (j3) ->
       else
         @baseCss
 
-    getViewData : ->
+    getTemplateData : ->
       id : @id
       css : @getCss()
 

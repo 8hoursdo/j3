@@ -12,7 +12,7 @@ j3.Button = j3.cls j3.View,
     @_active = !!options.active
     @_toggle = !!options.toggle
 
-  getViewData : ->
+  getTemplateData : ->
     id : @id
     css : @getCss() +
       (if @_primary then ' btn-primary' else '') +

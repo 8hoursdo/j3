@@ -22,7 +22,7 @@ do (j3) ->
       @_type = options.type || 'text'
       @_multiline = @_type == 'text' && !!options.multiline
 
-    getViewData : ->
+    getTemplateData : ->
       id : @id
       css : @getCss() +
         (if @_disabled then ' disabled' else '')
@@ -34,7 +34,7 @@ do (j3) ->
 
     onRender : (buffer) ->
       if @_multiline then template = @templateTextarea else template = @templateInput
-      buffer.append template @getViewData()
+      buffer.append template @getTemplateData()
       return
 
     onCreated : (options) ->

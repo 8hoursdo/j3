@@ -9,7 +9,7 @@ do (j3) ->
     onInit : (options) ->
       @_label = options.label
 
-    getViewData : ->
+    getTemplateData : ->
       id : @id
       label : @_label
       css : @getCss()

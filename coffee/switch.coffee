@@ -11,7 +11,7 @@ do (j3) ->
       @_name = options.name
       @_checked = !!options.checked
 
-    getViewData : ->
+    getTemplateData : ->
       id : @id
       css : @getCss() +
         (if @_checked then ' ' + @baseCss + '-checked' else '')
