@@ -78,7 +78,7 @@ j3.View = do (j3) ->
       @innerHTML = options.innerHTML
 
       # create child views
-      @createChildren && @createChildren options
+      @createChildren && @createChildren options, @getChildren()
 
       _creatingStack--
 
@@ -120,7 +120,7 @@ j3.View = do (j3) ->
     addChild : (child) ->
       @getChildren().insert child
 
-    createChildren : (options) ->
+    createChildren : (options, children) ->
       if not options.children then return
 
       for eachOption in options.children
@@ -136,7 +136,7 @@ j3.View = do (j3) ->
 
         child = new eachOption.cls eachOption
         @onChildCreated && @onChildCreated child, args
-        @getChildren().insert child
+        children.insert child
       return
 
     layout : ->
