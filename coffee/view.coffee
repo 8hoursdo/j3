@@ -223,4 +223,7 @@ j3.View = do (j3) ->
     if @_minHeight and height < @_minHeight then height = @_minHeight
     @onSetHeight height
 
+  view.genId = ->
+    'v_' + (++_idSeed)
+
   view
