@@ -21,8 +21,8 @@ do (j3) ->
 
     onCreateChild : (options, args) ->
       options.cls = j3.Button
-      if args.first then options.css += ' first'
-      if args.last then options.css += ' last'
+      if args.first then options.css = 'first'
+      if args.last then options.css = 'last'
 
       if @_toggle is 'checkbox'
         options.toggle = true
