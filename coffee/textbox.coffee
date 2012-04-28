@@ -9,7 +9,7 @@ do (j3) ->
     @setText @el.value
 
   j3.Textbox = j3.cls j3.View,
-    css : 'input'
+    baseCss : 'input'
 
     templateInput : j3.template '<input type="<%=type%>" id="<%=id%>" class="<%=css%>" name="<%=name%>"<%if(disabled){%> disabled="disabled"<%}%><%if(readonly){%> readonly="readonly"<%}%> value="<%-text%>" />'
     templateTextarea : j3.template '<textarea id="<%=id%>" class="<%=css%>" name="<%=name%>"<%if(disabled){%> disabled="disabled"<%}%><%if(readonly){%> readonly="readonly"<%}%>><%-text%></textarea>'
@@ -24,7 +24,7 @@ do (j3) ->
 
     getViewData : ->
       id : @id
-      css : @css +
+      css : @getCss() +
         (if @_disabled then ' disabled' else '')
       text : @_text
       disabled : @_disabled

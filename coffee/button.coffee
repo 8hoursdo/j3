@@ -1,10 +1,12 @@
 j3.Button = j3.cls j3.View,
-  css : 'btn'
+  baseCss : 'btn'
 
-  template : j3.template '<button type="<%=primary ? "submit" : "button"%>" id="<%=id%>" class="<%=css%>"<%if(disabled){%> disabled="disabled"<%}%>><%=text%></button>'
+  template : j3.template '<button type="<%=primary ? "submit" : "button"%>" id="<%=id%>" class="<%=css%>"<%if(disabled){%> disabled="disabled"<%}%> <%if(title){%> title="<%=title%>"<%}%>><%if(icon){%><i class="<%=icon%>"></i><%}%><%=text%></button>'
 
   onInit : (options) ->
     @_text = options.text || ''
+    @_tip = options.tip
+    @_icon = options.icon
     @_primary = !!options.primary
     @_disabled = !!options.disabled
     @_active = !!options.active
@@ -12,11 +14,13 @@ j3.Button = j3.cls j3.View,
 
   getViewData : ->
     id : @id
-    css : @css +
-      (if @_primary then ' ' +@css + '-primary' else '') +
+    css : @getCss() +
+      (if @_primary then ' btn-primary' else '') +
       (if @_disabled then ' disabled' else '') +
       (if @_active then ' active' else '')
     text : @_text
+    title : @_tip
+    icon : @_icon
     primary : @_primary
     disabled : @_disabled
 

@@ -1,4 +1,6 @@
 j3.Selector = j3.cls j3.View,
+  baseCss : 'sel'
+
   template : j3.template '<div id="<%=id%>" class="<%=css%>"<%if(disabled){%> disabled="disabled"<%}%>><div class="sel-lbl"></div><input type="text" class="sel-txt" /><a class="sel-trigger"><i class="<%=cssTrigger%>"></i></a></div>'
 
   onInit : (options) ->
@@ -14,7 +16,7 @@ j3.Selector = j3.cls j3.View,
 
   getViewData : ->
     id : @id
-    css : 'sel' +
+    css : @getCss() +
       (if @_disabled then ' disabled' else '')
     cssTrigger : @cssTrigger
     disabled : @_disabled

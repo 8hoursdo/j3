@@ -18,6 +18,8 @@ j3.Calendar = do ->
     @setCurrentDate clickedDate
 
   Calendar = j3.cls j3.View,
+    baseCss : 'cld'
+
     onInit : (options) ->
       options.firstDayOfWeek ?= 1
       @_firstDayOfWeek = options.firstDayOfWeek % 7
@@ -40,13 +42,13 @@ j3.Calendar = do ->
       return
 
     render : (buffer) ->
-      buffer.append '<div id="' + @id + '" class="cld">'
-      buffer.append '<div class="cld-top">'
-      buffer.append '<a class="cld-next-month"></a>'
-      buffer.append '<a class="cld-prev-month"></a>'
-      buffer.append '<div class="cld-cur-year-month"></div>'
+      buffer.append '<div id="' + @id + '" class="' + @getCss() + '">'
+      buffer.append '<div class="' + @baseCss + '-top">'
+      buffer.append '<a class="' + @baseCss + '-next-month"></a>'
+      buffer.append '<a class="' + @baseCss + '-prev-month"></a>'
+      buffer.append '<div class="' + @baseCss + '-cur-year-month"></div>'
       buffer.append '</div>'
-      buffer.append '<div class="cld-month-view">'
+      buffer.append '<div class="' + @baseCss + '-month-view">'
       @renderMonthView buffer
       buffer.append '</div>'
       buffer.append '</div>'
@@ -58,7 +60,7 @@ j3.Calendar = do ->
       # render names of week day
       for i in [0...7]
         dayOfWeek = (@_firstDayOfWeek + i) % 7
-        buffer.append '<th class="cld-weekday-"' + dayOfWeek + '>' + j3.Lang.dayNameAbb[dayOfWeek] + '</th>'
+        buffer.append '<th class="' + @baseCss + '-weekday-"' + dayOfWeek + '>' + j3.Lang.dayNameAbb[dayOfWeek] + '</th>'
       buffer.append '</tr>'
 
       # render days of month
@@ -75,9 +77,9 @@ j3.Calendar = do ->
           isCurDate = renderingDate.equals @_date
           buffer.append '<td class="'
           
-          buffer.append 'cld-weekday-' + renderingDate.getDayOfWeek()
+          buffer.append @baseCss + '-weekday-' + renderingDate.getDayOfWeek()
           if renderingDate.equals today
-            buffer.append ' cld-today'
+            buffer.append ' ' + @baseCss + '-today'
           if isCurDate
             buffer.append ' active'
           buffer.append '"><a>' + renderingDate.getDay() + '</a></td>'

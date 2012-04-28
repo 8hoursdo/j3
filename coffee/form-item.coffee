@@ -1,6 +1,8 @@
 do (j3) ->
   j3.FormItem = j3.cls j3.ContainerView,
-    templateBegin : j3.template '<div id="<%=id%>" class="form-item"><label class="form-label"><%=label%></label><div class="form-controls">'
+    baseCss : 'form-item'
+
+    templateBegin : j3.template '<div id="<%=id%>" class="<%=css%>"><label class="form-label"><%=label%></label><div class="form-controls">'
 
     templateEnd : j3.template '</div></div>'
 
@@ -10,6 +12,7 @@ do (j3) ->
     getViewData : ->
       id : @id
       label : @_label
+      css : @getCss()
 
 
   j3.TextboxFormItem = j3.cls j3.FormItem,

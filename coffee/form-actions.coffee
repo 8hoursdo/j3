@@ -3,7 +3,9 @@ do (j3) ->
     @_form.action sender.name, sender
 
   j3.FormActions = j3.cls j3.ContainerView,
-    templateBegin : j3.template '<div id="<%=id%>" class="form-actions">'
+    baseCss : 'form-actions'
+
+    templateBegin : j3.template '<div id="<%=id%>" class="<%=css%>">'
 
     templateEnd : j3.template '</div>'
 

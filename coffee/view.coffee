@@ -103,9 +103,15 @@ j3.View = do (j3) ->
       buffer.append @template data
       return
 
+    getCss : ->
+      if @css
+        @baseCss + ' ' + @css
+      else
+        @baseCss
+
     getViewData : ->
       id : @id
-      css : @css
+      css : @getCss()
 
     getChildren : ->
       if not @children then @children = new j3.List

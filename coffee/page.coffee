@@ -7,7 +7,7 @@ do (j3) ->
     _pages[id]
 
   j3.Page = j3.cls j3.ContainerView,
-    css : 'page'
+    baseCss : 'page'
 
     show : ->
       if _curPage then _curPage.show()

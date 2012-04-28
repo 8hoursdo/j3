@@ -1,13 +1,13 @@
 do (j3) ->
   j3.LinkList = j3.cls j3.View,
-    css : 'link-list'
+    baseCss : 'link-list'
 
     onInit : (options) ->
       @_linkTarget = options.linkTarget
       @setDatasource options.datasource
 
     onRender : (buffer) ->
-      buffer.append '<ul id="' + @id + '" class="' + @css + '">'
+      buffer.append '<ul id="' + @id + '" class="' + @getCss() + '">'
       @renderList buffer
       buffer.append '</ul>'
 
@@ -26,6 +26,10 @@ do (j3) ->
         url = model.get 'url'
         if url
           buffer.append ' href="' + url + '"'
+
+        title = model.get 'title'
+        if title
+          buffer.append ' title="' + j3.htmlEncode(title) + '"'
 
         target = @_linkTarget
         target = model.get 'target'

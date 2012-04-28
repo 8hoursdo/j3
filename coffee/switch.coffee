@@ -3,7 +3,7 @@ do (j3) ->
     @checked !@checked()
 
   j3.Switch = j3.cls j3.View,
-    css : 'swt'
+    baseCss : 'swt'
 
     template : j3.template '<div id="<%=id%>" class="<%=css%>"><a href="javascript:;"><span class="swt-on">YES</span><span class="swt-btn"></span><span class="swt-off">NO</span></a></div>'
 
@@ -13,8 +13,8 @@ do (j3) ->
 
     getViewData : ->
       id : @id
-      css : @css +
-        (if @_checked then ' ' +@css + '-checked' else '')
+      css : @getCss() +
+        (if @_checked then ' ' + @baseCss + '-checked' else '')
 
     onCreated : (options) ->
       j3.on @el, 'click', this, __switch_click
@@ -26,7 +26,7 @@ do (j3) ->
 
       if @_checked is !!checked then return
 
-      j3.Dom.toggleCls @el, @css + '-checked'
+      j3.Dom.toggleCls @el, @baseCss + '-checked'
       @_checked = !!checked
 
       @updateData()

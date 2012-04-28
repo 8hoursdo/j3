@@ -7,7 +7,9 @@ do (j3) ->
     return
 
   j3.Form = j3.cls j3.ContainerView,
-    templateBegin : j3.template '<form id="<%=id%>" class="form" method="<%=method%>" target="<%=target%>">'
+    baseCss : 'form'
+
+    templateBegin : j3.template '<form id="<%=id%>" class="<%=css%>" method="<%=method%>" target="<%=target%>">'
 
     templateEnd : j3.template '</form>'
 
@@ -18,6 +20,7 @@ do (j3) ->
 
     getViewData : ->
       id : @id
+      css : @getCss()
       method : @_method
       target : @_target
 

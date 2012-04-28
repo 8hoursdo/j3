@@ -14,14 +14,13 @@ do (j3) ->
     @fire 'click', sender, args
 
   j3.ButtonGroup = j3.cls j3.ContainerView,
-    css : 'btn-grp'
+    baseCss : 'btn-grp'
 
     onInit : (options) ->
       @_toggle = options.toggle
 
     onCreateChild : (options, args) ->
       options.cls = j3.Button
-      options.css = 'btn'
       if args.first then options.css += ' first'
       if args.last then options.css += ' last'
 
