@@ -33,6 +33,7 @@ task 'build', 'build j3 libarary', (options) ->
     'date-selector'
     'switch'
     'form'
+    'form-divider'
     'form-item'
     'form-actions'
     'navbar'

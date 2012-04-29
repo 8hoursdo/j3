@@ -11,6 +11,15 @@ do (j3) ->
 
     onInit : (options) ->
       @_form = options.form
+      @_form ?= options.parent
+      @_align = options.align
+
+    getTemplateData : ->
+      id : @id
+      css : @getCss() +
+        (if @_align is 'right' then ' ' + @baseCss + '-right' else '') +
+        (if @_align is 'left' then ' ' + @baseCss + '-left' else '') +
+        (if @_align is 'center' then ' ' + @baseCss + '-center' else '')
 
     onChildCreated : (child) ->
       child.on 'click', this, __actionButton_click

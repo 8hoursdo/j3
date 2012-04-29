@@ -221,6 +221,10 @@ j3.Dom = do ->
         break
 
       el = el.offsetParent
+      if el
+        cs = document.defaultView.getComputedStyle(el, null)
+        l += parseInt(cs.getPropertyValue 'border-left-width') || 0
+        t += parseInt(cs.getPropertyValue 'border-top-width') || 0
 
     if clientAbs
       de = document.documentElement

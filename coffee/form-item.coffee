@@ -4,10 +4,15 @@ do (j3) ->
 
     templateBegin : j3.template '<div id="<%=id%>" class="<%=css%>"><label class="form-label" for="<%=controlId%>"><%=label%></label><div class="form-controls">'
 
-    templateEnd : j3.template '</div></div>'
+    templateEnd : j3.template '<%if(helpText){%><span class="form-help"><%=helpText%><span><%}%></div></div>'
 
     onInit : (options) ->
       @_label = options.label
+      @_inline = options.inline
+      @_stacked = options.stacked
+      @_compact = options.compact
+      @_isFirst = options.isFirst
+      @_helpText = options.helpText
 
       if not options.controlId then options.controlId = j3.View.genId()
       @_controlId = options.controlId
@@ -15,8 +20,13 @@ do (j3) ->
     getTemplateData : ->
       id : @id
       label : @_label
-      css : @getCss()
+      css : @getCss() +
+        (if @_inline then ' ' + @baseCss + '-inline' else '') +
+        (if @_stacked then ' ' + @baseCss + '-stacked' else '') +
+        (if @_compact then ' ' + @baseCss + '-compact' else '') +
+        (if @_isFirst then ' ' + @baseCss + '-first' else '')
       controlId : @_controlId
+      helpText : @_helpText
 
 
   j3.TextboxFormItem = j3.cls j3.FormItem,
@@ -29,6 +39,7 @@ do (j3) ->
         name : options.name
         datasource : options.datasource
         fill : options.controlFill
+        width : options.controlWidth
         on : options.on
         parent : this
 
@@ -47,6 +58,7 @@ do (j3) ->
         name : options.name
         datasource : options.datasource
         fill : options.controlFill
+        width : options.controlWidth
         on : options.on
         parent : this
 
@@ -62,6 +74,7 @@ do (j3) ->
         id : options.controlId
         date : options.value
         fill : options.controlFill
+        width : options.controlWidth
         name : options.name
         datasource : options.datasource
         on : options.on

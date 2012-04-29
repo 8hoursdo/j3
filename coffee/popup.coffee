@@ -1,20 +1,37 @@
 do (j3) ->
-  _curPopup = null
+  _curPopups = {}
 
-  j3.regPopup = (obj) ->
-    if _curPopup then _curPopup.close()
+  __isInTarget = (target, x, y) ->
+    pos = j3.Dom.position target
+    width = j3.Dom.offsetWidth target
+    if x < pos.left || x > (pos.left + width)
+      return false
 
-    _curPopup = obj
+    height = j3.Dom.offsetHeight target
+    if y < pos.top || y > (pos.top + height)
+      return false
+
+    true
+    
+  j3.regPopup = (obj, name) ->
+    name ?= ''
+    curPopup = _curPopups[name]
+
+    if curPopup is obj then return
+
+    if curPopup then curPopup.close()
+
+    _curPopups[name] = obj
 
   j3.on window, 'mousedown', (evt) ->
-    if not _curPopup then return
+    pageX = evt.pageX()
+    pageY = evt.pageY()
+    for name, popup of _curPopups
+      if not popup then continue
 
-    src = evt.src()
-    el = _curPopup.el
-    while src
-      if el is src then return
-      src = src.parentNode
-
-    _curPopup.close()
-    _curPopup = null
-    
+      el = popup.el
+      popup.getPopupEl && el = popup.getPopupEl()
+      inside = __isInTarget el, pageX, pageY
+      if not inside
+        popup.close()
+        delete _curPopups[name]

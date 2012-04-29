@@ -1,7 +1,15 @@
 do (j3) ->
+  __renderListItems = (items, buffer) ->
+    items && items.forEach (item) =>
+      buffer.append '<li'
+      if item.value == @_selectedValue
+        buffer.append ' class="active"'
+      buffer.append '><a>' + item.text + '</a></li>'
+
   __elDrpList_click = (evt) ->
     @setSelectedIndex j3.Dom.indexOf j3.Dom.parent evt.src(), 'li'
     @close()
+    evt.stop()
 
   j3.DropdownList = j3.cls j3.Dropdown,
     _selectedIndex : -1
@@ -34,11 +42,7 @@ do (j3) ->
       buffer = new j3.StringBuilder
       buffer.append '<ul class="drp-list">'
 
-      @_items && @_items.forEach (item) =>
-        buffer.append '<li'
-        if item.value == @_selectedValue
-          buffer.append ' class="active"'
-        buffer.append '><a>' + item.text + '</a></li>'
+      __renderListItems.call this, @_items, buffer
 
       buffer.append '</ul>'
 
@@ -52,6 +56,10 @@ do (j3) ->
 
     setItems : (items) ->
       @_items = items
+      if @_elDrpList
+        buffer = new j3.StringBuilder
+        __renderListItems.call this, @_items, buffer
+        @_elDrpList.innerHTML = buffer.toString()
 
     getSelectedValue : ->
       @_selectedValue
