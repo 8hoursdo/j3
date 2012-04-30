@@ -5,6 +5,7 @@ j3.Selector = j3.cls j3.View,
 
   onInit : (options) ->
     @_disabled = !!options.disabled
+    @_placeholder = options.placeholder || ''
 
   onCreated : () ->
     @_elLabel = j3.Dom.byIndex @el, 0

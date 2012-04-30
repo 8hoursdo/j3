@@ -9,9 +9,10 @@ do (j3) ->
       @_data.hasOwnProperty name
 
     getData : ->
-      data = {}
-      if @_data then j3.ext data, @_data
-      data
+      if @_data
+        j3.clone @_data
+      else
+        {}
 
     get : (name) ->
       @_data[name]

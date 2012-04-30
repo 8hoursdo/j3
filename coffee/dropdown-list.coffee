@@ -12,7 +12,7 @@ do (j3) ->
     evt.stop()
 
   j3.DropdownList = j3.cls j3.Dropdown,
-    _selectedIndex : -1
+    _selectedIndex : null
 
     onInit : (options) ->
       j3.DropdownList.base().onInit.call this, options
@@ -80,7 +80,7 @@ do (j3) ->
       @_selectedIndex
 
     setSelectedIndex : (index) ->
-      if index < 0 && index >= @_items.count() then return
+      if index < -1 or index >= @_items.count() then index == -1
 
       oldIndex = @_selectedIndex
       if oldIndex == index then return
@@ -92,16 +92,26 @@ do (j3) ->
         if index isnt -1
           Dom.addCls Dom.byIndex(@_elDrpList, index), 'active'
 
-      item = @_items.getAt index
+      selectedText = ''
+      selectedValue = null
+      emptyCls = @baseCss + '-empty'
+      if index is -1
+        Dom.addCls @el, emptyCls
+        @setLabel @_placeholder
+      else
+        Dom.removeCls @el, emptyCls
+        item = @_items.getAt index
+        selectedText = item.text
+        selectedValue = item.value
 
-      @setLabel item.text
-      @setText item.text
+        @setLabel selectedText
+        @setText selectedText
 
       oldSelectedValue = @_selectedValue
       oldSelectedIndex = @_selectedIndex
 
       @_selectedIndex = index
-      @_selectedValue = item.value
+      @_selectedValue = selectedValue
 
       @updateData()
 

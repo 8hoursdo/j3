@@ -1,12 +1,29 @@
 do (j3) ->
   __textbox_focus = ->
+    @_updatingView = true
+    @el.value = @_text
+    j3.Dom.removeCls @el, @baseCss + '-empty'
+    @_updatingView = false
+
     @fire 'focus', this
 
   __textbox_blur = ->
+    @_updatingView = true
+    if not @_text
+      @el.value = @_placeholder
+      j3.Dom.addCls @el, @baseCss + '-empty'
+    @_updatingView = false
+
     @fire 'blur', this
 
   __textbox_change = ->
-    @setText @el.value
+    if @_updatingView then return
+    text = @el.value
+    if @_text == text then return
+    @_text = text
+    j3.Dom.removeCls @el, @baseCss + '-empty'
+    @updateData()
+    @fire 'change', this
 
   j3.Textbox = j3.cls j3.View,
     baseCss : 'input'
@@ -21,12 +38,14 @@ do (j3) ->
       @_readonly = !!options.readonly
       @_type = options.type || 'text'
       @_multiline = @_type == 'text' && !!options.multiline
+      @_placeholder = options.placeholder || ''
 
     getTemplateData : ->
       id : @id
       css : @getCss() +
-        (if @_disabled then ' disabled' else '')
-      text : @_text
+        (if @_disabled then ' disabled' else '') +
+        (if !@_text then ' ' + @baseCss + '-empty')
+      text : @_text || @_placeholder
       disabled : @_disabled
       readonly : @_readonly
       type : @_type
@@ -58,7 +77,15 @@ do (j3) ->
       if @_text == text then return
 
       @_text = text
-      @el.value = @_text
+
+      @_updatingView = true
+      if not @_text
+        @el.value = @_placeholder
+        j3.Dom.addCls @el, @baseCss + '-empty'
+      else
+        @el.value = @_text
+        j3.Dom.removeCls @el, @baseCss + '-empty'
+      @_updatingView = false
 
       @updateData()
 

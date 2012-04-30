@@ -36,6 +36,7 @@ do (j3) ->
         text : options.value
         multiline : options.multiline
         type : options.type
+        placeholder : options.placeholder
         name : options.name
         datasource : options.datasource
         fill : options.controlFill
@@ -55,6 +56,7 @@ do (j3) ->
         id : options.controlId
         items : options.items
         value : options.value
+        placeholder : options.placeholder
         name : options.name
         datasource : options.datasource
         fill : options.controlFill
@@ -75,6 +77,7 @@ do (j3) ->
         date : options.value
         fill : options.controlFill
         width : options.controlWidth
+        placeholder : options.placeholder
         name : options.name
         datasource : options.datasource
         on : options.on
