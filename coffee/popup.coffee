@@ -1,17 +1,11 @@
 do (j3) ->
   _curPopups = {}
 
-  __isInTarget = (target, x, y) ->
-    pos = j3.Dom.position target
-    width = j3.Dom.offsetWidth target
-    if x < pos.left || x > (pos.left + width)
-      return false
-
-    height = j3.Dom.offsetHeight target
-    if y < pos.top || y > (pos.top + height)
-      return false
-
-    true
+  __isChildElement = (parent, child) ->
+    while child
+      if child is parent then return true
+      child = child.parentNode
+    false
     
   j3.regPopup = (obj, name) ->
     name ?= ''
@@ -23,15 +17,18 @@ do (j3) ->
 
     _curPopups[name] = obj
 
+  j3.unregPopup = (obj, name) ->
+    name ?= ''
+    curPopup = _curPopups[name]
+    if curPopup is obj
+      delete _curPopups[name]
+
   j3.on window, 'mousedown', (evt) ->
-    pageX = evt.pageX()
-    pageY = evt.pageY()
+    src = evt.src()
     for name, popup of _curPopups
       if not popup then continue
 
-      el = popup.el
-      popup.getPopupEl && el = popup.getPopupEl()
-      inside = __isInTarget el, pageX, pageY
+      inside = __isChildElement popup.el, src
       if not inside
         popup.close()
         delete _curPopups[name]

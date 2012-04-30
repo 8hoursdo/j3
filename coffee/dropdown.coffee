@@ -23,7 +23,7 @@ j3.Dropdown = j3.cls j3.Selector,
       elBox.className = 'drp-box'
 
       @_elDropdownBox = elBox
-      Dom.append document.body, elBox
+      Dom.append @el, elBox
       @onCreateDropdownBox @_elDropdownBox
 
     @fire 'beforeDropdown', this, firstTime:firstTime
@@ -49,8 +49,8 @@ j3.Dropdown = j3.cls j3.Selector,
         Dom.offsetWidth @_elDropdownBox, widthEl
 
     @_elDropdownBox.style.height = ''
-    maxHeight = 28 * 15
-    minHeight = 28 * 8
+    maxHeight = 28 * 10
+    minHeight = 28 * 5
     wndHeight = Dom.clientHeight()
     scrollTop = document.body.scrollTop
     spaceTop = posEl.top - 2 - scrollTop
@@ -83,9 +83,6 @@ j3.Dropdown = j3.cls j3.Selector,
     @fire 'dropdown', this, firstTime:firstTime
     @_isDropdown = true
     return
-
-  getPopupEl : ->
-    @_elDropdownBox
 
   close : ->
     j3.Dom.removeCls @el, 'sel-active'
