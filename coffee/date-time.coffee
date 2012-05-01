@@ -80,6 +80,9 @@ j3.DateTime = do ->
     addMinute : (minutes) ->
       new DateTime @_value.getTime() + _MINUTE * minutes
 
+    addSecond : (seconds) ->
+      new DateTime @_value.getTime() + _SECOND * seconds
+
     toString : (format) ->
       format ?= _FORMAT_LOACL
       DateTime.format @_value, format
