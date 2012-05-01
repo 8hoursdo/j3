@@ -1,4 +1,6 @@
 do (j3) ->
+  if j3.isRunInServer() then return
+
   _curPopups = {}
 
   __isChildElement = (parent, child) ->

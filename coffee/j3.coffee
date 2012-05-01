@@ -4,14 +4,14 @@ j3 = ->
   j3.$.apply this, arguments
 
 if typeof exports isnt 'undefined'
-  if typeof module isnt 'undefined' and module.exports
-    exports = module.exports = j3
+  if typeof module isnt 'undefined'
+    module.exports = j3
   else
     exports.j3 = j3
 else
   root.j3 = j3
 
-j3.version = '0.0.1'
+j3.version = '0.0.2'
 
 j3.isRunInServer = ->
   j3.UA.name is 'server'

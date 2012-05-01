@@ -1,6 +1,6 @@
 task 'build', 'build j3 libarary', (options) ->
   coffeeDir = __dirname + '/coffee'
-  outputDir = __dirname + '/j3'
+  outputDir = __dirname + '/lib'
   coffeeFiles = [
     'j3'
     'oo'

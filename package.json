@@ -1,7 +1,7 @@
 {
   "name": "j3",
   "description": "An Useful Javascript Library for Building Website.",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "author": "Fossil Jue <imzshh@gmail.com>",
   "repository": {"type": "git", "url": "git://github.com/imzshh/j3.git"},
   "dependencies": {
@@ -9,7 +9,7 @@
   "devDependencies": {
     "coffee-script": ">= 0.0.1"
   },
-  "main": "./j3/js/j3.js",
+  "main": "./lib/js/j3.js",
   "contributors": [
     "Fossil Jue <imzshh@gmail.com>"
   ]
