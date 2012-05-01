@@ -37,7 +37,7 @@ j3.Selector = j3.cls j3.View,
 
   onSetWidth : (width) ->
     Dom = j3.Dom
-    widthLabel = Dom.offsetWidth @_elLabel
-    widthCur = Dom.offsetWidth @el
-    Dom.offsetWidth @_elLabel, widthLabel + width - widthCur
+    Dom.offsetWidth @el, width
+    widthLabel = Dom.width(@el) - Dom.offsetWidth(@_elTrigger)
+    Dom.offsetWidth @_elLabel, widthLabel
 
