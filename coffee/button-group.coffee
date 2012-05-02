@@ -1,6 +1,9 @@
 do (j3) ->
   _activeButton = null
 
+  __childButton_active = (sender, args) ->
+    @fire 'active', sender, args
+
   __childButton_click = (sender, args) ->
     if @_toggle is 'radio'
       if sender is _activeButton then return
@@ -29,3 +32,10 @@ do (j3) ->
 
     onChildCreated : (child) ->
       child.on 'click', this, __childButton_click
+      child.on 'active', this, __childButton_active
+
+    setActiveButtonByName : (name) ->
+      @getChildren().forEach (btn) ->
+        active = btn.name is name
+        btn.setActive active
+        if active then _activeButton = btn

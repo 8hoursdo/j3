@@ -25,10 +25,7 @@ j3.Button = j3.cls j3.View,
     disabled : @_disabled
 
   onCreated : ->
-    j3.on @el, 'click', this, ->
-      if @_toggle
-        @setActive not @getActive()
-      @fire 'click', this
+    j3.on @el, 'click', this, @click
 
   getText : ->
     @_text
@@ -57,6 +54,14 @@ j3.Button = j3.cls j3.View,
       j3.Dom.addCls @el, 'active'
     else
       j3.Dom.removeCls @el, 'active'
+
+    @fire (if @_active then 'active' else 'inactive'), this, active : @_active
+
+  click : ->
+    if @_toggle
+      @setActive not @getActive()
+    @fire 'click', this
+    
 
 
 
