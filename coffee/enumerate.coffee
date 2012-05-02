@@ -5,3 +5,15 @@ do (j3) ->
       if eachItem is item then index = _i
 
     index
+
+  j3.group = (list, grouper) ->
+    groups = {}
+    for eachItem in list
+      groupName = grouper(eachItem)
+
+      subList = groups[groupName]
+      if not subList then groups[groupName] = subList = []
+
+      subList.push eachItem
+    groups
+        
