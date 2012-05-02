@@ -7,9 +7,11 @@ j3.DateTime = do ->
   _monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 
   # parse date time like this: 2008-12-31 18:08:08
-  _regParse1 = /^(\d{4})-(\d{1,2})-(\d{1,2})(?: (\d{1,2}):(\d{1,2}):(\d{1,2})(?::(\d{1,3}))?)?$/
+  _regParse1 = /^(\d{4})-(\d{1,2})-(\d{1,2})(?: (\d{1,2}):(\d{1,2}):(\d{1,2})(?:.(\d{1,3}))?)?$/
   # parse date time like this: 12/31/2008 18:08:08
-  _regParse2 = /^(\d{1,2})\/(\d{1,2})\/(\d{4})(?: (\d{1,2}):(\d{1,2}):(\d{1,2})(?::(\d{1,3}))?)?$/
+  _regParse2 = /^(\d{1,2})\/(\d{1,2})\/(\d{4})(?: (\d{1,2}):(\d{1,2}):(\d{1,2})(?:.(\d{1,3}))?)?$/
+  # parse date time like this: 2008-12-31T18:08:08.000Z
+  _regParseUTC = /^(\d{4})-(\d{1,2})-(\d{1,2})(?:T(\d{1,2}):(\d{1,2}):(\d{1,2})(?:.(\d{1,3}))?)?Z$/
 
   _FORMAT_LOACL = 'yyyy-MM-dd HH:mm:ss'
   _FORMAT_UTC = 'yyyy-MM-ddTHH:mm:ssZ'
@@ -101,6 +103,9 @@ j3.DateTime = do ->
     getValue : ->
       new Date @_value.getTime()
 
+    getTime : ->
+      @_value.getTime()
+
     equals : (dateTime) ->
       if !dateTime then return false
       @_value.getTime() is dateTime._value.getTime()
@@ -122,7 +127,7 @@ j3.DateTime = do ->
         minutes = minutes || 0
         seconds = seconds || 0
         ms = ms || 0
-        time = Date.UTC(year, (month - 1), date, hours, minutes, seconds, ms).getTime()
+        time = Date.UTC(year, (month - 1), date, hours, minutes, seconds, ms)
       new DateTime time
 
     format : (value, format, isUTC) ->
@@ -170,6 +175,17 @@ j3.DateTime = do ->
       @format value, format, true
 
     parse : (str) ->
+      res = _regParseUTC.exec str
+      if res
+        # UTC String
+        return DateTime.UTC parseInt(res[1], 10)
+          , parseInt(res[2], 10)
+          , parseInt(res[3], 10)
+          , parseInt(res[4], 10)
+          , parseInt(res[5], 10)
+          , parseInt(res[6], 10)
+          , parseInt(res[7], 10)
+
       res = _regParse1.exec str
       if res
         return new DateTime parseInt(res[1], 10)
@@ -192,6 +208,10 @@ j3.DateTime = do ->
       
       return null
 
+    convertFromJson : (obj, attrs...) ->
+      for attr in attrs
+        obj[attr] = j3.DateTime.parse obj[attr]
+
     now : ->
       new DateTime
 
@@ -201,5 +221,15 @@ j3.DateTime = do ->
     equals : (dateTime1, dateTime2) ->
       if dateTime1 then return dateTime1.equals dateTime2
       return !dateTime2
+
+    lt : (dateTime1, dateTime2) ->
+      t1 = if dateTime1 then dateTime1.getTime() else 0
+      t2 = if dateTime2 then dateTime2.getTime() else 0
+      t1 < t2
+
+    gt : (dateTime1, dateTime2) ->
+      t1 = if dateTime1 then dateTime1.getTime() else 0
+      t2 = if dateTime2 then dateTime2.getTime() else 0
+      t1 > t2
 
   DateTime
