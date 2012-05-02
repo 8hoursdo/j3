@@ -6,11 +6,16 @@ j3.EventManager =
 
     if arguments.length == 1
       handlers = name
-      for handlerName of handlers
+      for handlerName, handler of handlers
         handlerList = @_eventHandlers[handlerName]
+        if j3.isArray handler
+          context = handler[0]
+          handler = handler[1]
+        else
+          context = null
         if not handlerList
           @_eventHandlers[handlerName] = handlerList = new j3.List
-        handlerList.insert handler : handlers[handlerName], context : null
+        handlerList.insert handler : handler, context : context
     else
       if arguments.length == 2
         handler = context
