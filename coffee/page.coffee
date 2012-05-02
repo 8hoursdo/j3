@@ -13,4 +13,10 @@ do (j3) ->
       if _curPage then _curPage.show()
       j3.Page.base().show.apply this, arguments
       _curPage = this
+
+      @refresh()
+
       return
+
+    refresh : ->
+      @onRefresh?()
