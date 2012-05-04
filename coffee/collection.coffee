@@ -6,33 +6,48 @@ do (j3) ->
 
   j3.Collection = j3.cls
     ctor : (options) ->
-      options = options || {}
+      options ?= {}
+
+      @_idName = options.idName || 'id'
 
       if options.id then _collections[options.id] = @
+
+      @_idxId = {}
       @_model = options.model || j3.Model
       @_models = new j3.List
       return
     
     insert : (data, options) ->
-      options = options || {}
+      options ?= {}
 
       if data instanceof @_model
         model = data
       else
         model = new @_model data
 
+      id = model.get @_idName
+      if id
+        @_idxId[id] = model
+
       model.collection = this
       @_models.insert model
 
       if not options.silent
-        @updateViews()
+        @updateViews 'add', model : model
+
+    remove : (model, options) ->
+      options ?= {}
+
+      @_models.remove model
+      @updateViews 'remove', model : model
 
     clear : (options) ->
-      options = options || {}
+      options ?= {}
 
+      @_idxId = {}
       @_models.clear()
       if not options.silent
-        @updateViews()
+        @updateViews 'refresh'
 
     loadData : (dataList, options) ->
       options = options || {}
@@ -47,7 +62,7 @@ do (j3) ->
         @setActive @_models.getAt options.activeIndex
 
       if not silent
-        @updateViews()
+        @updateViews 'refresh'
 
     getActive : ->
       @_activeModel
@@ -61,7 +76,10 @@ do (j3) ->
       @_activeModel = model
 
       if not options.silent
-        @fire 'active', this, old : old, cur : model
+        @updateViews 'active', old : old, cur : model
+
+    getById : (id) ->
+      @_idxId[id]
 
     forEach : (context, args, callback) ->
       @_models.forEach context, args, callback

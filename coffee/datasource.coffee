@@ -1,30 +1,43 @@
-j3.Datasource =
-  bind : (view) ->
-    if not view then return
+do (j3) ->
+  ViewInfo = (view, handler) ->
+    @view = view
+    @handler = handler
+  ViewInfo.prototype.equals = (obj) ->
+    @view is obj.view and @handler is obj.handler
 
-    if not @_views then @_views = new j3.List
+  j3.Datasource =
+    bind : (view, handler) ->
+      if not view then return
 
-    if @_views.contains view then return
+      if not @_views then @_views = new j3.List
 
-    @_views.insert view
+      viewInfo = new ViewInfo view, handler
+      if @_views.contains viewInfo then return
 
-    view.updateView @
+      @_views.insert viewInfo
 
-  unbind : (view) ->
-    if not view then return
+      handler ?= view.updateView
+      handler.call view, @, 'refresh'
 
-    if not @_views then return
+    unbind : (view, handler) ->
+      if not view then return
 
-    if not @_views.contains view then return
+      if not @_views then return
 
-    @_views.remove view
+      viewInfo = new ViewInfo view, handler
+      if not @_views.contains viewInfo then return
 
-  updateViews : ->
-    if not @_views then return
+      @_views.remove viewInfo
 
-    node = @_views.firstNode()
-    while node
-      node.value.updateView @
-      node = node.next
+    updateViews : (eventName, args) ->
+      if not @_views then return
 
-    return
+      node = @_views.firstNode()
+      while node
+        viewInfo = node.value
+        view = viewInfo.view
+        handler = viewInfo.handler || view.updateView
+        handler.call view, @, eventName, args
+        node = node.next
+
+      return

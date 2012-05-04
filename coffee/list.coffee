@@ -91,7 +91,12 @@ j3.List = j3.cls
   findNode : (value) ->
     node = @_first
 
-    if value && value.equals
+    if j3.isFunction value
+      while node
+        if value node.value
+          return node
+        node = node.next
+    else if value && value.equals
       while node
         if value.equals node.value
           return node
