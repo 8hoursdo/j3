@@ -55,6 +55,12 @@ j3.View = do (j3) ->
       # parent view of this view.
       @parent = options.parent
 
+      # page of the view.
+      # send messages to the page if you want notify status changing of the view.
+      # @page.fire 'message', this, name : 'msgName', data : 'msgData'
+      # handle the 'message' event of the page in the 'onCreated' method if you are instrested at the status changing of other views.
+      @page = options.page || (@parent && @parent.page) || @parent || null
+
       # container of this view, it should be a dom element
       @ctnr = j3.$ options.ctnr
       if not @ctnr then @ctnr = document.body
