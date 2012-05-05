@@ -14,8 +14,11 @@ do (j3) ->
       else
         {}
 
-    get : (name) ->
-      @_data[name]
+    get : (name, defaultVal) ->
+      if @_data.hasOwnProperty name
+        @_data[name]
+      else
+        defaultVal
 
     set : (name, value, options) ->
       @_data ?= {}
@@ -41,11 +44,14 @@ do (j3) ->
           changedData[name] = value
           @_data[name] = value
 
-      @updateViews()
-
-      @fire 'change', this,
+      args =
         changedData : changedData
         source : options.source
+        model : this
+
+      @updateViews 'change', args
+
+      if @collection then @collection.updateViews 'change', args
 
     toJson : (buffer) ->
       j3.toJson @_data, buffer

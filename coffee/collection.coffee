@@ -8,6 +8,10 @@ do (j3) ->
     ctor : (options) ->
       options ?= {}
 
+      if options.id
+        @id = options.id
+        _collections[@id] = this
+
       @_idName = options.idName || 'id'
 
       if options.id then _collections[options.id] = @
