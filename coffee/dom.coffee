@@ -113,6 +113,13 @@ j3.Dom = do ->
     firstChild : (el) ->
       @byIndex el, 0
 
+    lastChild : (el) ->
+      el = el.lastChild
+      while el
+        if el.nodeType == 1 then return el
+        el = el.previousSibling
+      return null
+
     next : (el) ->
       if !el then return null
 
