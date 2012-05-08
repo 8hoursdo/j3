@@ -52,7 +52,7 @@ j3.Lang =
   day :               "{0}天"
   days :              "{0}天"
   minuteSecond :      "{0}分{1}秒"
-  hourMinute :        "{0}小时{1}分钟"
+  hourMinute :        "{0}小时{1}分"
   dayHour :           "{0}天{1}小时"
 
   # Calendar

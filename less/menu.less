@@ -1,0 +1,45 @@
+.menu {
+  position: absolute;
+  left: 0;
+  top: 0;
+  float: left;
+  border: 1px solid @menuBorderColor;
+  background: @menuBgColor;
+}
+
+.menu-items {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.menu-item {
+  line-height: @menuItemHeight;
+
+  a {
+    display: block;
+    padding: 0 30px 0 5px;
+    text-decoration: none;
+    font-size: 12px;
+    color: @menuTextColor;
+    cursor: pointer;
+
+    i {
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+    }
+
+    &:hover {
+      color: @menuHoverTextColor;
+      background: @menuHoverBgColor;
+    }
+  }
+}
+
+.menu-divider {
+  border-top: 1px solid @menuDividerColor;
+  height: 0;
+  line-height: 0;
+  margin: (@menuDividerHeight / 2) 0
+}
