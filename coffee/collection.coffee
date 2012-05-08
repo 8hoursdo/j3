@@ -43,7 +43,12 @@ do (j3) ->
       options ?= {}
 
       @_models.remove model
+      delete @_idxId[model.get @_idName]
       @updateViews 'remove', model : model
+
+    removeById : (id, options) ->
+      model = @getById id
+      if model then @remove model, options
 
     clear : (options) ->
       options ?= {}
