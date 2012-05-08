@@ -1,4 +1,4 @@
-j3.DateTime = do ->
+do (j3) ->
   _SECOND =  1000
   _MINUTE =  60000
   _HOUR =    3600000
@@ -232,4 +232,41 @@ j3.DateTime = do ->
       t2 = if dateTime2 then dateTime2.getTime() else 0
       t1 > t2
 
-  DateTime
+  j3.DateTime = DateTime
+
+  TimeSpan =
+    format : (span) ->
+      if span < _MINUTE
+        seconds = Math.floor span / _SECOND
+        return j3.format j3.Lang.seconds, seconds
+      else if span < _HOUR
+        minutes = Math.floor span / _MINUTE
+        if minutes == 1
+          formatStr = j3.Lang.minute
+        else
+          formatStr = j3.Lang.minutes
+        return j3.format formatStr, minutes
+      else if span < _DAY
+        hours = Math.floor span / _HOUR
+        minutes = Math.floor (span - (hours * _HOUR)) / _MINUTE
+        if minutes == 0
+          if hours == 1
+            formatStr = j3.Lang.hour
+          else
+            formatStr = j3.Lang.hours
+        else
+          formatStr = j3.Lang.hourMinute
+        return j3.format formatStr, hours, minutes
+      else
+        days = Math.floor span / _DAY
+        hours = Math.floor (span - (hours * _DAY)) / _HOUR
+        if hours == 0
+          if days == 1
+            formatStr = j3.Lang.day
+          else
+            formatStr = j3.Lang.days
+        else
+          formatStr = j3.Lang.dayHour
+        return j3.format formatStr, days, hours
+
+  j3.TimeSpan = TimeSpan

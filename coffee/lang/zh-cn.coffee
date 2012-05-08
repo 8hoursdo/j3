@@ -42,6 +42,19 @@ j3.Lang =
   shortTimeFormat :		"HH:mm"
   longTimeFormat :		"HH:mm:ss"
 
+  # Time Span Format
+  second :            "{0}秒"
+  seconds :           "{0}秒"
+  minute :            "{0}分钟"
+  minutes :           "{0}分钟"
+  hour :              "{0}小时"
+  hours :             "{0}小时"
+  day :               "{0}天"
+  days :              "{0}天"
+  minuteSecond :      "{0}分{1}秒"
+  hourMinute :        "{0}小时{1}分钟"
+  dayHour :           "{0}天{1}小时"
+
   # Calendar
   datePickerBtnClear : "清空"
   datePickerBtnToday : "今天"
