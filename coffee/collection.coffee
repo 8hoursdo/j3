@@ -90,9 +90,10 @@ do (j3) ->
     getById : (id) ->
       @_idxId[id]
 
+    getAt : (index) ->
+      @_models.getAt index
+
     forEach : (context, args, callback) ->
       @_models.forEach context, args, callback
-      
 
-  j3.ext j3.Collection.prototype, j3.EventManager
   j3.ext j3.Collection.prototype, j3.Datasource

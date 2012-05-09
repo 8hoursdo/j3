@@ -1,10 +1,32 @@
 do (j3) ->
+  __hElClick = (evt) ->
+    if not @_commandMode then return
+
+    el = evt.src()
+    while el and el isnt @el
+      if el.tagName is 'A'
+        cmd = el.attributes['data-cmd']
+        if cmd
+          cmd = cmd.nodeValue
+          data = el.attributes['data-data']
+          if data then data = data.nodeValue
+
+          evt.stop()
+          @fire 'command', this, src : el, name : cmd, data : data
+          return
+      el = el.parentNode
+
   j3.LinkList = j3.cls j3.View,
     baseCss : 'link-list'
 
     onInit : (options) ->
       @_linkTarget = options.linkTarget
+      @_commandMode = options.commandMode
       @setDatasource options.datasource
+
+    onCreated : (options) ->
+      if @_commandMode
+        j3.on @el, 'click', this, __hElClick
 
     onRender : (buffer) ->
       buffer.append '<ul id="' + @id + '" class="' + @getCss() + '">'
@@ -36,6 +58,15 @@ do (j3) ->
         if not target then target = @_linkTarget
         if target
           buffer.append ' target="' + @_linkTarget + '"'
+
+        if @_commandMode
+          cmd = model.get 'cmd'
+          if cmd
+            buffer.append ' data-cmd="' + cmd + '"'
+
+          data = model.get 'data'
+          if data
+            buffer.append ' data-data="' + data + '"'
 
         buffer.append '>'
         buffer.append model.get 'text'

@@ -145,6 +145,9 @@ j3.List = j3.cls
     sb.append ']'
     return
 
+  # forEach(callback)
+  # forEach(context, callback)
+  # forEach(context, args, callback)
   forEach : (context, args, callback) ->
     if !args && !callback
       callback = context

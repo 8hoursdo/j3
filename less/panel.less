@@ -1,6 +1,6 @@
 .pnl {
   border: 1px solid @panelBorderColor;
-  .border-radius(3px);
+  .border-radius(5px);
   background-color: @panelBgColor;
   color: @panelTextColor;
 
@@ -9,6 +9,59 @@
     color: @panelHeaderTextColor;
 
     border-top: 1px solid #fff;
-    border-bottom: 1px solid darken(@panelHeaderBgColor, 20%);
+    border-bottom: 1px solid @panelBorderColor;
+
+    font-size: 12px;
+    line-height: 27px;
+    padding: 0 0 0 5px;
+    height: 27px;
+  }
+
+  .pnl-body {
+    border-top: 1px solid #fff;
+  }
+}
+
+.list-pnl {
+  .link-list {
+    padding: 5px 0;
+  }
+
+  .link-list li a {
+    color: @panelTextColor;
+    font-size: 12px;
+    line-height: 26px;
+    padding: 0 0 0 5px;
+
+    &:hover {
+      text-decoration: none;
+      background: #ededed;
+    }
+  }
+
+  .link-list li.active a {
+    background-color: @activeColor;
+    color: #fff;
+  }
+}
+
+.pnl-group {
+  border: 1px solid @panelBorderColor;
+  .border-radius(5px);
+  background-color: @panelBgColor;
+
+  .pnl {
+    border-width: 1px 0 0;
+    .border-radius(0);
+    background-color: transparent;
+  }
+
+  .pnl-first {
+    border: none;
+    .border-radius(5px 5px 0 0);
+
+    .pnl-header {
+      .border-radius(5px 5px 0 0);
+    }
   }
 }

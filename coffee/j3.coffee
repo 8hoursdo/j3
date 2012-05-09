@@ -82,6 +82,26 @@ j3.equals = (obj1, obj2) ->
 
   return false
 
+j3.compare = (obj1, obj2) ->
+  if @isObject obj1
+    if @isFunction obj1.compare
+      return obj1.compare obj2
+    else if not @isObject obj2
+      return 1
+
+  if @isObject obj2
+    if @isFunction obj2.compare
+      return obj2.compare obj1
+    else if not @isObject obj1
+      return -1
+
+  if obj1 is obj2
+    return 0
+  else if obj1 > obj2
+    return 1
+  else
+    return -1
+
 j3.$ = (id) ->
   if typeof id is 'string'
     return document.getElementById id
