@@ -105,8 +105,13 @@ j3.View = do (j3) ->
       return
 
     render : (buffer) ->
+      ret = not buffer
+      if ret
+        buffer = new j3.StringBuilder
       @onRender buffer, @getTemplateData()
-      return
+
+      if ret
+        buffer.toString()
 
     onRender : (buffer, data) ->
       buffer.append @template data
@@ -121,6 +126,7 @@ j3.View = do (j3) ->
     getTemplateData : ->
       id : @id
       css : @getCss()
+      view : @
 
     getChildren : ->
       if not @children then @children = new j3.List
