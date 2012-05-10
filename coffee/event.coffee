@@ -3,6 +3,10 @@ do (j3) ->
 
   Event = (@event) ->
 
+  j3.ext Event.prototype,
+    keyCode : ->
+      @event.keyCode
+
   if j3.UA.ie
     j3.ext Event.prototype,
       src : ->

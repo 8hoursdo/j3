@@ -16,6 +16,10 @@ do (j3) ->
 
     @fire 'blur', this
 
+  __textbox_keyup = (evt) ->
+    __textbox_change.call this
+    @fire 'keyup', this, keyCode : evt.keyCode()
+
   __textbox_change = ->
     if @_updatingView then return
     text = @el.value
@@ -61,7 +65,7 @@ do (j3) ->
 
       j3.on @el, 'blur', this, __textbox_blur
 
-      j3.on @el, 'keyup', this, __textbox_change
+      j3.on @el, 'keyup', this, __textbox_keyup
 
       j3.on @el, 'change', this, __textbox_change
 
@@ -105,6 +109,12 @@ do (j3) ->
     setReadonly : (value) ->
       @_readonly = !!value
       @el.readonly = @_readonly
+
+    focus : ->
+      @el.focus()
+
+    blur : ->
+      @el.blur()
 
     onUpdateData : ->
       @_datasource.set @name, @_text
