@@ -14,8 +14,32 @@ do (j3) ->
   __sorter = (sortBy) ->
     if j3.isFunction sortBy then return sortBy
 
+    if j3.isString sortBy then sortBy = [sortBy]
+
+    sortRules = []
+    for eachSortBy in sortBy
+      sortInfo = eachSortBy.split ' '
+
+      sortRule =
+        name : sortInfo[0]
+
+      if sortInfo.length > 1
+        for info in sortInfo.slice 1
+          if info is 'desc'
+            sortRule.desc = true
+          else if info is 'nullGreat'
+            sortRule.nullGreat = true
+
+      sortRules.push sortRule
+    
     return (obj1, obj2) ->
-      j3.compare obj1[sortBy], obj2[sortBy]
+      res = 0
+      for eachRule in sortRules
+        res = j3.compare obj1[eachRule.name], obj2[eachRule.name], eachRule.nullGreat
+        if eachRule.desc then res *= -1
+        
+        if res isnt 0 then return res
+      0
 
   j3.CollectionView = j3.cls
     ctor : (options) ->

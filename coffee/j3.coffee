@@ -37,6 +37,9 @@ j3.isObject = (obj) ->
 j3.isNull = (obj) ->
   obj is null
 
+j3.isNullOrUndefined = (obj) ->
+  @isNull(obj) or @isUndefined(obj)
+
 toString = Object.prototype.toString
 
 j3.isDate = (obj) ->
@@ -44,6 +47,9 @@ j3.isDate = (obj) ->
 
 j3.isArray = (obj) ->
   '[object Array]' is toString.call obj
+
+j3.isDateTime = (obj) ->
+  obj instanceof j3.DateTime
 
 
 j3.clone = (obj) ->
@@ -82,7 +88,21 @@ j3.equals = (obj1, obj2) ->
 
   return false
 
-j3.compare = (obj1, obj2) ->
+j3.compare = (obj1, obj2, nullGreat) ->
+  # deal null value
+  if @isNullOrUndefined obj1
+    if @isNullOrUndefined obj2 then return 0
+    if nullGreat then return 1 else return -1
+  else if @isNullOrUndefined obj2
+    if nullGreat then return -1 else return 1
+
+  # deal date time
+  if @isDateTime(obj1) or @isDate(obj1)
+    obj1 = obj1.getTime()
+  if @isDateTime(obj2) or @isDate(obj2)
+    obj2 = obj2.getTime()
+
+  # deal object with compare
   if @isObject obj1
     if @isFunction obj1.compare
       return obj1.compare obj2
