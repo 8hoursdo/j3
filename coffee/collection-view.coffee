@@ -41,6 +41,58 @@ do (j3) ->
         if res isnt 0 then return res
       0
 
+  __grouper = (groupBy) ->
+    if j3.isFunction groupBy then return groupBy
+
+    if j3.isString groupBy
+      return (obj) -> value : obj[groupBy]
+
+    if j3.isObject groupBy
+      if not groupBy.text
+        groupText = null
+      else if j3.isFunction groupBy.text
+        groupText = groupBy.text
+      else
+        textName = groupBy.text
+        groupText = (obj) -> obj[textName]
+
+      if not groupBy.value
+        groupValue = null
+      else if j3.isFunction groupBy.value
+        groupValue = groupBy.value
+      else
+        valueName = groupBy.value
+        groupValue = (obj) -> obj[valueName]
+
+      return (obj) ->
+        groupInfo = {}
+        if groupText then groupInfo.text = groupText obj
+        if groupValue then groupInfo.value = groupValue obj
+        groupInfo
+
+  __group = (models, groupBy, groupSortBy) ->
+    grouper = __grouper groupBy
+    groups = {}
+
+    for eachModel in models
+      groupInfo = grouper eachModel.getData()
+      modelGroup = groups[groupInfo.value]
+      if not modelGroup
+        groupInfo.text ?= groupInfo.value
+        groupInfo.items = []
+        groups[groupInfo.value] = modelGroup = groupInfo
+
+      modelGroup.items.push eachModel
+
+    modelGroups = []
+    for eachGroupValue, eachGroup of groups
+      modelGroups.push eachGroup
+
+    if not groupSortBy then groupSortBy = 'value nullGreat'
+    modelGroups.sort __sorter groupSortBy
+
+    modelGroups
+
   j3.CollectionView = j3.cls
     ctor : (options) ->
       @_idName = options.idName
@@ -50,6 +102,9 @@ do (j3) ->
       @_groupBy = options.groupBy
 
       @setDatasource options.datasource
+
+    getSelector : ->
+      @_selector
 
     setSelector : (selector, options) ->
       options = options || {}
@@ -68,19 +123,36 @@ do (j3) ->
       if not options.silent
         @refresh()
 
-    sortBy : (sortBy, options) ->
+    getSortBy : ->
+      @_sortBy
+
+    setSortBy : (sortBy, options) ->
       options = options || {}
       @_sortBy = sortBy
 
       if not options.silent
         @refresh()
 
-    groupBy : (groupBy, options) ->
+    getGroupBy : ->
+      @_groupBy
+
+    setGroupBy : (groupBy, options) ->
       options = options || {}
       @_groupBy = groupBy
+      @_modelGroups = null
 
       if not options.silent
-        @refresh()
+        @updateViews 'group'
+
+    getGroupSortBy : ->
+      @_groupSortBy
+
+    setGroupSortBy : (groupBy, options) ->
+      options = options || {}
+      @_groupSortBy = groupBy
+
+      if not options.silent
+        @updateViews 'groupSort'
 
     getById : (id) ->
       @getDatasource().getById id
@@ -108,6 +180,22 @@ do (j3) ->
       
       for model in @_models
         callback.call context, model, args
+
+    forEachGroup : (context, args, callback) ->
+      if not @_models then return
+
+      if not @_modelGroups then @_modelGroups = __group @_models, @_groupBy, @_groupSortBy
+
+      if !args && !callback
+        callback = context
+        context = null
+        args = null
+      else if !callback
+        callback = args
+        args = null
+
+      for group in @_modelGroups
+        callback.call context, group, args
 
     refresh : ->
       models = []
@@ -151,6 +239,8 @@ do (j3) ->
       @_models = []
       for model in models
         @_models.push new j3.Model model
+
+      @_modelGroups = null
 
       @updateViews 'refresh'
 
