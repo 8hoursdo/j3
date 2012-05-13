@@ -52,8 +52,10 @@ j3.isDateTime = (obj) ->
   obj instanceof j3.DateTime
 
 
-j3.clone = (obj) ->
+j3.clone = (obj, properties) ->
   if not @isObject obj then return obj
+
+  if obj is null then return null
 
   if @isDate obj then return new Date obj.getTime()
 
@@ -63,10 +65,16 @@ j3.clone = (obj) ->
       res.push j3.clone item
     return res
 
-  if @isFunction obj.clone then return obj.clone()
+  if @isFunction obj.clone then return obj.clone properties
 
   res = {}
-  @ext res, obj
+  if arguments.length == 1
+    for prop of obj
+      res[prop] = j3.clone obj[prop]
+  else
+    for prop in properties
+      if obj.hasOwnProperty prop
+        res[prop] = j3.clone obj[prop]
   res
 
 j3.equals = (obj1, obj2) ->
