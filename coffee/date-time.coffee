@@ -259,7 +259,7 @@ do (j3) ->
         return j3.format formatStr, hours, minutes
       else
         days = Math.floor span / _DAY
-        hours = Math.floor (span - (hours * _DAY)) / _HOUR
+        hours = Math.floor (span - (days * _DAY)) / _HOUR
         if hours == 0
           if days == 1
             formatStr = j3.Lang.day
