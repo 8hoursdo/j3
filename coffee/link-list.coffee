@@ -38,41 +38,15 @@ do (j3) ->
       if not datasource then return
 
       activeModel = datasource.getActive()
+      renderOptions =
+        target : @_linkTarget
+        commandMode : @_commandMode
+
       datasource.forEach (model) =>
-        buffer.append '<li'
-        if activeModel is model
-          buffer.append ' class="active"'
-        buffer.append '>'
-
-        buffer.append '<a'
-        url = model.get 'url'
-        if url
-          buffer.append ' href="' + url + '"'
-
-        title = model.get 'title'
-        if title
-          buffer.append ' title="' + j3.htmlEncode(title) + '"'
-
-        target = @_linkTarget
-        target = model.get 'target'
-        if not target then target = @_linkTarget
-        if target
-          buffer.append ' target="' + @_linkTarget + '"'
-
-        if @_commandMode
-          cmd = model.get 'cmd'
-          if cmd
-            buffer.append ' data-cmd="' + cmd + '"'
-
-          data = model.get 'data'
-          if data
-            buffer.append ' data-data="' + data + '"'
-
-        buffer.append '>'
-        buffer.append model.get 'text'
-        buffer.append '</a>'
-
-        buffer.append '</li>'
+        j3.LinkList.renderLinkListItem buffer,
+          model,
+          activeModel is model,
+          renderOptions
 
     onUpdateView : (datasource) ->
       if !@el then return
@@ -80,6 +54,42 @@ do (j3) ->
       buffer = new j3.StringBuilder
       @renderList buffer
       @el.innerHTML = buffer.toString()
+
+  j3.LinkList.renderLinkListItem = (buffer, model, isActive, options) ->
+    buffer.append '<li'
+    if isActive
+      buffer.append ' class="active"'
+    buffer.append '>'
+
+    buffer.append '<a'
+    url = model.get 'url'
+    if url
+      buffer.append ' href="' + url + '"'
+
+    title = model.get 'title'
+    if title
+      buffer.append ' title="' + j3.htmlEncode(title) + '"'
+
+    target = model.get 'target'
+    if not target then target = options.target
+    if target
+      buffer.append ' target="' + target + '"'
+
+    if options.commandMode
+      cmd = model.get 'cmd'
+      if cmd
+        buffer.append ' data-cmd="' + cmd + '"'
+
+      data = model.get 'data'
+      if data
+        buffer.append ' data-data="' + data + '"'
+
+    buffer.append '>'
+    buffer.append model.get 'text'
+    buffer.append '</a>'
+
+    buffer.append '</li>'
+   
 
   j3.ext j3.LinkList.prototype, j3.DataView
       

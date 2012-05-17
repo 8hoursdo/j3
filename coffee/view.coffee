@@ -37,6 +37,8 @@ j3.View = do (j3) ->
     return
 
   view = j3.cls
+    template : j3.template '<div id="<%=id%>" class="<%=css%>"></div>'
+
     ctor : (options) ->
       _creatingStack++
 

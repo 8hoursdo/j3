@@ -8,7 +8,7 @@ j3.ContainerView = j3.cls j3.View,
 
     if @innerHTML
       buffer.append @innerHTML
-    else if @children
+    else
       @renderChildren buffer
 
     @renderEnd buffer, data
@@ -22,6 +22,8 @@ j3.ContainerView = j3.cls j3.View,
     return
 
   renderChildren : (buffer) ->
+    if not @children then return
+
     node = @children.firstNode()
     while node
       node.value.render buffer

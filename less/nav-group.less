@@ -1,0 +1,24 @@
+.nav-group-item {
+  .nav-list {
+    padding: 5px 0;
+  }
+
+  .nav-list li a {
+    color: @panelTextColor;
+    font-size: 12px;
+    line-height: 26px;
+    padding: 0 0 0 5px;
+
+    &:hover {
+      text-decoration: none;
+      background: #ededed;
+    }
+  }
+
+  .nav-list li.active a {
+    color: @activeColor;
+    font-weight: bold;
+    background-color: @panelHeaderBgColor;
+  }
+}
+

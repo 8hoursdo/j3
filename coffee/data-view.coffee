@@ -6,7 +6,7 @@ j3.DataView =
     if @_datasource == datasource then return
 
     @_datasource = datasource
-    datasource.bind this
+    if datasource then datasource.bind this
 
   updateData : ->
     if not @_datasource then return

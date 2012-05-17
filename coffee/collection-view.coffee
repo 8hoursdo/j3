@@ -155,7 +155,7 @@ do (j3) ->
         @updateViews 'groupSort'
 
     getById : (id) ->
-      @getDatasource().getById id
+      @_idxId[id]
 
     getAt : (index) ->
       if index < 0 or index >= @_models.length then return null
@@ -163,6 +163,20 @@ do (j3) ->
 
     removeById : (id, options) ->
       @getDatasource().removeById id, options
+
+    getActive : ->
+      @_activeModel
+
+    setActive : (model, options) ->
+      if @_activeModel is model then return
+
+      options = options || {}
+
+      old = @_activeModel
+      @_activeModel = model
+
+      if not options.silent
+        @updateViews 'active', old : old, cur : model
 
     onUpdateView : (datasource, eventName, args) ->
       @refresh()
@@ -200,7 +214,7 @@ do (j3) ->
     refresh : ->
       models = []
 
-      @_idxId = {}
+      distinctor = {}
       # select
       if @_selector
         @_datasource.forEach this, (model) ->
@@ -208,8 +222,8 @@ do (j3) ->
           if newModel
             if @_idName
               id = newModel[@_idName]
-              if not @_idxId[id]
-                @_idxId[id] = newModel
+              if not distinctor[id]
+                distinctor[id] = newModel
                 models.push newModel
             else
               models.push newModel
@@ -237,8 +251,13 @@ do (j3) ->
         models.sort __sorter @_sortBy
 
       @_models = []
+      @_idxId = {}
       for model in models
-        @_models.push new j3.Model model
+        newModel = new j3.Model model
+        @_models.push newModel
+        if @_idName
+          id = model[@_idName]
+          @_idxId[id] = newModel
 
       @_modelGroups = null
 

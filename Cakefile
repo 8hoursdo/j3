@@ -40,6 +40,7 @@ task 'build', 'build j3 libarary', (options) ->
     'menu'
     'navbar'
     'link-list'
+    'nav-group'
     'panel'
     'location'
     'router'
