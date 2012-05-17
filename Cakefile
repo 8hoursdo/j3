@@ -42,6 +42,8 @@ task 'build', 'build j3 libarary', (options) ->
     'link-list'
     'nav-group'
     'panel'
+    'tabset'
+    'tab-panel'
     'location'
     'router'
     'application'

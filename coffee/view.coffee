@@ -140,11 +140,12 @@ j3.View = do (j3) ->
     createChildren : (options) ->
       if not options.children then return
 
-      for eachOption in options.children
+      lenChildren = options.children.length
+      for eachOption, i in options.children
         args =
-          index : _i
-          first : _i is 0
-          last : _i is (_len - 1)
+          index : i
+          first : i is 0
+          last : i is (lenChildren - 1)
 
         eachOption.parent = this
         @onCreateChild && @onCreateChild eachOption, args
@@ -152,7 +153,7 @@ j3.View = do (j3) ->
         if not j3.isFunction eachOption.cls then continue
 
         child = new eachOption.cls eachOption
-        @onChildCreated && @onChildCreated child, args
+        @onChildCreated && @onChildCreated child, args, eachOption
       return
 
     layout : ->

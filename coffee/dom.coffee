@@ -14,7 +14,7 @@ j3.Dom = do ->
 
     addCls : (el, cls) ->
       if !@hasCls el, cls
-        el.className = el.className + ' ' + cls.trim()
+        el.className = (el.className + ' ' + cls).trim()
       return
 
     removeCls : (el, cls) ->

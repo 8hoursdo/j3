@@ -1,0 +1,53 @@
+.tabs {
+  background-color: #fff;
+}
+
+.tabs-header {
+  border-bottom: 1px solid @boxBorderColor;
+  height: 30px;
+}
+
+.tabs-triggers {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  li {
+    float: left;
+    margin-left: 5px;
+
+    a {
+      display: inline-block;
+      padding: 1px 11px 0;
+      line-height: @tabsHeaderHeight - 1px;
+      cursor: pointer;
+      .border-radius(@tabsTriggerBorderRadius @tabsTriggerBorderRadius 0 0);
+
+      &:hover {
+        background: #ededed;
+      }
+    }
+  }
+
+  li.active a {
+    color: @activeColor;
+    cursor: default;
+    padding: 0 10px 1px;
+    line-height: @tabsHeaderHeight - 1px;
+    border: 1px solid @boxBorderColor;
+    border-bottom: none;
+    background: #fff;
+  }
+}
+
+.tabs-body {
+  clear:both;
+}
+
+.tab-pnl {
+  display: none;
+}
+
+.tab-pnl-active {
+  display: block;
+}
