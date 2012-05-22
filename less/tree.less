@@ -1,0 +1,67 @@
+.tree-view {
+  overflow: auto;
+}
+
+.tree-node {
+  overflow: visible;
+}
+
+.tree-node-body {
+  white-space: nowrap;
+  padding: 2px 0;
+  cursor: default;
+  overflow: visible;
+}
+
+.tree-node-idents,
+.tree-node-ident,
+.tree-node-expander,
+.tree-node-content,
+.tree-node-icon,
+.tree-node-label {
+  display: inline-block;
+  vertical-align: top;
+}
+
+.tree-node-ident,
+.tree-node-expander,
+.tree-node-icon {
+  width: @treeNodeHeight;
+  height: @treeNodeHeight;
+}
+
+
+.tree-node-idents {
+}
+
+.tree-node-ident {
+}
+
+.tree-node-expander {
+  cursor: pointer;
+  background-image: url(../img/icons.png);
+  background-repeat: none;
+  background-position: (0px - (30px * 0) - (30px - 18px) / 2) (0px - (30px * 0) - (30px - 18px) / 2)
+}
+
+.tree-node-expanded .tree-node-expander {
+  background-position: (0px - (30px * 1) - (30px - 18px) / 2) (0px - (30px * 0) - (30px - 18px) / 2)
+}
+
+.tree-node-content {
+}
+
+.tree-node-icon {
+}
+
+.tree-node-label {
+  line-height: @treeNodeHeight;
+}
+
+.tree-node-children {
+}
+
+.tree-node-active {
+  background: @activeTreeNodeBgColor;
+}
+

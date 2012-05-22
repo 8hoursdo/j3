@@ -65,6 +65,7 @@ j3.View = do (j3) ->
 
       # container of this view, it should be a dom element
       @ctnr = j3.$ options.ctnr
+      if not @ctnr and @parent then @ctnr = @parent.getBody()
       if not @ctnr then @ctnr = document.body
 
       # override the default css class if specified
@@ -104,6 +105,10 @@ j3.View = do (j3) ->
       # add me into parent's children
       if @parent
         @parent.getChildren().insert this
+
+      # override this to do sth like loading data.
+      @onLoad? options
+
       return
 
     render : (buffer) ->
@@ -155,6 +160,9 @@ j3.View = do (j3) ->
         child = new eachOption.cls eachOption
         @onChildCreated && @onChildCreated child, args, eachOption
       return
+
+    getBody : ->
+      @elBody || @el
 
     layout : ->
       if @_layouting then return

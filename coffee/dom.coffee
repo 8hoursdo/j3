@@ -5,6 +5,11 @@ j3.Dom = do ->
   _tempDiv = document.createElement 'div'
 
   Dom =
+    attr : (el, name) ->
+      node = el.attributes[name]
+      if not node then return null
+      node.nodeValue
+
     hasCls : (el, cls) ->
       j3.include el.className, cls, ' '
 
@@ -59,6 +64,9 @@ j3.Dom = do ->
 
     hide : (el) ->
       el.style.display = 'none'
+
+    remove : (el) ->
+      el.parentNode.removeChild el
 
     append : (target, el) ->
       if not target then return

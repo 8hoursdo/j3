@@ -30,7 +30,10 @@ do (j3) ->
 
         return
       el = el.parentNode
-    
+
+  __tabPanelActive = ->
+    @onActive?()
+    @fire 'active', this
 
   j3.Tabset = j3.cls j3.ContainerView,
     baseCss : 'tabs'
@@ -63,6 +66,8 @@ do (j3) ->
 
       j3.on @_elTabsTriggers, 'click', this, __hElTabsTriggers_Click
 
+      __tabPanelActive.call @_activePanel
+
     getActive : ->
       @_activePanel
 
@@ -80,7 +85,9 @@ do (j3) ->
       Dom.addCls @_activePanel.elTrigger, 'active'
       Dom.addCls @_activePanel.el, 'tab-pnl-active'
 
-      @fire 'active', this, old : old, current : @_activePanel
+      __tabPanelActive.call @_activePanel
+
+      @fire 'active', this, old : old, panel : @_activePanel
 
 
 
