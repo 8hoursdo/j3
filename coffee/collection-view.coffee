@@ -95,7 +95,7 @@ do (j3) ->
 
   j3.CollectionView = j3.cls
     ctor : (options) ->
-      @_idName = options.idName
+      @_idName = options.idName || 'id'
       @_selector = options.selector
       @_filterBy = options.filterBy
       @_sortBy = options.sortBy
@@ -254,6 +254,8 @@ do (j3) ->
       @_idxId = {}
       for model in models
         newModel = new j3.Model model
+        newModel.collection = this
+
         @_models.push newModel
         if @_idName
           id = model[@_idName]
