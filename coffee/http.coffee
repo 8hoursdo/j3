@@ -64,7 +64,7 @@ do (j3) ->
       xhr.onreadystatechange = ->
         if xhr.readyState isnt 4 then return
 
-        req.callback && req.callback.call req.context, xhr, __parseResponse xhr
+        req.callback && req.callback.call req.context, xhr, __parseResponse(xhr), req.args
 
     if req.method is 'GET' or not req.data
       xhr.send ''
@@ -83,7 +83,7 @@ do (j3) ->
       # option
       # url, context, callback
       # url, data, context, callback
-      # url, data, dataType, context, callback
+      # url, data, context, args, callback
       ->
         url = arguments[0]
         if j3.isObject url
@@ -95,18 +95,22 @@ do (j3) ->
             context = arguments[1]
             callback = arguments[2]
             data = null
-            dataType = null
           else if arguments.length == 4
             data = arguments[1]
             context = arguments[2]
             callback = arguments[3]
-            dataType = 'form'
+          else if arguments.length == 5
+            data = arguments[1]
+            context = arguments[2]
+            args = arguments[3]
+            callback = arguments[4]
 
           options.method = method
           options.data = data
-          options.dataType = dataType
+          options.dataType = 'form'
           options.url = url
           options.callback = callback
           options.context = context
+          options.args = args
 
         __doRequest options
