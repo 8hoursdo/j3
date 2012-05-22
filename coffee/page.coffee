@@ -15,8 +15,21 @@ do (j3) ->
       _curPage = this
 
       @refresh()
-
       return
 
     refresh : ->
       @onRefresh?()
+
+    onMessage : ->
+      @_msgEvtMngr ?= j3.createEventManager()
+      @_msgEvtMngr.on.apply @_msgEvtMngr, arguments
+
+    unMessage : ->
+      if not @_msgEvtMngr then return
+      @_msgEvtMngr.un.apply @_msgEvtMngr, arguments
+
+    notifyMessage : (name, sender, args) ->
+      @onNotifyMessage? name, sender, args
+
+      if not @_msgEvtMngr then return
+      @_msgEvtMngr.fire name, sender, args

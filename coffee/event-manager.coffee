@@ -54,4 +54,10 @@ j3.EventManager =
       obj.handler.call obj.context, sender, args
     this
 
+EventManagerCls = ->
 
+j3.ext EventManagerCls.prototype, j3.EventManager
+
+j3.createEventManager = ->
+  new EventManagerCls
+  
