@@ -70,6 +70,28 @@ do (j3) ->
     val : ->
       @_dropdownList.getSelectedValue()
 
+  j3.DropdownTreeFormItem = j3.cls j3.FormItem,
+    createChildren : (options) ->
+      @_dropdownTree = new j3.DropdownTree
+        id : options.controlId
+        placeholder : options.placeholder
+        treeOptions : options.treeOptions
+        name : options.name
+        textName : options.textName
+        itemValueName : options.itemValueName
+        itemTextName : options.itemTextName
+        datasource : options.datasource
+        fill : options.controlFill
+        width : options.controlWidth
+        on : options.on
+        parent : this
+
+    dropdownTree : ->
+      @_dropdownTree
+
+    val : ->
+      @_dropdownTree.getSelectedValue()
+
   j3.DateSelectorFormItem = j3.cls j3.FormItem,
     createChildren : (options) ->
       @_dateSelector = new j3.DateSelector

@@ -33,6 +33,15 @@ j3.Dropdown = j3.cls j3.Selector,
     Dom.addCls @el, 'sel-active'
     Dom.show @_elDropdownBox
 
+    @resizeDropdownBox()
+
+    @fire 'dropdown', this, firstTime:firstTime
+    @_isDropdown = true
+    return
+
+  resizeDropdownBox : ->
+    Dom = j3.Dom
+
     # change position of drp-box
     posEl = Dom.position @el
     heightEl = Dom.offsetHeight @el
@@ -79,10 +88,6 @@ j3.Dropdown = j3.cls j3.Selector,
       topBox = posEl.top + heightEl + 2
 
     Dom.place @_elDropdownBox, posEl.left, topBox
-
-    @fire 'dropdown', this, firstTime:firstTime
-    @_isDropdown = true
-    return
 
   close : ->
     j3.Dom.removeCls @el, 'sel-active'

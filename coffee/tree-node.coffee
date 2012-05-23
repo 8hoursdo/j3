@@ -101,8 +101,8 @@ do (j3) ->
 
       if value
         @fire 'expand', this
-        tree.onNodeExpanded? args
-        tree.fire 'expandNode', tree, args
+        tree.onNodeExpand? args
+        tree.fire 'nodeExpand', tree, args
 
     getActive : ->
       @_tree.getActiveNode() is this
