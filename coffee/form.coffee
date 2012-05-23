@@ -16,11 +16,13 @@ do (j3) ->
     onInit : (options) ->
       @_method = options.method || 'GET'
       @_target = options.target || 'ajax'
+      @_narrowLabel = options.narrowLabel
       @_datasource = options.datasource
 
     getTemplateData : ->
       id : @id
-      css : @getCss()
+      css : @getCss() +
+        (if @_narrowLabel then ' form-narrow-label' else '')
       method : @_method
       target : @_target
 
