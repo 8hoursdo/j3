@@ -5,6 +5,19 @@ j3.Dom = do ->
   _tempDiv = document.createElement 'div'
 
   Dom =
+    create : (tagName, attributes, innerHTML) ->
+      el = document.createElement tagName
+      if not el then return
+
+      if not attributes then return el
+      for name, value of attributes
+        el[name] = value
+
+      if not j3.isUndefined innerHTML
+        el.innerHTML = innerHTML
+
+      el
+
     attr : (el, name) ->
       node = el.attributes[name]
       if not node then return null
@@ -146,6 +159,22 @@ j3.Dom = do ->
         el = el.previousSibling
       return null
 
+    pageWidth : (wnd) ->
+      wnd ?= window
+
+      pw = wnd.document.documentElement.scrollWidth
+      cw = @clientWidth wnd
+
+      if pw > cw then pw else cw
+
+    pageHeight : (wnd) ->
+      wnd ?= window
+
+      ph = wnd.document.documentElement.scrollHeight
+      ch = @clientHeight wnd
+
+      if ph > ch then ph else ch
+
     offsetWidth : (el, width) ->
       if arguments.length == 1 then return el.offsetWidth
 
@@ -176,6 +205,19 @@ j3.Dom = do ->
       if not j3.isUndefined top
         s.top = (top - pos.top) + 'px'
       return
+
+    center : (el, top, left) ->
+      top ?= 0.4
+      left ?= 0.5
+
+      cw = @clientWidth()
+      ch = @clientHeight()
+      ew = @offsetWidth el
+      eh = @offsetHeight el
+      st = document.documentElement.scrollTop
+      sl = document.documentElement.scrollLeft
+        
+      @place el, ((cw - ew)*left + sl), ((ch - eh)*top + st)
 
   __width_ie = (el) ->
     cs = el.currentStyle

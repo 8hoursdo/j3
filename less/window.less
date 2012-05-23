@@ -1,0 +1,55 @@
+.wnd {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: #fff;
+
+  .border-radius(5px);
+}
+
+.wnd-header {
+  border-bottom: 1px solid @splitLineColor;
+  padding: 5px 10px 5px 15px;
+  height: 25px;
+
+  .wnd-title {
+    margin: 0;
+    padding: 0;
+    font-size: 16px;
+    line-height: 25px;
+  }
+
+  .close {
+    float:right;
+    width: 25px;
+    font-size: 18px;
+    line-height: 25px;
+  }
+}
+
+.wnd-body {
+  overflow: auto;
+}
+
+.wnd-body-inner {
+  padding: 10px 15px;
+
+  .form {
+    padding: 5px 0 0;
+  }
+}
+
+.wnd-footer {
+  .clearfix();
+  .border-radius(0 0 5px 5px);
+  padding: 15px;
+  background: @formActionBgColor;
+}
+
+.wnd-actions {
+
+  .btn{
+    margin-left: 5px;
+    float: right;
+  }
+}
