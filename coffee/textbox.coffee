@@ -33,7 +33,7 @@ do (j3) ->
     baseCss : 'input'
 
     templateInput : j3.template '<input type="<%=type%>" id="<%=id%>" class="<%=css%>" name="<%=name%>"<%if(disabled){%> disabled="disabled"<%}%><%if(readonly){%> readonly="readonly"<%}%> value="<%-text%>" />'
-    templateTextarea : j3.template '<textarea id="<%=id%>" class="<%=css%>" name="<%=name%>"<%if(disabled){%> disabled="disabled"<%}%><%if(readonly){%> readonly="readonly"<%}%>><%-text%></textarea>'
+    templateTextarea : j3.template '<textarea id="<%=id%>" class="<%=css%>" name="<%=name%>"<%if(disabled){%> disabled="disabled"<%}%><%if(readonly){%> readonly="readonly"<%}%> row="<%=row%>"><%-text%></textarea>'
 
     onInit : (options) ->
       @_text = options.text || ''
@@ -42,18 +42,22 @@ do (j3) ->
       @_readonly = !!options.readonly
       @_type = options.type || 'text'
       @_multiline = @_type == 'text' && !!options.multiline
+      if @_multiline
+        @_row = options.row || 3
       @_placeholder = options.placeholder || ''
 
     getTemplateData : ->
       id : @id
       css : @getCss() +
         (if @_disabled then ' disabled' else '') +
+        (if @_multiline then ' input-multiline' else '') +
         (if !@_text then ' ' + @baseCss + '-empty')
       text : @_text || @_placeholder
       disabled : @_disabled
       readonly : @_readonly
       type : @_type
       name : @name
+      row : @_row
 
     onRender : (buffer) ->
       if @_multiline then template = @templateTextarea else template = @templateInput
