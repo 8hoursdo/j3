@@ -4,8 +4,15 @@ do (j3) ->
     baseCss : 'tree-node'
 
     onInit : (options) ->
-      @_text = options.text
+      @_level = @parent.getLevel() + 1
+      @_tree = @parent.getTree()
+
       @_data = options.data
+      if options.text
+        @_text = options.text
+      else if @_data
+        @_text = @_data[@_tree._dataTextName]
+        
       @_icon = options.icon
       @_expanded = !!options.expanded
       @_childrenLoaded = !!options.childrenLoaded
@@ -14,9 +21,6 @@ do (j3) ->
       if options.hasOwnProperty 'checkable'
         @_checkable = !!options.checkable
 
-      @_level = @parent.getLevel() + 1
-      @_tree = @parent.getTree()
-
     onCreateChild : (options) ->
       options.cls = options.cls || j3.TreeNode
       options.parent = this
@@ -24,18 +28,20 @@ do (j3) ->
     renderBegin : (buffer, data) ->
       buffer.append '<div id="' + data.id + '" class="' + data.css + '">'
       buffer.append '<div class="tree-node-body'
-      if @getLevel() is 0
+      if @_level is 0
         buffer.append ' tree-node-top'
       if @_expanded
         buffer.append ' tree-node-expanded'
       buffer.append '">'
 
       buffer.append '<div class="tree-node-idents">'
-      for i in [0...@_level]
-        buffer.append '<div class="tree-node-ident"></div>'
+      if @_level
+        for i in [0...@_level-1]
+          buffer.append '<div class="tree-node-ident"></div>'
       buffer.append '</div>'
 
-      buffer.append '<div class="tree-node-expander"></div>'
+      if @_level
+        buffer.append '<div class="tree-node-expander"></div>'
 
       buffer.append '<div class="tree-node-content">'
 
@@ -147,13 +153,13 @@ do (j3) ->
 
       activeNode = @_tree.getActiveNode()
       while activeNode and activeNode isnt @_tree and activeNode isnt @
-        activeNode = currentActiveNode.parent
+        activeNode = activeNode.parent
 
       if activeNode is @
         @setActive()
 
       @children.clear()
-      @_elNodeBody.innerHTML = ''
+      @elBody.innerHTML = ''
 
     getText : ->
       @_text
@@ -167,6 +173,25 @@ do (j3) ->
 
     setData : (value) ->
       @_data = value
+
+      if @_data
+        dataTextName = @_tree._dataTextName
+        if dataTextName
+          @setText @_data[dataTextName]
+
+    getNodeByDataId : (id) ->
+      if @_data && @_data[@_tree._dataIdName] is id
+        return this
+
+      if not @children then return null
+
+      node = @children.getFirstNode()
+      while node
+        treeNode = node.value.getNodeByDataId id
+        if treeNode then return treeNode
+        node = node.next
+
+      return null
 
     getChildrenLoaded : ->
       @_childrenLoaded

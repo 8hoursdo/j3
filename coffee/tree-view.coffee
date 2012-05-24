@@ -22,6 +22,9 @@ do (j3) ->
     onInit : (options) ->
       @_showTopNode = options.showTopNode
       @_checkable = !!options.checkable
+      @_dataIdName = options.dataIdName || 'id'
+      @_dataTextName = options.dataTextName || 'name'
+      @_topNodeHidden = !!options.topNodeHidden
 
     createChildren : (options) ->
       nodeOptions = options.topNode || {}
@@ -29,7 +32,10 @@ do (j3) ->
       @_topNode = new j3.TreeNode nodeOptions
 
     onRender : (buffer, data) ->
-      buffer.append '<div id="' + data.id + '" class="' + data.css + '">'
+      buffer.append '<div id="' + data.id + '" class="' + data.css
+      if @_topNodeHidden
+        buffer.append ' tree-view-hide-top-node'
+      buffer.append '">'
 
       @_topNode.render buffer
 
@@ -38,9 +44,6 @@ do (j3) ->
 
     onCreated : ->
       j3.on @el, 'click', this, __hEl_Click
-
-    getTopNode : ->
-      @_topNode
 
     getLevel : ->
       -1
@@ -51,10 +54,21 @@ do (j3) ->
     getCheckable : ->
       @_checkable
 
+    getTopNode : ->
+      @_topNode
+
+    getNodeByDataId : (id) ->
+      @getTopNode().getNodeByDataId id
+
     getActiveNode : ->
       @_activeNode
 
     setActiveNode : (node) ->
+      node ?= null
+
+      if @_topNodeHidden and node is @getTopNode()
+        node = null
+
       if @_activeNode is node then return
 
       old = @_activeNode
