@@ -16,7 +16,7 @@ do (j3) ->
       actions
 
   __elClose_click = (evt) ->
-    @close()
+    @close 'cancel'
 
   j3.Window = j3.cls j3.ContainerView,
     baseCss : 'wnd'
@@ -69,6 +69,9 @@ do (j3) ->
 
       j3.on @_elClose, 'click', this, __elClose_click
 
+    setTitle : (value) ->
+      @_elTitle.innerHTML = j3.htmlEncode value
+
     action : (name, src) ->
       args = name : name, src : src
 
@@ -83,9 +86,10 @@ do (j3) ->
 
       @layout()
 
-    close : (result) ->
+    close : (result, data) ->
       args =
         result : result
+        data : data
 
       beforeClose? args
       if args.stop then return
