@@ -1,10 +1,21 @@
 do (j3) ->
-  __tree_activeNodeChange = (sender, args) ->
-    @setSelectedItem if args.node then args.node.getData() else null
+  __tree_nodeClick = (sender, args) ->
+    node = args.node
+    if node.getUnselectable() then return
+
+    @setSelectedItem if node then node.getData() else null
     @close()
 
-  __tree_expand = (sender, args) ->
+  __tree_nodeExpand = (sender, args) ->
     @resizeDropdownBox()
+
+  __getItemByValue = (value, callback) ->
+    if not value then return callback null
+
+    datasource = @getItemsDatasource()
+    if not datasource then return
+
+    datasource.getById value, callback
 
   j3.DropdownTree = j3.cls j3.Dropdown,
     onInit : (options) ->
@@ -12,8 +23,8 @@ do (j3) ->
 
       @_treeOptions = options.treeOptions || {}
       @_textName = options.textName || @name
-      @_itemValueName = options.itemValueName || @name
-      @_itemTextName = options.itemTextName || @_textName
+      @_itemsValName = options.itemsValName || @name
+      @_itemsTextName = options.itemsTextName || @_textName
 
     onCreateDropdownBox : (elBox) ->
       treeCls = @_treeOptions.cls || j3.Tree
@@ -21,14 +32,23 @@ do (j3) ->
       @_treeOptions.ctnr = elBox
       @_tree = new treeCls @_treeOptions
 
-      @_tree.on 'activeNodeChange', this, __tree_activeNodeChange
-      @_tree.on 'nodeExpand', this, __tree_expand
+      @_tree.on 'nodeClick', this, __tree_nodeClick
+      @_tree.on 'nodeExpand', this, __tree_nodeExpand
+
+      @fire 'treeLoad', this, tree : @_tree
 
     onCreated : (options) ->
       j3.DropdownTree.base().onCreated.call this
 
       @_selectedValue = options.selectedValue
       @setDatasource options.datasource
+
+      @setItemsDatasource options.itemsDatasource
+
+    onDropdown : ->
+      topNode = @_tree.getTopNode()
+      topNode.expand()
+      @_tree.setActiveNode null
 
     getTree : ->
       @_tree
@@ -39,10 +59,21 @@ do (j3) ->
     setSelectedItem : (value) ->
       @_selectedItem = value
 
-      @_selectedValue = value[@_itemValueName]
-      @setLabel value[@_itemTextName]
+      selectedValue = value[@_itemsValName]
+      if @_selectedValue is selectedValue then return
+      @_selectedValue = selectedValue
+
+      @setSelectedText value[@_itemsTextName] || @_selectedValue || ''
 
       @updateData()
+      @fire 'change', this, value : selectedValue
+
+    getSelectedText : ->
+      @_selectedText
+
+    setSelectedText : (value) ->
+      @_selectedText = value
+      @setLabel @_selectedText
 
     getSelectedValue : ->
       @_selectedValue
@@ -50,12 +81,30 @@ do (j3) ->
     setSelectedValue : (value) ->
       if @_selectedValue is value then return
 
-      @_selectedValue = value
-      @fire 'change', this, value : @_selectedValue
+      __getItemByValue.call this, value, (item) =>
+        if item
+          @_selectedValue = value
+          @setSelectedText j3.getVal(item, @_itemsTextName)
+        else
+          @_selectedValue = null
+          @setSelectedText ''
+
+        @fire 'change', this, value : @_selectedValue
 
     onUpdateView : (datasource, eventName, args) ->
+      value = datasource.get @name
+
+      @setSelectedValue value
 
     onUpdateData : ->
-      @getDatasource().set @name, @_selectedValue
+      datasource = @getDatasource()
+      data = {}
+      data[@name] = @_selectedValue
+      if @_textName
+        data[@_textName] = @_selectedText
 
-  j3.ext j3.DropdownTree.prototype, j3.DataView
+      datasource.set data, append : true
+
+    onUpdateViewItems : (datasource, eventName, args) ->
+
+  j3.ext j3.DropdownTree.prototype, j3.DataView, j3.DataItemsView

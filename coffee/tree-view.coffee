@@ -1,5 +1,5 @@
 do (j3) ->
-  __hEl_Click = (evt) ->
+  __hEl_click = (evt) ->
     el = evt.src()
 
     while el and el isnt @el
@@ -10,11 +10,29 @@ do (j3) ->
         return
 
       if el.className is 'tree-node'
-        treeNode = el._j3TreeNode
-        if treeNode
-          @setActiveNode treeNode
+        node = el._j3TreeNode
+        if node
+          if not node.getUnselectable()
+            @setActiveNode node
+
+          node.click()
+          @fire 'nodeClick', this, node : node
         return
       el = el.parentNode
+
+  __hEl_mousemove = (evt) ->
+    el = evt.src()
+
+    while el and el isnt @el
+      if el.className is 'tree-node'
+        node = el._j3TreeNode
+        if node
+          @setHoverNode node
+        return
+      el = el.parentNode
+
+  __hEl_mouseout = (evt) ->
+    @setHoverNode null
 
   j3.TreeView = j3.cls j3.View,
     baseCss : 'tree-view'
@@ -43,7 +61,9 @@ do (j3) ->
       return
 
     onCreated : ->
-      j3.on @el, 'click', this, __hEl_Click
+      j3.on @el, 'click', this, __hEl_click
+      j3.on @el, 'mousemove', this, __hEl_mousemove
+      j3.on @el, 'mouseout', this, __hEl_mouseout
 
     getLevel : ->
       -1
@@ -64,9 +84,10 @@ do (j3) ->
       @_activeNode
 
     setActiveNode : (node) ->
-      node ?= null
-
       if @_topNodeHidden and node is @getTopNode()
+        node = null
+
+      if node && node.getUnselectable()
         node = null
 
       if @_activeNode is node then return
@@ -78,6 +99,26 @@ do (j3) ->
       if @_activeNode then @_activeNode.__doSetActive true
 
       @fire 'activeNodeChange', this, old : old, node : @_activeNode
+
+    getHoverNode : ->
+      @_hoverNode
+
+    setHoverNode : (node) ->
+      if @_topNodeHidden and node is @getTopNode()
+        node = null
+
+      if node && node.getUnselectable()
+        node = null
+
+      if @_hoverNode is node then return
+
+      old = @_hoverNode
+      if @_hoverNode then @_hoverNode.__doSetHover false
+
+      @_hoverNode = node
+      if @_hoverNode then @_hoverNode.__doSetHover true
+
+      @fire 'hoverNodeChange', this, old : old, node : @_hoverNode
 
     removeNode : (node) ->
       node.remove()

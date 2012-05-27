@@ -47,6 +47,8 @@ do (j3) ->
           changedData[name] = value
           @_data[name] = value
 
+      if not changedData then return
+
       args =
         changedData : changedData
         source : options.source
@@ -59,5 +61,19 @@ do (j3) ->
     toJson : (buffer) ->
       j3.toJson @_data, buffer
 
-  j3.ext j3.Model.prototype, j3.EventManager
-  j3.ext j3.Model.prototype, j3.Datasource
+  j3.ext j3.Model.prototype, j3.EventManager, j3.Datasource
+
+  j3.getVal = (model, name, defaultVal) ->
+    if j3.isFunction model.get
+      return model.get name, defaultVal
+
+    if j3.isUndefined model[name]
+      return defaultVal
+
+    model[name]
+
+  j3.setVal = (model, name, value, options) ->
+    if j3.isFunction model.set
+      return model.set name, value, options
+
+    model[name] = value

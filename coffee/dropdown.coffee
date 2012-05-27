@@ -18,6 +18,8 @@ j3.Dropdown = j3.cls j3.Selector,
 
     firstTime = !@_elDropdownBox
 
+    args = firstTime : firstTime
+
     if firstTime
       elBox = document.createElement 'div'
       elBox.className = 'drp-box'
@@ -26,7 +28,11 @@ j3.Dropdown = j3.cls j3.Selector,
       Dom.append @el, elBox
       @onCreateDropdownBox @_elDropdownBox
 
-    @fire 'beforeDropdown', this, firstTime:firstTime
+    @beforeDropdown? args
+    if args.stop then return
+
+    @fire 'beforeDropdown', this, args
+    if args.stop then return
 
     j3.regPopup this, 'dropdown'
 
@@ -35,7 +41,9 @@ j3.Dropdown = j3.cls j3.Selector,
 
     @resizeDropdownBox()
 
-    @fire 'dropdown', this, firstTime:firstTime
+    @onDropdown? args
+    @fire 'dropdown', this, args
+
     @_isDropdown = true
     return
 

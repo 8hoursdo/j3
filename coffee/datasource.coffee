@@ -2,6 +2,8 @@ do (j3) ->
   ViewInfo = (view, handler) ->
     @view = view
     @handler = handler
+    return
+
   ViewInfo.prototype.equals = (obj) ->
     @view is obj.view and @handler is obj.handler
 

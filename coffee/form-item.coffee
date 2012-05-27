@@ -78,8 +78,9 @@ do (j3) ->
         treeOptions : options.treeOptions
         name : options.name
         textName : options.textName
-        itemValueName : options.itemValueName
-        itemTextName : options.itemTextName
+        itemsValName : options.itemsValName
+        itemsTextName : options.itemsTextName
+        itemsDatasource : options.itemsDatasource
         datasource : options.datasource
         fill : options.controlFill
         width : options.controlWidth

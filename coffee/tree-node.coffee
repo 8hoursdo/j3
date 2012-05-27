@@ -21,6 +21,10 @@ do (j3) ->
       if options.hasOwnProperty 'checkable'
         @_checkable = !!options.checkable
 
+      @_unselectable = !!options.unselectable
+
+      @_expandOnClick = options.expandOnClick
+
     onCreateChild : (options) ->
       options.cls = options.cls || j3.TreeNode
       options.parent = this
@@ -73,14 +77,20 @@ do (j3) ->
 
       @el._j3TreeNode = this
 
-    getCheckable : ->
-      @_checkable
-
     getLevel : ->
       @_level
 
     getTree : ->
       @_tree
+
+    getCheckable : ->
+      @_checkable
+
+    getUnselectable : ->
+      @_unselectable
+
+    setUnselectable : (value) ->
+      @_unselectable = value
 
     getExpanded : ->
       @_expanded
@@ -93,11 +103,16 @@ do (j3) ->
 
       args = node : this
       if value
-        @fire 'beforeExpand', this
+        @beforeExpand && @beforeExpand args
+        if args.stop then return
 
-        tree.beforeExpandNode? args
+        @fire 'beforeExpand', this, args
+        if args.stop then return
+
+        tree.beforeExpandNode && tree.beforeExpandNode args
+        if args.stop then return
+
         tree.fire 'beforeExpandNode', tree, args
-
         if args.stop then return
 
       j3.Dom.toggleCls @_elNodeBody, 'tree-node-expanded'
@@ -107,8 +122,28 @@ do (j3) ->
 
       if value
         @fire 'expand', this
-        tree.onNodeExpand? args
+
+        tree.onNodeExpand && tree.onNodeExpand args
+
         tree.fire 'nodeExpand', tree, args
+
+    expand : (recursive) ->
+      @setExpanded true
+
+      if recursive and @children
+        @children.forEach (child) ->
+          child.expand true
+
+    collapse : (recursive) ->
+      @setExpanded false
+
+      if recursive and @children
+        @children.forEach (child) ->
+          child.collapse true
+
+    click : ->
+      if @_expandOnClick
+        @expand()
 
     getActive : ->
       @_tree.getActiveNode() is this
@@ -118,10 +153,16 @@ do (j3) ->
 
     __doSetActive : (value) ->
       if value
-        j3.Dom.toggleCls @_elNodeBody, 'tree-node-active'
+        j3.Dom.addCls @_elNodeBody, 'tree-node-active'
       else
         j3.Dom.removeCls @_elNodeBody, 'tree-node-active'
       return
+
+    __doSetHover : (value) ->
+      if value
+        j3.Dom.addCls @_elNodeBody, 'tree-node-hover'
+      else
+        j3.Dom.removeCls @_elNodeBody, 'tree-node-hover'
 
     remove : ->
       # We can't remove top node
@@ -185,7 +226,7 @@ do (j3) ->
 
       if not @children then return null
 
-      node = @children.getFirstNode()
+      node = @children.firstNode()
       while node
         treeNode = node.value.getNodeByDataId id
         if treeNode then return treeNode

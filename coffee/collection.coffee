@@ -19,6 +19,10 @@ do (j3) ->
       @_idxId = {}
       @_model = options.model || j3.Model
       @_models = new j3.List
+      @_notFoundModels = {}
+
+      @_lazyLoad = options.lazyLoad
+      @_url = options.url
       return
     
     insert : (data, options) ->
@@ -55,6 +59,7 @@ do (j3) ->
 
       @_idxId = {}
       @_models.clear()
+      @_notFoundModels = {}
       if not options.silent
         @updateViews 'refresh'
 
@@ -87,8 +92,31 @@ do (j3) ->
       if not options.silent
         @updateViews 'active', old : old, cur : model
 
-    getById : (id) ->
-      @_idxId[id]
+    getById : (id, callback) ->
+      if not id
+        callback && callback null
+        return null
+
+      model = @_idxId[id]
+
+      if model
+        callback && callback model
+        return model
+
+      if not @_lazyLoad or @_notFoundModels[id]
+        callback && callback null
+        return null
+
+      j3.get @_url + id, null, this, (xhr, result) ->
+        if xhr.status >= 500
+          return callback null
+        else if xhr.status >= 400
+          @_notFoundModels[id] = true
+          return callback null
+
+        @insert result
+        callback @_idxId[id]
+        return
 
     getAt : (index) ->
       @_models.getAt index

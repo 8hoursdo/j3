@@ -19,6 +19,7 @@ task 'build', 'build j3 libarary', (options) ->
     'http'
     'datasource'
     'data-view'
+    'data-items-view'
     'model'
     'collection'
     'collection-view'

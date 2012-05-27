@@ -9,10 +9,11 @@ j3.ns = (nameSpace) ->
     curNS = curNS[name]
   curNS
   
-ext = j3.ext = (original, extend) ->
-  for prop of extend
-    original[prop] = extend[prop]
-  return
+ext = j3.ext = (original, exts...) ->
+  for extend in exts
+    for prop of extend
+      original[prop] = extend[prop]
+  original
 
 j3.cls = (base, members) ->
   # j3.cls(members)
