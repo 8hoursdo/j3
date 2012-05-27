@@ -22,9 +22,9 @@ do (j3) ->
       j3.DropdownTree.base().onInit.apply this, arguments
 
       @_treeOptions = options.treeOptions || {}
-      @_textName = options.textName || @name
+      @_textName = options.textName
       @_itemsValName = options.itemsValName || @name
-      @_itemsTextName = options.itemsTextName || @_textName
+      @_itemsTextName = options.itemsTextName || @_itemsValName
 
     onCreateDropdownBox : (elBox) ->
       treeCls = @_treeOptions.cls || j3.Tree
