@@ -47,8 +47,6 @@ do (j3) ->
           changedData[name] = value
           @_data[name] = value
 
-      if not changedData then return
-
       args =
         changedData : changedData
         source : options.source
