@@ -39,4 +39,41 @@ do (j3) ->
 
       subList.push eachItem
     groups
-        
+
+  __getChildItems = (list, parentId, options) ->
+    idName = options.idName
+    parentName = options.parentName
+    childrenName = options.childrenName
+
+    children = []
+
+    j3.forEach list, (item) ->
+      if parentId is j3.getVal item, parentName
+        children.push item
+        j3.setVal item, childrenName, __getChildItems(list, j3.getVal(item, idName), options)
+
+    if children.length
+      return children
+    return null
+
+  j3.tree = (list, options) ->
+    options ?= {}
+    options.idName ?= 'id'
+    options.parentName ?= 'parentId'
+    options.childrenName ?= 'children'
+
+    idName = options.idName
+    parentName = options.parentName
+    childrenName = options.childrenName
+
+    itemsDictionary = {}
+    j3.forEach list, (item) ->
+      itemsDictionary[j3.getVal item, idName] = item
+
+    rootItems = []
+    j3.forEach list, (item) ->
+      if not j3.getVal item, parentName
+        rootItems.push item
+        j3.setVal item, childrenName, __getChildItems(list, j3.getVal(item, idName), options)
+
+    rootItems
