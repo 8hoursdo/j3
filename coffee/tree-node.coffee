@@ -1,4 +1,8 @@
 do (j3) ->
+  __renderIndents = (buffer) ->
+    if @_level
+      for i in [0...@_level-1]
+        buffer.append '<div class="tree-node-indent"></div>'
 
   j3.TreeNode = j3.cls j3.ContainerView,
     baseCss : 'tree-node'
@@ -38,10 +42,8 @@ do (j3) ->
         buffer.append ' tree-node-expanded'
       buffer.append '">'
 
-      buffer.append '<div class="tree-node-idents">'
-      if @_level
-        for i in [0...@_level-1]
-          buffer.append '<div class="tree-node-ident"></div>'
+      buffer.append '<div class="tree-node-indents">'
+      __renderIndents.call this, buffer
       buffer.append '</div>'
 
       if @_level
@@ -72,6 +74,7 @@ do (j3) ->
 
     onCreated : (options) ->
       @_elNodeBody = j3.Dom.firstChild @el
+      @_elIndent = j3.Dom.firstChild @_elNodeBody
       @elBody = j3.Dom.lastChild @el
       @_elLabel = j3.$ @id + '-label'
 
@@ -79,6 +82,22 @@ do (j3) ->
 
     getLevel : ->
       @_level
+
+    setLevel : (value) ->
+      if @_level is value then return
+
+      @_level = value
+
+      buffer = new j3.StringBuilder
+      __renderIndents.call this, buffer
+      @_elIndent.innerHTML = buffer.toString()
+
+      if not @children then return
+
+      node = @children.firstNode()
+      while node
+        node.value.setLevel @_level + 1
+        node = node.next
 
     getTree : ->
       @_tree
@@ -163,6 +182,19 @@ do (j3) ->
         j3.Dom.addCls @_elNodeBody, 'tree-node-hover'
       else
         j3.Dom.removeCls @_elNodeBody, 'tree-node-hover'
+
+    insert : (child) ->
+      if child.parent is this then return
+
+      child.parent.children.remove child
+
+      if not @_childrenLoaded
+        @expand()
+        return
+
+      @getChildren().insert child
+      @elBody.appendChild child.el
+      child.setLevel @_level + 1
 
     remove : ->
       # We can't remove top node

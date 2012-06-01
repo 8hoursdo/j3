@@ -38,7 +38,6 @@ do (j3) ->
     baseCss : 'tree-view'
 
     onInit : (options) ->
-      @_showTopNode = options.showTopNode
       @_checkable = !!options.checkable
       @_dataIdName = options.dataIdName || 'id'
       @_dataTextName = options.dataTextName || 'name'
