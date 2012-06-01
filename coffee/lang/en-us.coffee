@@ -1,8 +1,10 @@
 j3.Lang =
   # Control
   loading : "Loading..."
-  ttlMessage : "Message"
-  ttlConfirm : "Confirm"
+  warning : "Warning"
+  error : "Error"
+  message : "Message"
+  confirm : "Confirm"
   yes : "Yes"
   no : "No"
   ok : "OK"

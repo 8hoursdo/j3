@@ -18,6 +18,8 @@ do (j3) ->
   __elClose_click = (evt) ->
     @close 'cancel'
 
+  __el_blur = (evt) ->
+
   j3.Window = j3.cls j3.ContainerView,
     baseCss : 'wnd'
 
@@ -65,9 +67,10 @@ do (j3) ->
       Dom = j3.Dom
       @_elClose = Dom.firstChild Dom.firstChild @el
       @_elTitle = Dom.lastChild Dom.firstChild @el
-      @elBody = Dom.firstChild Dom.lastChild @el
+      @elBody = Dom.firstChild Dom.byIndex(@el, 1)
 
       j3.on @_elClose, 'click', this, __elClose_click
+      j3.on @el, 'blur', this, __el_blur
 
     setTitle : (value) ->
       @_elTitle.innerHTML = j3.htmlEncode value
@@ -103,4 +106,6 @@ do (j3) ->
       onClose? args
       @fire 'close', this, args
 
-
+    getActionButton : (name) ->
+      if not @_windowActions then return null
+      @_windowActions.getActionButton name

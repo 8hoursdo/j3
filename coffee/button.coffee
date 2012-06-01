@@ -61,6 +61,12 @@ j3.Button = j3.cls j3.View,
     if @_toggle
       @setActive not @getActive()
     @fire 'click', this
+
+  focus : ->
+    @el.focus()
+
+  blur : ->
+    @el.blur()
     
 
 

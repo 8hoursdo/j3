@@ -72,11 +72,15 @@ j3.Dom = do ->
         @hide el
 
     show : (el) ->
-      el.style.display = ''
+      if el.style.display isnt 'none' then return
+
+      el.style.display = el._oldStyleDisplay || ''
       return
 
     hide : (el) ->
+      el._oldStyleDisplay = el.style.display
       el.style.display = 'none'
+      return
 
     remove : (el) ->
       el.parentNode.removeChild el

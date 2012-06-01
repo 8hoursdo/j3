@@ -53,6 +53,7 @@ task 'build', 'build j3 libarary', (options) ->
     'tree-view'
     'window-actions'
     'window'
+    'message-box'
     'location'
     'router'
     'application'

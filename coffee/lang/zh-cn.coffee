@@ -1,8 +1,10 @@
 j3.Lang =
   # Control
   loading : "正在加载……"
-  ttlMessage : "提示"
-  ttlConfirm : "确认"
+  warning : "警告"
+  error : "错误"
+  message : "提示"
+  confirm : "确认"
   yes : "是"
   no : "否"
   ok : "确定"
