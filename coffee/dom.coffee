@@ -78,6 +78,8 @@ j3.Dom = do ->
       return
 
     hide : (el) ->
+      if el.style.display is 'none' then return
+
       el._oldStyleDisplay = el.style.display
       el.style.display = 'none'
       return
