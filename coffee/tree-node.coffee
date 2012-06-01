@@ -192,6 +192,7 @@ do (j3) ->
         @expand()
         return
 
+      child.parent = this
       @getChildren().insert child
       @elBody.appendChild child.el
       child.setLevel @_level + 1
