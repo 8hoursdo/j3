@@ -1,5 +1,3 @@
-_regTrim = /^\s+|\s+$/g
-
 _regFormat = /{(\d+)?}/g
 
 j3.ext j3,
@@ -49,4 +47,12 @@ else
     if @isNullOrEmpty s then return ''
     s.replace _regTime, ''
 
-  String.prototype.trim = -> s.replace _regTrim, ''
+  # see: http://blog.stevenlevithan.com/archives/faster-trim-javascript
+  String.prototype.trim = (s) ->
+    s = s.replace /^\s\s*/, ''
+    ws = /\s/
+    i = s.length - 1
+    while ws.test s.charAt(i)
+      i--
+    s.slice 0, i + 1
+
