@@ -121,6 +121,9 @@ do (j3) ->
     getAt : (index) ->
       @_models.getAt index
 
+    count : ->
+      @_models.count()
+
     forEach : (context, args, callback) ->
       @_models.forEach context, args, callback
 
