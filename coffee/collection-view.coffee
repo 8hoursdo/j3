@@ -100,6 +100,7 @@ do (j3) ->
       @_filterBy = options.filterBy
       @_sortBy = options.sortBy
       @_groupBy = options.groupBy
+      @_groupSortBy = options.groupSortBy
 
       @setDatasource options.datasource
 
