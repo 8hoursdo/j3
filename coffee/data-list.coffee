@@ -63,17 +63,17 @@ do (j3) ->
           index++
 
     renderDataListItem : (buffer, dataListItem) ->
-      itemCss = 'data-list-item'
+      itemCss = 'list-item'
       if dataListItem.index is 0
-        itemCss += ' data-list-item-first'
+        itemCss += ' list-item-first'
       else if dataListItem.index is (dataListItem.count - 1)
-        itemCss += ' data-list-item-last'
+        itemCss += ' list-item-last'
 
       if dataListItem.index % 2
-        itemCss += ' data-list-item-even'
+        itemCss += ' list-item-even'
 
       if dataListItem.active
-        itemCss += ' data-list-item-active'
+        itemCss += ' list-item-active'
 
       buffer.append '<div class="' + itemCss + '">'
 
