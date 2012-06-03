@@ -6,6 +6,10 @@ do (j3) ->
   __renderGroupItem = (buffer, group, activeLink) ->
     buffer.append '<div class="nav-group-item">'
     buffer.append '<div class="nav-list-title">'
+
+    if group.icon
+      buffer.append '<i class="' + group.icon + '"></i>'
+
     buffer.append j3.htmlEncode group.text
     buffer.append '</div>'
 
