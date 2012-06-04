@@ -5,6 +5,7 @@ do (j3) ->
 
     onCreateChild : (options, args) ->
       options.cls ?= j3.Button
-      if args.first then options.css = 'first'
-      if args.last then options.css = 'last'
+      options.css ?= ''
+      if args.first then options.css += ' first'
+      if args.last then options.css += ' last'
 
