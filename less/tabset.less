@@ -4,12 +4,12 @@
 
 .tabs-header {
   border-bottom: 1px solid @boxBorderColor;
-  height: 30px;
+  height: @tabsHeaderHeight;
 }
 
 .tabs-triggers {
   margin: 0;
-  padding: 0;
+  padding: 0 0 0 15px;
   list-style: none;
 
   li {
@@ -18,13 +18,16 @@
 
     a {
       display: inline-block;
-      padding: 1px 11px 0;
-      line-height: @tabsHeaderHeight - 1px;
+      border: 1px solid @boxBorderColor;
+      padding: 1px @tabsTriggerPadding 0;
+      background: #e8e8e8;
+      line-height: @tabsHeaderHeight - 2px;
+      color: #666;
       cursor: pointer;
       .border-radius(@tabsTriggerBorderRadius @tabsTriggerBorderRadius 0 0);
 
       &:hover {
-        background: #ededed;
+        background: #fff;
       }
     }
   }
@@ -32,11 +35,12 @@
   li.active a {
     color: @activeColor;
     cursor: default;
-    padding: 0 10px 1px;
-    line-height: @tabsHeaderHeight - 1px;
-    border: 1px solid @boxBorderColor;
+    padding: 0 @tabsTriggerPadding 1px;
+    line-height: @tabsHeaderHeight - 2px;
+    border-top: 2px solid @activeColor;
     border-bottom: none;
     background: #fff;
+    color: #333;
   }
 }
 
@@ -46,6 +50,7 @@
 
 .tab-pnl {
   display: none;
+  padding-top: 10px;
 }
 
 .tab-pnl-active {
