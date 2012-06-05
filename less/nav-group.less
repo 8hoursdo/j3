@@ -3,13 +3,13 @@
     height: 32px;
     line-height: 32px;
     padding-left: 10px;
-    vertical-align: top;
 
     i {
       display: inline-block;
-      width: 16px;
-      height: 16px;
-      margin-top: 8px;
+      vertical-align: top;
+      width: @baseIconSize;
+      height: @baseIconSize;
+      margin-top: (32px - @baseIconSize) / 2;
       margin-right: 10px;
     }
   }
@@ -23,13 +23,13 @@
     font-size: 12px;
     line-height: 26px;
     padding: 0 0 0 10px;
-    vertical-align: top;
 
     i {
       display: inline-block;
+      vertical-align: top;
       width: 16px;
       height: 16px;
-      margin-top: 5px;
+      margin-top: (26px - @baseIconSize) / 2;
       margin-right: 10px;
     }
 
