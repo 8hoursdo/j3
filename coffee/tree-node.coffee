@@ -4,6 +4,19 @@ do (j3) ->
       for i in [0...@_level-1]
         buffer.append '<div class="tree-node-indent"></div>'
 
+  __refreshNode = ->
+    el = @_elNodeBody
+    Dom = j3.Dom
+    if @_childrenLoaded and (not @children or not @children.count())
+      @collapse()
+      Dom.addCls el, 'tree-node-leaf'
+    else
+      Dom.removeCls el, 'tree-node-leaf'
+      if @_expanded
+        Dom.addCls el, 'tree-node-expanded'
+      else
+        Dom.removeCls el, 'tree-node-expanded'
+
   j3.TreeNode = j3.cls j3.ContainerView,
     baseCss : 'tree-node'
 
@@ -38,7 +51,9 @@ do (j3) ->
       buffer.append '<div class="tree-node-body'
       if @_level is 0
         buffer.append ' tree-node-top'
-      if @_expanded
+      if @_childrenLoaded and (not @children or not @children.count())
+        buffer.append ' tree-node-leaf'
+      else if @_expanded
         buffer.append ' tree-node-expanded'
       buffer.append '">'
 
@@ -79,6 +94,9 @@ do (j3) ->
       @_elLabel = j3.$ @id + '-label'
 
       @el._j3TreeNode = this
+
+    onLoad : ->
+      if @parent and @parent isnt @_tree then __refreshNode.apply @parent
 
     getLevel : ->
       @_level
