@@ -9,6 +9,7 @@ j3.Lang =
   no : "No"
   ok : "OK"
   cancel : "Cancel"
+  save : "Save"
   mngboxyes : "Yes"
   mngboxno : "No"
   mngboxok : "OK"
@@ -20,6 +21,7 @@ j3.Lang =
   close : "Close"
   expand : "Expand"
   collapse : "Collapse"
+  savedSuccess : "Saved success."
   
   # PagePilot
   prevPage : "Prev"

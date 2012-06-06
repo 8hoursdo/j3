@@ -9,6 +9,7 @@ j3.Lang =
   no : "否"
   ok : "确定"
   cancel : "取消"
+  save : "保存"
   clear : "清空"
   minimum : "最小化"
   maximum : "最大化"
@@ -16,6 +17,7 @@ j3.Lang =
   close : "关闭"
   expand : "展开"
   collapse : "折叠"
+  savedSuccess : "保存成功。"
   
   # PagePilot
   prevPage : "上一页"
