@@ -11,15 +11,23 @@ do (j3) ->
 
       el = el.parentNode
 
-  __fireCommand = (name, el) ->
+  __fireCommand = (name, src) ->
     elListItem = null
+    el = src
     while el and el isnt @el
       elListItem = el
       el = el.parentNode
 
     if el is @el
       data = @getDatasource().getAt j3.Dom.indexOf(elListItem)
-      @fire 'command', this, name : name, data : data
+
+      args =
+        name : name
+        data : data
+        src : src
+
+      @onCommand? args
+      @fire 'command', this, args
 
   j3.DataList = j3.cls j3.View,
     baseCss : 'data-list'
