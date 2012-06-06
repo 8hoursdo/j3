@@ -18,6 +18,8 @@ j3.Lang =
   expand : "展开"
   collapse : "折叠"
   savedSuccess : "保存成功。"
+  edit : '修改'
+  editedSuccess : '修改成功。'
   
   # PagePilot
   prevPage : "上一页"

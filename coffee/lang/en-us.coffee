@@ -22,6 +22,9 @@ j3.Lang =
   expand : "Expand"
   collapse : "Collapse"
   savedSuccess : "Saved success."
+  edit : 'Edit'
+  editedSuccess : 'Edited success.'
+
   
   # PagePilot
   prevPage : "Prev"
