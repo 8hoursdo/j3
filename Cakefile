@@ -54,6 +54,7 @@ task 'build', 'build j3 libarary', (options) ->
     'window-actions'
     'window'
     'message-box'
+    'message-bar'
     'data-list'
     'location'
     'router'

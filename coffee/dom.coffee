@@ -213,8 +213,8 @@ j3.Dom = do ->
       return
 
     center : (el, top, left) ->
-      top ?= 0.4
-      left ?= 0.5
+      if top isnt 0 then top ?= 0.4
+      if left isnt 0 then left ?= 0.5
 
       cw = @clientWidth()
       ch = @clientHeight()
@@ -222,8 +222,18 @@ j3.Dom = do ->
       eh = @offsetHeight el
       st = document.documentElement.scrollTop
       sl = document.documentElement.scrollLeft
+
+      if left >= 1
+        x = left
+      else
+        x = (cw - ew)*left + sl
+
+      if top >= 1
+        y = top
+      else
+        y = (ch - eh)*top + st
         
-      @place el, ((cw - ew)*left + sl), ((ch - eh)*top + st)
+      @place el, x, y
 
   __width_ie = (el) ->
     cs = el.currentStyle

@@ -1,0 +1,57 @@
+.msg-bar {
+  position: absolute;
+  z-index: 3000;
+  top: 0;
+  left: 0;
+  border: 1px solid @boxBorderColor;
+  .border-radius(3px);
+  background: #fff;
+  color: #999;
+  padding: 5px 5px;
+  font-size: 12px;
+  line-height: @baseLineHeight;
+}
+
+.msg-bar-error {
+  border-color: #f1433f;
+  color: #f1433f;
+  background: #ffcccc;
+}
+
+.msg-bar-warning {
+  border-color: #ffad46;
+  color: #ffefda;
+  background: #fddab7;
+}
+
+.msg-bar-message {
+  border-color: #36b1c5;
+  color: #36b1c5;
+  background: #d7f9ff;
+}
+
+.msg-bar-icon {
+  float: left;
+  width: 18px;
+  height: 18px;
+  background-image: url(../img/icons.png);
+  background-repeat: none;
+}
+
+.msg-bar-icon-error {
+  background-position: (0px - (30px * 4) - (30px - 18px) / 2) (0px - (30px * 4) - (30px - 18px) / 2);
+}
+
+.msg-bar-icon-warning {
+  background-position: (0px - (30px * 5) - (30px - 18px) / 2) (0px - (30px * 4) - (30px - 18px) / 2);
+}
+
+.msg-bar-icon-message {
+  background-position: (0px - (30px * 6) - (30px - 16px) / 2) (0px - (30px * 4) - (30px - 16px) / 2);
+}
+
+.msg-bar-content {
+  float: left;
+  padding: 0 10px;
+  max-width: 800px;
+}
