@@ -107,12 +107,11 @@ do (j3) ->
       @el.disabled = @_disabled
       j3.Dom.toggleCls @el, 'disabled'
 
-    getReadonly : ->
-      @_readonly
+    getReadOnly : ->
+      @el.readOnly
 
-    setReadonly : (value) ->
-      @_readonly = !!value
-      @el.readonly = @_readonly
+    setReadOnly : (value) ->
+      @el.readOnly = !!value
 
     focus : ->
       @el.focus()
