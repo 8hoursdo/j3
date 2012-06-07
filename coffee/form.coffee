@@ -36,6 +36,16 @@ do (j3) ->
     getDatasource : ->
       @_datasource
 
+    getFormItemByName : (name) ->
+      if not @children then return null
+
+      node = @children.firstNode()
+      while node
+        if node.value.name is name
+          return node.value
+        node = node.next
+      null
+
     action : (name, src) ->
       @fire 'action', this, name : name, src : src
 
