@@ -87,7 +87,7 @@ do (j3) ->
 
       __tabPanelActive.call @_activePanel
 
-      @fire 'active', this, old : old, panel : @_activePanel
+      @fire 'activePanelChange', this, old : old, panel : @_activePanel
 
 
 
