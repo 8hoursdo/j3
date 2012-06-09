@@ -20,8 +20,10 @@ do (j3) ->
   __renderList = (buffer, links, activeLink) ->
     buffer.append '<ul class="nav-list">'
     renderOptions = commandMode : true
-    j3.forEach links, this, (link) ->
-      j3.LinkList.renderLinkListItem buffer, link, activeLink is link, renderOptions
+    j3.forEach links, this, (link, args, index) ->
+      renderOptions.isActive = activeLink is link
+      renderOptions.isFirst = index is 0
+      j3.LinkList.renderLinkListItem buffer, link, renderOptions
     buffer.append '</ul>'
 
   j3.NavGroup = j3.cls j3.View,

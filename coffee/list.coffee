@@ -158,9 +158,11 @@ j3.List = j3.cls
       args = null
 
     node = @_first
+    i = 0
     while node
-      callback.call context, node.value, args
+      callback.call context, node.value, args, i
       node = node.next
+      i++
     return
 
   tryUntil : (context, args, callback) ->
@@ -173,10 +175,12 @@ j3.List = j3.cls
       args = null
 
     node = @_first
+    i = 0
     while node
-      if callback.call context, node.value, args
+      if callback.call context, node.value, args, i
         return node.value
       node = node.next
+      i++
     return
 
   doWhile : (context, args, callback) ->
@@ -189,9 +193,11 @@ j3.List = j3.cls
       args = null
 
     node = @_first
+    i = 0
     while node
-      if not callback.call context, node.value, args
+      if not callback.call context, node.value, args, i
         return node.value
       node = node.next
+      i++
     return
 

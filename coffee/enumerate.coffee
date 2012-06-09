@@ -20,8 +20,8 @@ do (j3) ->
       args = null
 
     if j3.isArray list
-      for eachItem in list
-        callback.call context, eachItem, args
+      for eachItem, i in list
+        callback.call context, eachItem, args, i
     else if list.forEach
       list.forEach context, args, callback
 
@@ -77,3 +77,23 @@ do (j3) ->
         j3.setVal item, childrenName, __getChildItems(list, j3.getVal(item, idName), options)
 
     rootItems
+
+  j3.pickFieldVal = (list, options) ->
+    map = {}
+    res = []
+
+    j3.forEach list, (item) ->
+      value = j3.getVal item, options.fieldName
+      if j3.isArray value
+        for eachVal in value
+          if not map[eachVal]
+            map[eachVal] = true
+            res.push eachVal
+      else
+        if not map[eachVal]
+          map[eachVal] = true
+          res.push eachVal
+
+    res
+        
+        

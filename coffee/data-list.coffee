@@ -2,6 +2,7 @@ do (j3) ->
   __el_click = (evt) ->
     el = evt.src()
 
+    elListItem = null
     while el and el isnt @el
       cmd = j3.Dom.attr el, 'data-cmd'
       if cmd
@@ -9,7 +10,16 @@ do (j3) ->
         __fireCommand.call this, cmd, el
         break
 
+      elListItem = el
       el = el.parentNode
+
+    if el is @el
+      __elListItem_click.call this, elListItem
+
+  __elListItem_click = (el) ->
+    datasource = @getDatasource()
+    if datasource
+      datasource.setActive datasource.getAt(j3.Dom.indexOf(el))
 
   __fireCommand = (name, src) ->
     elListItem = null
@@ -32,6 +42,8 @@ do (j3) ->
   j3.DataList = j3.cls j3.View,
     baseCss : 'data-list'
 
+    _activeItemIndex : -1
+
     onInit : (options) ->
       @_dataItemCls = options.dataItemCls
       @_dataItemRenderer = options.dataItemRenderer
@@ -40,6 +52,11 @@ do (j3) ->
       j3.on @el, 'click', this, __el_click
 
       @setDatasource options.datasource
+
+      if @_activeItemIndex is -1
+        @_activeItenEl = null
+      else
+        @_activeItenEl = j3.Dom.byIndex @_activeItemIndex
 
     onUpdateView : (datasource, eventName, data) ->
       if not @el then return
@@ -55,11 +72,10 @@ do (j3) ->
       buffer.append '</div>'
 
     renderDataListItems : (buffer, datasource) ->
-      index = 0
       if datasource
         activeModel = datasource.getActive()
         count = datasource.count
-        datasource.forEach this, (model) ->
+        datasource.forEach this, (model, args, index) ->
           dataListItem =
             index : index
             count : count
@@ -68,7 +84,6 @@ do (j3) ->
             selected : false
 
           @renderDataListItem buffer, dataListItem
-          index++
 
     renderDataListItem : (buffer, dataListItem) ->
       itemCss = 'list-item'
@@ -82,6 +97,7 @@ do (j3) ->
 
       if dataListItem.active
         itemCss += ' list-item-active'
+        @_activeItemIndex = dataListItem.index
 
       buffer.append '<div class="' + itemCss + '">'
 

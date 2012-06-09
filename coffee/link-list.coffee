@@ -5,11 +5,9 @@ do (j3) ->
     el = evt.src()
     while el and el isnt @el
       if el.tagName is 'A'
-        cmd = el.attributes['data-cmd']
+        cmd = j3.Dom.attr el, 'data-cmd'
         if cmd
-          cmd = cmd.nodeValue
-          data = el.attributes['data-data']
-          if data then data = data.nodeValue
+          data = j3.Dom.attr el, 'data-data'
 
           evt.stop()
           @fire 'command', this, src : el, name : cmd, data : data
@@ -22,6 +20,7 @@ do (j3) ->
     onInit : (options) ->
       @_linkTarget = options.linkTarget
       @_commandMode = options.commandMode
+      if options.items then @_items = options.items
       @setDatasource options.datasource
 
     onCreated : (options) ->
@@ -35,17 +34,20 @@ do (j3) ->
 
     renderList : (buffer) ->
       datasource = @getDatasource()
-      if not datasource then return
+      if datasource
+        activeModel = datasource.getActive()
+      else
+        datasource = @_items || []
 
-      activeModel = datasource.getActive()
       renderOptions =
         target : @_linkTarget
         commandMode : @_commandMode
 
-      datasource.forEach (model) =>
+      j3.forEach datasource, (model, args, index) =>
+        renderOptions.isActive = activeModel is model
+        renderOptions.isFirst = index is 0
         j3.LinkList.renderLinkListItem buffer,
           model,
-          activeModel is model,
           renderOptions
 
     onUpdateView : (datasource) ->
@@ -55,37 +57,43 @@ do (j3) ->
       @renderList buffer
       @el.innerHTML = buffer.toString()
 
-  j3.LinkList.renderLinkListItem = (buffer, model, isActive, options) ->
-    buffer.append '<li'
-    if isActive
-      buffer.append ' class="active"'
-    buffer.append '>'
+  j3.LinkList.renderLinkListItem = (buffer, model, options) ->
+    buffer.append '<li class="'
+    if options.isActive
+      buffer.append ' active"'
+    if options.isFirst
+      buffer.append ' first"'
+    buffer.append '">'
 
     buffer.append '<a'
-    url = model.get 'url'
+    url = j3.getVal model, 'url'
     if url
       buffer.append ' href="' + url + '"'
 
-    title = model.get 'title'
+    title = j3.getVal model, 'title'
     if title
       buffer.append ' title="' + j3.htmlEncode(title) + '"'
 
-    target = model.get 'target'
+    target = j3.getVal model, 'target'
     if not target then target = options.target
     if target
       buffer.append ' target="' + target + '"'
 
     if options.commandMode
-      cmd = model.get 'cmd'
+      cmd = j3.getVal model, 'cmd'
       if cmd
         buffer.append ' data-cmd="' + cmd + '"'
 
-      data = model.get 'data'
+      data = j3.getVal model, 'data'
       if data
         buffer.append ' data-data="' + data + '"'
 
     buffer.append '>'
-    buffer.append model.get 'text'
+    icon = j3.getVal model, 'icon'
+    if icon
+      buffer.append '<i class="' + icon + '"></i>'
+
+    buffer.append j3.htmlEncode(j3.getVal(model, 'text'))
     buffer.append '</a>'
 
     buffer.append '</li>'
