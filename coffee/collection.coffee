@@ -108,6 +108,12 @@ do (j3) ->
         @updateViews 'active', args
         @fire 'activeModelChange', this, args
 
+    setActiveByIndex : (index, options) ->
+      if index >= @count() or index < 0
+        index = -1
+
+      @setActive @getAt(index), options
+
     getById : (id, callback) ->
       if not id
         callback && callback null
