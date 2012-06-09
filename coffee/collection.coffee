@@ -44,15 +44,29 @@ do (j3) ->
         @updateViews 'add', model : model
 
     remove : (model, options) ->
+      if not model then return
+
       options ?= {}
+
+      if @_activeModel is model
+        node = @_models.findNode(model)
+        newActiveModel = node.next && node.next.value
+        if not newActiveModel then newActiveModel = node.prev && node.prev.value
 
       @_models.remove model
       delete @_idxId[model.get @_idName]
-      @updateViews 'remove', model : model
+
+      if not options.silent
+        @updateViews 'remove', model : model
+      if newActiveModel
+        @setActive newActiveModel, options
 
     removeById : (id, options) ->
       model = @getById id
       if model then @remove model, options
+
+    removeActive : (options) ->
+      if @_activeModel then @remove @_activeModel, options
 
     clear : (options) ->
       options ?= {}
