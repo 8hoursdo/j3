@@ -123,7 +123,7 @@ j3.List = j3.cls
       
   getAt : (index) ->
     node = @getNodeAt index
-    node.value if node
+    if node then node.value else null
 
   toString : ->
     sb = new j3.StringBuilder

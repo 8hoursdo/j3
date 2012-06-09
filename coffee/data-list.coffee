@@ -13,7 +13,7 @@ do (j3) ->
       elListItem = el
       el = el.parentNode
 
-    if el is @el
+    if el is @el and @_activeItemOnClick
       __elListItem_click.call this, elListItem
 
   __elListItem_click = (el) ->
@@ -47,6 +47,7 @@ do (j3) ->
     onInit : (options) ->
       @_dataItemCls = options.dataItemCls
       @_dataItemRenderer = options.dataItemRenderer
+      @_activeItemOnClick = options.activeItemOnClick
 
     onCreated : (options) ->
       j3.on @el, 'click', this, __el_click
@@ -74,7 +75,7 @@ do (j3) ->
     renderDataListItems : (buffer, datasource) ->
       if datasource
         activeModel = datasource.getActive()
-        count = datasource.count
+        count = datasource.count()
         datasource.forEach this, (model, args, index) ->
           dataListItem =
             index : index
