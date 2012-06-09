@@ -104,7 +104,9 @@ do (j3) ->
       @_activeModel = model
 
       if not options.silent
-        @updateViews 'active', old : old, cur : model
+        args = old : old, model : model
+        @updateViews 'active', args
+        @fire 'activeModelChange', this, args
 
     getById : (id, callback) ->
       if not id
@@ -142,3 +144,4 @@ do (j3) ->
       @_models.forEach context, args, callback
 
   j3.ext j3.Collection.prototype, j3.Datasource
+  j3.ext j3.Collection.prototype, j3.EventManager
