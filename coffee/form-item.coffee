@@ -50,6 +50,25 @@ do (j3) ->
     val : ->
       @_textbox.getText()
 
+  j3.CheckboxFormItem = j3.cls j3.FormItem,
+    createChildren : (options) ->
+      @_checkbox = new j3.Checkbox
+        id : options.controlId
+        text : options.text
+        value : options.value
+        name : options.name
+        valueName : options.valueName
+        datasource : options.datasource
+        width : options.controlWidth
+        on : options.on
+        parent : this
+
+    checkbox : ->
+      @_checkbox
+
+    val : ->
+      @_checkbox.getValue()
+
   j3.DropdownListFormItem = j3.cls j3.FormItem,
     createChildren : (options) ->
       @_dropdownList = new j3.DropdownList

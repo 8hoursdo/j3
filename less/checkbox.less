@@ -1,0 +1,55 @@
+.chk {
+  line-height: @baseLineHeight;
+  color: @textColor;
+  text-decoration: none;
+
+  i {
+    display: inline-block;
+    margin-right: 5px;
+    width: @baseIconSize;
+    height: @baseIconSize;
+    vertical-align: top;
+    background-image: url(../img/icons.png);
+    background-repeat: no-repeat;
+    background-position: (0px - (30px * 0) - (30px - @baseIconSize) / 2) (0px - (30px * 5) - (30px - @baseIconSize) / 2);
+  }
+
+  &:hover i {
+    background-position: (0px - (30px * 1) - (30px - @baseIconSize) / 2) (0px - (30px * 5) - (30px - @baseIconSize) / 2);
+  }
+}
+
+.chk-checked {
+  i {
+    background-position: (0px - (30px * 3) - (30px - @baseIconSize) / 2) (0px - (30px * 5) - (30px - @baseIconSize) / 2);
+  }
+
+  &:hover i {
+    background-position: (0px - (30px * 4) - (30px - @baseIconSize) / 2) (0px - (30px * 5) - (30px - @baseIconSize) / 2);
+  }
+}
+
+.chk-disabled {
+  cursor: default;
+  color: @inactiveTextColor;
+
+  i {
+    background-position: (0px - (30px * 2) - (30px - @baseIconSize) / 2) (0px - (30px * 5) - (30px - @baseIconSize) / 2);
+  }
+
+  &:hover i {
+    background-position: (0px - (30px * 2) - (30px - @baseIconSize) / 2) (0px - (30px * 5) - (30px - @baseIconSize) / 2);
+  }
+}
+
+.chk-disabled.chk-checked {
+  color: @inactiveTextColor;
+
+  i {
+    background-position: (0px - (30px * 5) - (30px - @baseIconSize) / 2) (0px - (30px * 5) - (30px - @baseIconSize) / 2);
+  }
+
+  &:hover i {
+    background-position: (0px - (30px * 5) - (30px - @baseIconSize) / 2) (0px - (30px * 5) - (30px - @baseIconSize) / 2);
+  }
+}

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>checkbox</title>
+    <link rel="Stylesheet" href="../lib/css/j3.css" />
+    <script type="text/javascript" src="../lib/js/j3.js"></script>
+</head>
+<body>
+<p id='normal'></p>
+<p id='checked'></p>
+<p id='disabled'></p>
+<p id='disabled&checked'></p>
+<script type="text/javascript">
+    j3.ready(function () {
+        new j3.Checkbox({ ctnr: 'normal', text: 'normal' });
+        new j3.Checkbox({ ctnr: 'checked', text: 'checked', checked: true });
+        new j3.Checkbox({ ctnr: 'disabled', text: 'disabled', disabled: true });
+        new j3.Checkbox({ ctnr: 'disabled&checked', text: 'disabled&checked', checked: true, disabled: true });
+    });
+</script>
+</body>
+</html>

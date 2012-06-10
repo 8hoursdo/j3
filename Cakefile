@@ -29,6 +29,7 @@ task 'build', 'build j3 libarary', (options) ->
     'container-view'
     'button'
     'button-group'
+    'checkbox'
     'textbox'
     'calendar'
     'selector'
