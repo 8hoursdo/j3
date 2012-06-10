@@ -30,5 +30,5 @@ else
 
     toString : ->
       @_data.join ''
-  
 
+j3.StringBuilder.prototype.a = j3.StringBuilder.prototype.append
