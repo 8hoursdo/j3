@@ -2,8 +2,8 @@
 <html>
 <head>
     <title>switch</title>
-    <link rel="Stylesheet" href="../j3/css/j3.css" />
-    <script type="text/javascript" src="../j3/js/j3.js"></script>
+    <link rel="Stylesheet" href="../lib/css/j3.css" />
+    <script type="text/javascript" src="../lib/js/j3.js"></script>
 </head>
 <body>
 <div style="width:300px">
@@ -16,7 +16,7 @@
         var switch2 = new j3.Switch({ctnr:'switch2'});
 
         switch1.on('change', function(sender){
-            switch2.checked(!sender.checked());
+            switch2.setChecked(!sender.getChecked());
             }
         );
     });
