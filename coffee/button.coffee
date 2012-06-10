@@ -32,7 +32,7 @@ j3.Button = j3.cls j3.View,
 
   setText : (text) ->
     @_text = text || ''
-    @el.innerHTML = @_text
+    @el.innerHTML = j3.htmlEncode @_text
 
   getDisabled : ->
     @_disabled
