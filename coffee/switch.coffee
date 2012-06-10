@@ -1,6 +1,8 @@
 do (j3) ->
-  __switch_click = ->
-    @checked !@checked()
+  __el_keypress = (evt) ->
+    if evt.keyCode() is 32
+      @click()
+      evt.stop()
 
   j3.Switch = j3.cls j3.View,
     baseCss : 'swt'
@@ -17,13 +19,15 @@ do (j3) ->
         (if @_checked then ' ' + @baseCss + '-checked' else '')
 
     onCreated : (options) ->
-      j3.on @el, 'click', this, __switch_click
+      j3.on @el, 'click', this, @click
+      j3.on @el, 'keypress', this, __el_keypress
 
       @setDatasource options.datasource
 
-    checked : (checked) ->
-      if j3.isUndefined checked then return @_checked
+    getChecked : ->
+      @_checked
 
+    setChecked : (checked) ->
       if @_checked is !!checked then return
 
       j3.Dom.toggleCls @el, @baseCss + '-checked'
@@ -33,11 +37,14 @@ do (j3) ->
 
       @fire 'change', this
 
+    click : ->
+      @setChecked !@getChecked()
+
     onUpdateData : ->
       @_datasource.set @_name, @_checked
 
     onUpdateView : ->
-      @checked @_datasource.get @_name
+      @setChecked @_datasource.get @_name
 
   j3.ext j3.Switch.prototype, j3.DataView
 

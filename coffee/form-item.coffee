@@ -126,4 +126,4 @@ do (j3) ->
       @_switch
 
     val : ->
-      @_switch.checked()
+      @_switch.getChecked()
