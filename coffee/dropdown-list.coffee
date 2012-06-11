@@ -92,20 +92,17 @@ do (j3) ->
         if index isnt -1
           Dom.addCls Dom.byIndex(@_elDrpList, index), 'active'
 
-      selectedText = ''
+      selectedItem = null
       selectedValue = null
-      emptyCls = @baseCss + '-empty'
-      if index is -1
-        Dom.addCls @el, emptyCls
-        @setLabel @_placeholder
-      else
-        Dom.removeCls @el, emptyCls
-        item = @_items.getAt index
-        selectedText = item.text
-        selectedValue = item.value
 
-        @setLabel selectedText
-        @setText selectedText
+      if index isnt -1
+        item = @_items.getAt index
+        selectedItem =
+          text : j3.getVal item, 'text'
+          value : j3.getVal item, 'value'
+        selectedValue = selectedItem.value
+
+      @setSelectedItem selectedItem
 
       oldSelectedValue = @_selectedValue
       oldSelectedIndex = @_selectedIndex

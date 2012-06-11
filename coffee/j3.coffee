@@ -94,6 +94,11 @@ j3.equals = (obj1, obj2) ->
 
   if @isFunction obj1.equals then return obj1.equals obj2
 
+  if @isObject(obj1) and @isObject(obj2)
+    for key of obj1
+      if not @equals obj1[key], obj2[key] then return false
+    return true
+
   return false
 
 j3.compare = (obj1, obj2, nullGreat) ->

@@ -4,13 +4,11 @@ do (j3) ->
     @setDate args.curDate
 
   __refreshView = ->
-    emptyCls = @baseCss + '-empty'
-    if @_date
-      @setLabel @_date.toString 'yyyy-MM-dd'
-      j3.Dom.removeCls @el, emptyCls
-    else
-      @setLabel @_placeholder
-      j3.Dom.addCls @el, emptyCls
+    if @_data
+      item =
+        text : @_date.toString 'yyyy-MM-dd'
+
+    @setSelectedItem item
     
   j3.DateSelector = j3.cls j3.Dropdown,
     cssTrigger : 'icon-calendar'

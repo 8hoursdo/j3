@@ -9,13 +9,22 @@
   width: 198px;
 }
 
-.sel-lbl {
+.sel-bar {
   display: inline-block;
   margin: 0;
   padding: 5px;
   line-height: @baseLineHeight;
   vertical-align: top;
   overflow: hidden;
+}
+
+.sel-lbls {
+  .sel-lbl {
+    display: inline-block;
+    background: @panelBgColor;
+    margin-right: 5px;
+    padding: 0 5px;
+  }
 }
 
 .sel-txt {
@@ -29,8 +38,7 @@
 }
 
 .sel-empty {
-  .sel-lbl,
-  .sel-txt {
+  .sel-lbls {
     color: @placeholderText;
   }
 }
