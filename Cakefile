@@ -20,6 +20,7 @@ task 'build', 'build j3 libarary', (options) ->
     'datasource'
     'data-view'
     'data-items-view'
+    'compile'
     'model'
     'collection'
     'collection-view'

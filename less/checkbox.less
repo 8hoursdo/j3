@@ -1,4 +1,5 @@
-.chk {
+.chk,
+.list-item-chk {
   line-height: @baseLineHeight;
   color: @textColor;
   text-decoration: none;
@@ -19,6 +20,7 @@
   }
 }
 
+.list-item-checked .list-item-chk,
 .chk-checked {
   i {
     background-position: (0px - (30px * 3) - (30px - @baseIconSize) / 2) (0px - (30px * 5) - (30px - @baseIconSize) / 2);
@@ -29,6 +31,7 @@
   }
 }
 
+.list-item-disabled .list-item-chk,
 .chk-disabled {
   cursor: default;
   color: @inactiveTextColor;
