@@ -146,10 +146,10 @@ do (j3) ->
         @fire 'beforeExpand', this, args
         if args.stop then return
 
-        tree.beforeExpandNode && tree.beforeExpandNode args
+        tree.beforeNodeExpand && tree.beforeNodeExpand args
         if args.stop then return
 
-        tree.fire 'beforeExpandNode', tree, args
+        tree.fire 'beforeNodeExpand', tree, args
         if args.stop then return
 
       j3.Dom.toggleCls @_elNodeBody, 'tree-node-expanded'
