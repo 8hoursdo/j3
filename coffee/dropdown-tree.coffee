@@ -3,19 +3,38 @@ do (j3) ->
     node = args.node
     if node.getUnselectable() then return
 
-    @setSelectedItem if node then node.getData() else null
     @close()
+    
+    selectedItem = null
+    if node
+      nodeData = node.getData()
+      selectedItem =
+        text : j3.getVal nodeData, @_itemsTextName
+        value : j3.getVal nodeData, @_itemsValName
+    __setSelectedItemInternal.call this, selectedItem
 
   __tree_nodeExpand = (sender, args) ->
     @resizeDropdownBox()
 
-  __getItemByValue = (value, callback) ->
+  __getDataItemByValue = (value, callback) ->
     if not value then return callback null
 
     datasource = @getItemsDatasource()
     if not datasource then return
 
     datasource.getById value, callback
+
+  __setSelectedItemInternal = (selectedItem) ->
+    selectedValue = (selectedItem && selectedItem.value) || null
+
+    if @_selectedValue is selectedValue then return
+    @_selectedValue = selectedValue
+
+    @updateData()
+
+    @doSetSelectedItems selectedItem
+
+    @fire 'change', this, value : selectedValue
 
   j3.DropdownTree = j3.cls j3.Dropdown,
     onInit : (options) ->
@@ -53,43 +72,18 @@ do (j3) ->
     getTree : ->
       @_tree
 
-    getSelectedItem : ->
-      @_selectedItem
-
-    setSelectedItem : (value) ->
-      @_selectedItem = value
-
-      selectedValue = value[@_itemsValName]
-      if @_selectedValue is selectedValue then return
-      @_selectedValue = selectedValue
-
-      @setSelectedText value[@_itemsTextName] || @_selectedValue || ''
-
-      @updateData()
-      @fire 'change', this, value : selectedValue
-
-    getSelectedText : ->
-      @_selectedText
-
-    setSelectedText : (value) ->
-      @_selectedText = value
-      @setLabel @_selectedText
-
     getSelectedValue : ->
       @_selectedValue
 
     setSelectedValue : (value) ->
       if @_selectedValue is value then return
 
-      __getItemByValue.call this, value, (item) =>
-        if item
-          @_selectedValue = value
-          @setSelectedText j3.getVal(item, @_itemsTextName)
-        else
-          @_selectedValue = null
-          @setSelectedText ''
-
-        @fire 'change', this, value : @_selectedValue
+      __getDataItemByValue.call this, value, (dataItem) =>
+        if dataItem
+          selectedItem =
+            text : j3.getVal dataItem, @_itemsTextName
+            value : j3.getVal dataItem, @_itemsValName
+        __setSelectedItemInternal.call this, selectedItem
 
     onUpdateView : (datasource, eventName, args) ->
       value = datasource.get @name

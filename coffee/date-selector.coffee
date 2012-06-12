@@ -2,13 +2,6 @@ do (j3) ->
   __calendar_change = (sender, args) ->
     @close()
     @setDate args.curDate
-
-  __refreshView = ->
-    if @_data
-      item =
-        text : @_date.toString 'yyyy-MM-dd'
-
-    @setSelectedItem item
     
   j3.DateSelector = j3.cls j3.Dropdown,
     cssTrigger : 'icon-calendar'
@@ -17,12 +10,11 @@ do (j3) ->
       j3.DateSelector.base().onInit.call this, options
 
       @_name = options.name
-      @_date = options.date
 
     onCreated : (options) ->
       j3.DateSelector.base().onCreated.call this
 
-      __refreshView.call this
+      @setDate options.date
       @setDatasource options.datasource
 
     onCreateDropdownBox : (elBox) ->
@@ -32,15 +24,26 @@ do (j3) ->
     getDate : ->
       @_calendar.getCurrentDate()
 
-    setDate : (date) ->
+    setDate : (date, internal) ->
       if j3.equals @_date, date then return
 
       oldDate = @_date
       @_date = date
-      __refreshView.call this
+
+      unless internal
+        if @_date
+          selectedItem =
+            text : @_date.toString 'yyyy-MM-dd'
+            value : @_date
+
+        @doSetSelectedItems selectedItem
 
       @updateData()
       @fire 'change', this, oldDate : oldDate, curDate : @_date
+
+    onSetSelectedItems : ->
+      selectedItem = @getSelectedItem()
+      @setDate (selectedItem && selectedItem.value) || null, true
 
     onUpdateData : ->
       @_datasource.set @_name, @_date

@@ -1,5 +1,5 @@
 do (j3) ->
-  __refreshSelectedItems = ->
+  __refreshSelectedLabels = ->
     sb = new j3.StringBuilder
 
     isEmpty = true
@@ -79,65 +79,23 @@ do (j3) ->
       @_multiple = value
 
     getSelectedItem : ->
-      if not @_selectedItems or not @_selectedItems.length then return null
-
-      @_selectedItems[0]
+      if @_selectedItems and @_selectedItems.length then @_selectedItems[0] else null
 
     getSelectedItems : ->
       @_selectedItems || []
 
     setSelectedItem : (item) ->
-      @_selectedItems = [item]
-
-      __refreshSelectedItems.call this
+      @setSelectedItems item
 
     setSelectedItems : (items) ->
-      if j3.isArray items
-        @_selectedItems = items
-      else if items
-        @_selectedItems = [items]
-      else
-        @_selectedItems = []
+      @doSetSelectedItems items
+      @onSetSelectedItems?()
 
-      __refreshSelectedItems.call this
-
-    addSelectedItem : (item, silent) ->
-      if not @_selectedItems then @_selectedItems = [item]
-
-      index = j3.indexOf @_selectedItems, item
-      if index is -1 then @_selectedItems.push item
-
-      if not silent then __refreshSelectedItems.call this
-
-    addSelectedItems : (items) ->
-      if not @_selectedItems then @_selectedItems = []
-
-      if j3.isArray items
-        for eachItem in items
-          @addSelectedItem eachItem, true
-      else
-        @addSelectedItem items, true
-
-      __refreshSelectedItems.call this
-
-    removeSelectedItem : (item) ->
-      if not @_selectedItems then return
-
-      index = j3.indexOf @_selectedItems, item
-      if index isnt -1 then @_selectedItems.splice index, 1
-
-      if not silent then __refreshSelectedItems.call this
-
-    removeSelectedItems : (items) ->
-      if not @_selectedItems then return
-
-      if j3.isArray items
-        for eachItem in items
-          @removeSelectedItem eachItem, true
-      else
-        @removeSelectedItem items, true
-
-      __refreshSelectedItems.call this
+    doSetSelectedItems : (items) ->
+      if items and not j3.isArray items then items = [items]
+      
+      @_selectedItems = items or []
+      __refreshSelectedLabels.call this
 
     onSetWidth : (width) ->
       Dom = j3.Dom

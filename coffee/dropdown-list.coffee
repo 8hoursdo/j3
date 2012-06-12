@@ -64,7 +64,7 @@ do (j3) ->
     getSelectedValue : ->
       @_selectedValue
 
-    setSelectedValue : (value) ->
+    setSelectedValue : (value, internal) ->
       index = 0
       @_items.tryUntil (item) =>
         if item.value == value
@@ -74,12 +74,12 @@ do (j3) ->
           return false
 
       if index == @_items.count() then index = -1
-      @setSelectedIndex index
+      @setSelectedIndex index, internal
 
     getSelectedIndex : ->
       @_selectedIndex
 
-    setSelectedIndex : (index) ->
+    setSelectedIndex : (index, internal) ->
       if index < -1 or index >= @_items.count() then index == -1
 
       oldIndex = @_selectedIndex
@@ -96,13 +96,8 @@ do (j3) ->
       selectedValue = null
 
       if index isnt -1
-        item = @_items.getAt index
-        selectedItem =
-          text : j3.getVal item, 'text'
-          value : j3.getVal item, 'value'
+        selectedItem = @_items.getAt index
         selectedValue = selectedItem.value
-
-      @setSelectedItem selectedItem
 
       oldSelectedValue = @_selectedValue
       oldSelectedIndex = @_selectedIndex
@@ -112,11 +107,25 @@ do (j3) ->
 
       @updateData()
 
+      unless internal
+        if index isnt -1
+          selectedItem =
+            text : j3.getVal selectedItem, 'text'
+            value : j3.getVal selectedItem, 'value'
+
+        @doSetSelectedItems selectedItem
+
       @fire 'change', this,
         oldIndex : oldSelectedIndex
         oldValue : oldSelectedValue
         curIndex : @_selectedIndex
         curValue : @_selectedValue
+
+    onSetSelectedItems : ->
+      if @getMultiple()
+      else
+        selectedItem = @getSelectedItem()
+        if selectedItem then @setSelectedValue selectedItem.value, true
 
     onUpdateData : ->
       @_datasource.set @name, @_selectedValue
