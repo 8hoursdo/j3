@@ -80,6 +80,8 @@ j3.clone = (obj, properties) ->
 j3.equals = (obj1, obj2) ->
   if typeof obj1 isnt typeof obj2 then return false
 
+  if @isNull obj1 then return @isNull obj2
+
   if not @isObject obj1 then return obj1 is obj2
 
   if @isDate obj1 then return obj1.getTime() is obj2.getTime()
