@@ -1,6 +1,11 @@
 do (j3) ->
   if j3.isRunInServer() then return
 
+  _contentTypes =
+    text : 'text/pain'
+    json : 'application/json'
+    form : 'application/x-www-form-urlencoded'
+
   # the XMLHttpRequest factory
   if window.XMLHttpRequest
     __getXHR = -> new XMLHttpRequest
@@ -57,7 +62,7 @@ do (j3) ->
     xhr.open req.method, req.url, async, req.username, req.password
 
     # set headers
-    xhr.setRequestHeader 'Content-Type', 'application/x-www-form-urlencoded'
+    xhr.setRequestHeader 'Content-Type', _contentTypes[req.dataType] || _contentTypes.form
     if headers
       for name of headers
         if headers.hasOwnProperty name
@@ -75,7 +80,7 @@ do (j3) ->
     else
       # set request body
       buffer = new j3.StringBuilder
-      __serializeBody buffer, req.data
+      __serializeBody buffer, req.data, req.dataType
       
       # now send the request
       xhr.send buffer.toString()
@@ -111,7 +116,7 @@ do (j3) ->
 
           options.method = method
           options.data = data
-          options.dataType = 'form'
+          options.dataType = 'json'
           options.url = url
           options.callback = callback
           options.context = context
