@@ -90,10 +90,19 @@ do (j3) ->
             map[eachVal] = true
             res.push eachVal
       else
-        if not map[eachVal]
-          map[eachVal] = true
-          res.push eachVal
+        if not map[value]
+          map[value] = true
+          res.push value
 
     res
+
+  j3.toMap = (list, keyName) ->
+    map = {}
+
+    j3.forEach list, (item) ->
+      key = j3.getVal item, keyName
+      map[key] = item
+
+    map
         
         
