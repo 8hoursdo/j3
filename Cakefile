@@ -58,6 +58,8 @@ task 'build', 'build j3 libarary', (options) ->
     'message-box'
     'message-bar'
     'data-list'
+    'splitter'
+    'splitter-panel'
     'location'
     'router'
     'application'
