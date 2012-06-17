@@ -88,7 +88,8 @@ j3.Dropdown = j3.cls j3.Selector,
       else if spaceTop < boxHeight
         showOnTop = false
 
-    Dom.offsetHeight @_elDropdownBox, boxHeight
+    if Dom.offsetHeight(@_elDropdownBox) > boxHeight
+      Dom.offsetHeight @_elDropdownBox, boxHeight
 
     if showOnTop
       topBox = posEl.top - boxHeight - 2
