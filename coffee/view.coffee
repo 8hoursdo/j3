@@ -13,17 +13,20 @@ j3.View = do (j3) ->
   # a dictionary of views with specified id, indexed by the id
   _views = {}
 
+  # 保存所有的顶级控件，即没有parent属性的控件
+  _topViews = {}
+
   j3.getView = (id) ->
     _views[id]
 
-  _viewCreated = ->
+  __viewCreated = ->
     # get the dom element of view
     @el = j3.$ @id
 
     if @children
       node = @children.firstNode()
       while node
-        _viewCreated.call node.value
+        __viewCreated.call node.value
         node = node.next
 
     options = @_options
@@ -97,7 +100,7 @@ j3.View = do (j3) ->
         @render buffer
         j3.Dom.append @ctnr, buffer.toString()
 
-        _viewCreated.call this
+        __viewCreated.call this
 
         if not @parent then @layout()
         else if _creatingStack == 0 then @parent.addChild this
@@ -105,6 +108,8 @@ j3.View = do (j3) ->
       # add me into parent's children
       if @parent
         @parent.getChildren().insert this
+      else
+        _topViews[@id] = this
 
       # override this to do sth like loading data.
       @onLoad? options
@@ -165,30 +170,44 @@ j3.View = do (j3) ->
       @elBody || @el
 
     layout : ->
+      # 如果正在执行布局，则无需再次布局
       if @_layouting then return
 
+      # 未添加到Dom树中的控件无需布局，正常情况下不会出现。
       parentNode = @el.parentNode
       if !parentNode then return
 
+      # 设置正在布局标志
       @_layouting = yes
 
+      # 计算控件应该占用的空间
       if parentNode is document.body
+        # 如果控件被放置于body下，则当控件fill的时候，按照窗口大小计算控件大小。
+        # 这样的策略导致body的margin或者padding不为0的时候会有问题。
         rect =
           width : if @_fill & 1 then j3.Dom.clientWidth() else @_width
-          height: if @_fill & 2 then j3.DOm.clientHeight() else @_height
+          height: if @_fill & 2 then j3.Dom.clientHeight() else @_height
       else
         rect =
           width : if @_fill & 1 then j3.Dom.width parentNode else @_width
-          height: if @_fill & 2 then j3.DOm.height parentNode else @_height
+          height: if @_fill & 2 then j3.Dom.height parentNode else @_height
 
+      # 在设置控件大小之前触发测量控件大小的事件，给控件一个最终决定大小的机会。
+      @onMeasure? rect
+      @fire 'measure', this, rect
+
+      # 设置控件的大小
       __setWidth.call this, rect.width
       __setHeight.call this, rect.height
 
+      # 对子控件进行布局
       @layoutChildren()
       
+      # 布局结束
       @_layouting = no
       return
 
+    # 对子控件进行布局
     layoutChildren : ->
       if !@children then return
 
@@ -229,6 +248,9 @@ j3.View = do (j3) ->
     onSetHeight : (height) ->
       j3.Dom.offsetHeight @el, height
 
+    getFill : ->
+      @_fill
+
     show : ->
       j3.Dom.show @el
 
@@ -248,7 +270,60 @@ j3.View = do (j3) ->
     if @_minHeight and height < @_minHeight then height = @_minHeight
     @onSetHeight height
 
+
+  # 重新布局的处理
+  # -----------------------
+
+  # 表示是否正在重新布局
+  _relayouting = false
+  # 表示是否在重新布局结束后，再次重新布局
+  _needRelayout = false
+
+  # 表示最后一次布局时的窗口大小，如果大小不变，则无需重新布局
+  _lastClientWidth = 0
+  _lastClientHeight = 0
+
+  _relayoutTimout = null
+
+  # 浏览器窗口大小改变时，自动对顶级控件重新进行布局
+  __resize = (evt) ->
+    if _relayouting
+      _needRelayout = true
+      return
+
+    Dom = j3.Dom
+    cw = Dom.clientWidth()
+    ch = Dom.clientHeight()
+
+    if cw is _lastClientWidth and ch is _lastClientHeight
+      return
+
+    _lastClientWidth = cw
+    _lastClientHeight = ch
+
+    clearTimeout _relayoutTimout
+    _relayoutTimout = setTimeout __relayout, 100
+
+  __relayout = ->
+    Dom = j3.Dom
+    cw = Dom.clientWidth()
+    ch = Dom.clientHeight()
+
+    _relayouting = true
+
+    for id, view of _topViews
+      view.layout()
+
+    _relayouting = false
+
+    if _needRelayout then __resize()
+
+  j3.on window, 'resize', __resize
+
+
+
   view.genId = ->
     'v_' + (++_idSeed)
 
   view
+
