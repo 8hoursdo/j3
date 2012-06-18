@@ -11,6 +11,7 @@ do (j3) ->
       @_inline = options.inline
       @_stacked = options.stacked
       @_compact = options.compact
+      @_nolabel = options.nolabel
       @_isFirst = options.isFirst
       @_helpText = options.helpText
 
@@ -24,6 +25,7 @@ do (j3) ->
         (if @_inline then ' ' + @baseCss + '-inline' else '') +
         (if @_stacked then ' ' + @baseCss + '-stacked' else '') +
         (if @_compact then ' ' + @baseCss + '-compact' else '') +
+        (if @_nolabel then ' ' + @baseCss + '-nolabel' else '') +
         (if @_isFirst then ' ' + @baseCss + '-first' else '')
       controlId : @_controlId
       helpText : @_helpText
@@ -41,6 +43,7 @@ do (j3) ->
         datasource : options.datasource
         fill : options.controlFill
         width : options.controlWidth
+        height : options.controlHeight
         on : options.on
         parent : this
 
