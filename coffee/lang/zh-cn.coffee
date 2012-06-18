@@ -56,6 +56,8 @@ j3.Lang =
   minuteSecond :      "{0}分{1}秒"
   hourMinute :        "{0}小时{1}分"
   dayHour :           "{0}天{1}小时"
+  workday :           "{0}工作日"
+  workdays :          "{0}工作日"
 
   # Calendar
   datePickerBtnClear : "清空"

@@ -49,6 +49,21 @@ j3.Lang =
   shortTimeFormat :		"HH:mm"
   longTimeFormat :		"HH:mm:ss"
 
+  # Time Span Format
+  second :            "{0} second"
+  seconds :           "{0} seconds"
+  minute :            "{0} minute"
+  minutes :           "{0} minutes"
+  hour :              "{0} hour"
+  hours :             "{0} hours"
+  day :               "{0} day"
+  days :              "{0} days"
+  minuteSecond :      "{0} minutes, {1} seconds"
+  hourMinute :        "{0} hours, {1} minutes"
+  dayHour :           "{0} days, {1} hours"
+  workday :           "{0} workday"
+  workdays :          "{0} workdays"
+
   # Calendar
   datePickerBtnClear : "Clear"
   datePickerBtnToday : "Today"
