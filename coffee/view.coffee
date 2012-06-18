@@ -205,6 +205,8 @@ j3.View = do (j3) ->
       
       # 布局结束
       @_layouting = no
+
+      @onLayouted? rect
       return
 
     # 对子控件进行布局
