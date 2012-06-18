@@ -45,6 +45,8 @@ do (j3) ->
     hide : ->
       if not _elOverlay then return
 
+      if _zIdxOverlay is 2300 then return
+
       _zIdxOverlay -= 2
       s = _elOverlay.style
       if _zIdxOverlay is 2300
