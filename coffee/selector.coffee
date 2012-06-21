@@ -39,7 +39,7 @@ do (j3) ->
   j3.Selector = j3.cls j3.View,
     baseCss : 'sel'
 
-    template : j3.template '<div id="<%=id%>" class="<%=css%>"<%if(disabled){%> disabled="disabled"<%}%>><div class="sel-bar"><div class="sel-lbls"></div></div><a class="sel-trigger"><i class="<%=cssTrigger%>"></i></a></div>'
+    template : j3.template '<div id="<%=id%>" class="<%=css%>"<%if(disabled){%> disabled="disabled"<%}%>><div class="sel-inner"><div class="sel-bar"><div class="sel-lbls"></div></div><a class="sel-trigger"><i class="<%=cssTrigger%>"></i></a></div></div>'
 
     onInit : (options) ->
       @_disabled = !!options.disabled
@@ -48,7 +48,8 @@ do (j3) ->
 
     onCreated : () ->
       Dom = j3.Dom
-      @_elBar = Dom.firstChild @el
+      @elInner = Dom.firstChild @el
+      @_elBar = Dom.firstChild @elInner
       @_elTrigger = Dom.next @_elBar
 
       @_elLbls = Dom.firstChild @_elBar

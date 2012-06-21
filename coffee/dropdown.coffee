@@ -25,7 +25,7 @@ j3.Dropdown = j3.cls j3.Selector,
       elBox.className = 'drp-box'
 
       @_elDropdownBox = elBox
-      Dom.append @el, elBox
+      Dom.append @elInner, elBox
       @onCreateDropdownBox @_elDropdownBox
 
     @beforeDropdown? args
