@@ -1,18 +1,15 @@
 do (j3) ->
-  _activeButton = null
-
   __childButton_active = (sender, args) ->
     @fire 'active', sender, args
 
   __childButton_click = (sender, args) ->
-    if @_toggle is 'radio'
+    if @_toggle is 'radio' or @_toggle is 'exclusive'
       if sender is _activeButton then return
 
-      if _activeButton
-        _activeButton.setActive false
+      if @_activeButton
+        @_activeButton.setActive false
 
-      _activeButton = sender
-      _activeButton.setActive true
+      @_activeButton = if sender.getActive() then sender else null
 
     @fire 'click', sender, args
 
@@ -27,7 +24,7 @@ do (j3) ->
       if args.first then options.css = 'first'
       if args.last then options.css = 'last'
 
-      if @_toggle is 'checkbox'
+      if @_toggle is 'checkbox' or @_toggle is 'exclusive'
         options.toggle = true
 
     onChildCreated : (child) ->
@@ -38,4 +35,4 @@ do (j3) ->
       @getChildren().forEach (btn) ->
         active = btn.name is name
         btn.setActive active
-        if active then _activeButton = btn
+        if active then @_activeButton = btn
