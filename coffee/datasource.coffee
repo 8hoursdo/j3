@@ -43,3 +43,6 @@ do (j3) ->
         node = node.next
 
       return
+
+    refreshViews : ->
+      @updateViews 'refresh'

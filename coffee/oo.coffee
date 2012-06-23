@@ -34,7 +34,7 @@ j3.cls = (base, members) ->
       members.ctor = ->
         ctorOfBase.apply this, arguments
   else if !ctorOfCls
-    member.ctor = ->
+    members.ctor = ->
 
   ctor = members.ctor
   proto = ctor.prototype

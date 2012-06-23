@@ -57,13 +57,13 @@ do (j3) ->
       @onCommand? args
       @fire 'command', this, args
 
+  # 切换指定项的选中与未选中状态
   __toggleSelectedIndex = (index, elListItem) ->
     Dom = j3.Dom
 
     args = {}
     css = 'list-item-checked'
-    datasource = @getDatasource()
-    dataItem = @_itemDataSelector datasource.getAt(index)
+    dataItem = __getDataItemByIndex.call this, index
     if Dom.hasCls elListItem, css
       args.unselectedItems = [dataItem]
       Dom.removeCls elListItem, css
@@ -75,6 +75,7 @@ do (j3) ->
 
     @fire 'selectedItemsChange', this, args
 
+  # 更新@_selectItems中的数据
   __updateSelectedItems = (selectedItems, unselectedItems) ->
     if not @_selectedItems then @_selectedItems = []
 
@@ -88,10 +89,13 @@ do (j3) ->
         index = j3.indexOf @_selectedItems, item
         if index isnt -1 then @_selectedItems.splice index, 1
 
+  # 获取指定索引的数据项
+  __getDataItemByIndex = (index) ->
+    datasource = @getDatasource()
+    @_itemDataSelector datasource.getAt(index)
+
   j3.DataList = j3.cls j3.View,
     baseCss : 'data-list'
-
-    _activeItemIndex : -1
 
     onInit : (options) ->
       # 指定呈现列表项html的函数。
@@ -122,7 +126,7 @@ do (j3) ->
       if @_activeItemIndex is -1
         @_activeItenEl = null
       else
-        @_activeItenEl = j3.Dom.byIndex @_activeItemIndex
+        @_activeItenEl = j3.Dom.byIndex @el, @_activeItemIndex
 
     onUpdateView : (datasource, eventName, data) ->
       if not @el then return
@@ -138,19 +142,25 @@ do (j3) ->
       buffer.append '</div>'
 
     renderDataListItems : (buffer, datasource) ->
+      # 在每次刷新列表的时候重置当前项索引
+      @_activeItemIndex = -1
+
       if datasource
         activeModel = datasource.getActive()
         count = datasource.count()
         datasource.forEach this, (model, args, index) ->
+          isActive = activeModel is model
+          if isActive then @_activeItemIndex = index
           dataListItem =
             index : index
             count : count
             data : model
-            active : activeModel is model
+            active : isActive
             checked : @shouldListItemSelected model
 
           @renderDataListItem buffer, dataListItem
 
+    # 呈现列表项，不要重载此函数
     renderDataListItem : (buffer, dataListItem) ->
       itemCss = 'list-item'
       if dataListItem.index is 0
@@ -163,7 +173,6 @@ do (j3) ->
 
       if dataListItem.active
         itemCss += ' list-item-active'
-        @_activeItemIndex = dataListItem.index
 
       if dataListItem.checked
         itemCss += ' list-item-checked'
@@ -174,17 +183,31 @@ do (j3) ->
 
       buffer.append '</div>'
 
+    # 呈现列表项内容，派生类可以重载此函数
     onRenderDataListItem : (buffer, dataListItem) ->
       if @_listItemRenderer
         @_listItemRenderer buffer, dataListItem, this
       else if not j3.isUndefined dataListItem.data
         buffer.append dataListItem.data.toString()
 
+    # 获取当前数据项
+    getActiveItem : ->
+      if @_activeItemIndex is -1 then return null
+      __getDataItemByIndex.call this, @_activeItemIndex
+
+    # 获取当前列表项的索引值
+    getActiveIndex : ->
+      @_activeItemIndex
+
     # 设置索引指定的列表项为当前项
     setActiveIndex : (index) ->
+      if @_activeItemIndex is index then return
+
       datasource = @getDatasource()
       if datasource
         datasource.setActive datasource.getAt(index)
+
+      @fire 'activeItemChange', this
 
     # 切换索引指定的列表项的选中/未选中状态
     toggleSelectedIndex : (index) ->

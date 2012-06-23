@@ -12,7 +12,7 @@ do (j3) ->
           isEmpty = false
 
           sb.a '<div class="sel-lbl">'
-          sb.a j3.htmlEncode(item.text)
+          sb.a j3.htmlEncode(item.text || item.name || item.value)
           sb.a '<i data-cmd="unselect" class="sel-icon-unselect"></i>'
           sb.a '</div>'
       else

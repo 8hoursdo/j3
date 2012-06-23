@@ -177,25 +177,25 @@ do (j3) ->
       @_activeModel = model
 
       if not options.silent
-        @updateViews 'active', old : old, cur : model
+        args = old : old, model : model
+        @updateViews 'active', args
+        @fire 'activeModelChange', this, args
+
+    count : ->
+      @_models.length
 
     onUpdateView : (datasource, eventName, args) ->
       @refresh()
 
     forEach : (context, args, callback) ->
-      if not @_models then return
+      j3.forEach @_models, context, args, callback
 
-      if !args && !callback
-        callback = context
-        context = null
-        args = null
-      else if !callback
-        callback = args
-        args = null
+    tryUntil : (context, args, callback) ->
+      j3.tryUntil @_models, context, args, callback
+
+    doWhile : (context, args, callback) ->
+      j3.doWhile @_models, context, args, callback
       
-      for model in @_models
-        callback.call context, model, args
-
     forEachGroup : (context, args, callback) ->
       if not @_models then return
 
@@ -209,8 +209,8 @@ do (j3) ->
         callback = args
         args = null
 
-      for group in @_modelGroups
-        callback.call context, group, args
+      for group, i in @_modelGroups
+        callback.call context, group, args, i
 
     refresh : ->
       models = []
@@ -268,3 +268,4 @@ do (j3) ->
 
   j3.ext j3.CollectionView.prototype, j3.DataView
   j3.ext j3.CollectionView.prototype, j3.Datasource
+  j3.ext j3.CollectionView.prototype, j3.EventManager

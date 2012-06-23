@@ -149,5 +149,11 @@ do (j3) ->
     forEach : (context, args, callback) ->
       @_models.forEach context, args, callback
 
+    tryUntil : (context, args, callback) ->
+      @_models.tryUntil context, args, callback
+
+    doWhile : (context, args, callback) ->
+      @_models.doWhile context, args, callback
+
   j3.ext j3.Collection.prototype, j3.Datasource
   j3.ext j3.Collection.prototype, j3.EventManager

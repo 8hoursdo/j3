@@ -28,13 +28,15 @@
 }
 
 .drp-list {
-  list-style: none;
   margin: 0;
   padding: 0;
+  border: none;
 
-  li {
+  .list-item {
     margin: 0;
     padding: 0;
+    border: none;
+    font-size: 14px;
 
     a {
       display: block;
@@ -44,9 +46,11 @@
     }
   }
 
-  li a:hover,
-  li.active a {
-    background: @activeColor;
-    color: #fff;
+  .list-item a:hover {
+    background-color: @hoverBgColor;
+  }
+
+  .list-item-active a {
+    background-color: @activeBgColor;
   }
 }

@@ -11,6 +11,8 @@ do (j3) ->
     index
 
   j3.forEach = (list, context, args, callback) ->
+    if not list then return
+
     if !args && !callback
       callback = context
       context = null
@@ -22,6 +24,46 @@ do (j3) ->
     if j3.isArray list
       for eachItem, i in list
         callback.call context, eachItem, args, i
+    else if list.forEach
+      list.forEach context, args, callback
+
+    return
+
+  j3.tryUntil = (list, context, args, callback) ->
+    if not list then return
+
+    if !args && !callback
+      callback = context
+      context = null
+      args = null
+    else if !callback
+      callback = args
+      args = null
+
+    if j3.isArray list
+      for eachItem, i in list
+        if callback.call context, eachItem, args, i
+          return eachItem
+    else if list.forEach
+      list.forEach context, args, callback
+
+    return
+
+  j3.doWhile = (list, context, args, callback) ->
+    if not list then return
+
+    if !args && !callback
+      callback = context
+      context = null
+      args = null
+    else if !callback
+      callback = args
+      args = null
+
+    if j3.isArray list
+      for eachItem, i in list
+        if not callback.call context, eachItem, args, i
+          return eachItem
     else if list.forEach
       list.forEach context, args, callback
 

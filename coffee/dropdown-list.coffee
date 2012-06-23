@@ -1,15 +1,18 @@
 do (j3) ->
-  __renderListItems = (items, buffer) ->
-    items && items.forEach (item) =>
-      buffer.append '<li'
-      if item.value == @_selectedValue
-        buffer.append ' class="active"'
-      buffer.append '><a>' + item.text + '</a></li>'
+  # 列表当前项改变的事件处理
+  __dataList_activeItemChange = (sender) ->
+    selectedItem = sender.getActiveItem()
 
-  __elDrpList_click = (evt) ->
-    @setSelectedIndex j3.Dom.indexOf j3.Dom.parent evt.src(), 'li'
+    @_selectedValue = selectedItem.value
+    @doSetSelectedItems selectedItem
+    @updateData()
+
+    @onChange && @onChange()
+    @fire 'change', this
+
     @close()
-    evt.stop()
+
+  _defaultItemDataSelector = j3.compileSelector ['text', 'value']
 
   j3.DropdownList = j3.cls j3.Dropdown,
     _selectedIndex : null
@@ -17,109 +20,78 @@ do (j3) ->
     onInit : (options) ->
       j3.DropdownList.base().onInit.call this, options
 
-      items = options.items
-      list = new j3.List
-      if items
-        if j3.isArray items
-          for eachItem in items
-            eachItem.value ?= eachItem.text
-            list.insert eachItem
-        else if items instanceof j3.List
-          items.forEach (item) ->
+      if options.itemsDatasource
+        @_itemsDatasource = options.itemsDatasource
+      else
+        datasource = new j3.Collection
+        items = options.items
+        if items
+          j3.forEach items, (item) ->
             item.value ?= item.text
-            list.insert item
-          @_items = options.items
-      @_items = list
-      @_selectedValue = options.value
+            datasource.insert item
+        @_itemsDatasource = datasource
+
+      @_itemDataSelector = j3.compileSelector(options.itemDataSelector || _defaultItemDataSelector)
 
     onCreated : (options) ->
       j3.DropdownList.base().onCreated.call this
 
-      @setSelectedValue @_selectedValue
+      if j3.isUndefined options.value
+        @doSetSelectedItems null
+      else
+        @setSelectedValue options.value
       @setDatasource options.datasource
 
     onCreateDropdownBox : (elBox) ->
-      buffer = new j3.StringBuilder
-      buffer.append '<ul class="drp-list">'
+      @_dataList = new DropdownDataList
+        parent : this
+        ctnr : elBox
+        datasource : @_itemsDatasource
+        itemDataSelector : @_itemDataSelector
+        activeItemOnClick : yes
 
-      __renderListItems.call this, @_items, buffer
+      @_dataList.on 'activeItemChange', this, __dataList_activeItemChange
 
-      buffer.append '</ul>'
-
-      j3.Dom.append elBox, buffer.toString()
-      @_elDrpList = j3.Dom.byIndex elBox, 0
-
-      j3.on @_elDrpList, 'click', this, __elDrpList_click
+    getItemsDatasource : ->
+      @_itemsDatasource
 
     getItems : () ->
       @_items
 
     setItems : (items) ->
-      @_items = items
-      if @_elDrpList
-        buffer = new j3.StringBuilder
-        __renderListItems.call this, @_items, buffer
-        @_elDrpList.innerHTML = buffer.toString()
+      datasource = new j3.Collection
+      if items
+        j3.forEach items, (item) ->
+          item.value ?= item.text
+          datasource.insert item
+
+      @_itemsDatasource = datasource
+      if @_dataList then @_dataList.setDatasource @_itemsDatasource
 
     getSelectedValue : ->
       @_selectedValue
 
     setSelectedValue : (value, internal) ->
-      index = 0
-      @_items.tryUntil (item) =>
-        if item.value == value
+      if @_selectedValue is value then return
+
+      @_selectedValue = value
+
+      selectedItem = @_itemsDatasource.tryUntil (item) ->
+        if value is j3.getVal(item, 'value')
           return true
         else
-          ++index
           return false
+      @_itemsDatasource.setActive selectedItem
 
-      if index == @_items.count() then index = -1
-      @setSelectedIndex index, internal
+      if selectedItem
+        @doSetSelectedItems @_itemDataSelector selectedItem
+      else
+        @doSetSelectedItems null
 
-    getSelectedIndex : ->
-      @_selectedIndex
-
-    setSelectedIndex : (index, internal) ->
-      if index < -1 or index >= @_items.count() then index == -1
-
-      oldIndex = @_selectedIndex
-      if oldIndex == index then return
-
-      Dom = j3.Dom
-      if @_elDrpList
-        if oldIndex isnt -1
-          Dom.removeCls Dom.byIndex(@_elDrpList, oldIndex), 'active'
-        if index isnt -1
-          Dom.addCls Dom.byIndex(@_elDrpList, index), 'active'
-
-      selectedItem = null
-      selectedValue = null
-
-      if index isnt -1
-        selectedItem = @_items.getAt index
-        selectedValue = selectedItem.value
-
-      oldSelectedValue = @_selectedValue
-      oldSelectedIndex = @_selectedIndex
-
-      @_selectedIndex = index
-      @_selectedValue = selectedValue
+      @onChange && @onChange()
+      @fire 'change', this
 
       @updateData()
-
-      unless internal
-        if index isnt -1
-          selectedItem =
-            text : j3.getVal selectedItem, 'text'
-            value : j3.getVal selectedItem, 'value'
-
-        @doSetSelectedItems selectedItem
-
-      @fire 'change', this,
-        oldIndex : oldSelectedIndex
-        oldValue : oldSelectedValue
-        curIndex : @_selectedIndex
-        curValue : @_selectedValue
 
     onSetSelectedItems : ->
       if @getMultiple()
@@ -135,3 +107,12 @@ do (j3) ->
 
   j3.ext j3.DropdownList.prototype, j3.DataView
 
+
+  DropdownDataList = j3.cls j3.DataList,
+    css : 'drp-list'
+
+    onRenderDataListItem : (sb, dataListItem) ->
+      itemData = dataListItem.data
+      sb.a '<a>'
+      sb.a j3.getVal(itemData, 'text') or j3.getVal(itemData, 'name') or j3.getVal(itemData, 'value')
+      sb.a '</a>'
