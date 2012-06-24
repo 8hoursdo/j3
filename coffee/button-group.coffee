@@ -1,15 +1,15 @@
 do (j3) ->
   __childButton_active = (sender, args) ->
-    @_activeButton = sender
-    @fire 'active', sender, args
-
-  __childButton_click = (sender, args) ->
     if @_toggle is 'radio' or @_toggle is 'exclusive'
-      if sender is @_activeButton then return
-
       if @_activeButton
         @_activeButton.setActive false
 
+      @_activeButton = sender
+
+    @fire 'active', sender, args
+
+  __childButton_click = (sender, args) ->
+    if @_toggle is 'exclusive'
       @_activeButton = if sender.getActive() then sender else null
 
     @fire 'click', sender, args
