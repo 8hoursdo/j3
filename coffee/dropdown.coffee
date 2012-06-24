@@ -65,9 +65,12 @@ j3.Dropdown = j3.cls j3.Selector,
       if widthBox < widthEl
         Dom.offsetWidth @_elDropdownBox, widthEl
 
-    @_elDropdownBox.style.height = ''
     maxHeight = 28 * 10
     minHeight = 28 * 5
+
+    if Dom.offsetHeight(@_elDropdownBox) is maxHeight then return
+
+    @_elDropdownBox.style.height = ''
     wndHeight = Dom.clientHeight()
     scrollTop = document.body.scrollTop
     spaceTop = posEl.top - 2 - scrollTop
