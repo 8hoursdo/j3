@@ -11,36 +11,6 @@ do (j3) ->
   __select = (model, selector) ->
     if j3.isFunction selector then return selector model
 
-  __sorter = (sortBy) ->
-    if j3.isFunction sortBy then return sortBy
-
-    if j3.isString sortBy then sortBy = [sortBy]
-
-    sortRules = []
-    for eachSortBy in sortBy
-      sortInfo = eachSortBy.split ' '
-
-      sortRule =
-        name : sortInfo[0]
-
-      if sortInfo.length > 1
-        for info in sortInfo.slice 1
-          if info is 'desc'
-            sortRule.desc = true
-          else if info is 'nullGreat'
-            sortRule.nullGreat = true
-
-      sortRules.push sortRule
-    
-    return (obj1, obj2) ->
-      res = 0
-      for eachRule in sortRules
-        res = j3.compare obj1[eachRule.name], obj2[eachRule.name], eachRule.nullGreat
-        if eachRule.desc then res *= -1
-        
-        if res isnt 0 then return res
-      0
-
   __grouper = (groupBy) ->
     if j3.isFunction groupBy then return groupBy
 
@@ -89,7 +59,7 @@ do (j3) ->
       modelGroups.push eachGroup
 
     if not groupSortBy then groupSortBy = 'value nullGreat'
-    modelGroups.sort __sorter groupSortBy
+    modelGroups.sort j3.compileSortBy(groupSortBy)
 
     modelGroups
 
@@ -249,7 +219,7 @@ do (j3) ->
 
       # sort
       if @_sortBy
-        models.sort __sorter @_sortBy
+        models.sort j3.compileSortBy(@_sortBy)
 
       @_models = []
       @_idxId = {}
