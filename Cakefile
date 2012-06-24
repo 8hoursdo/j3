@@ -6,6 +6,7 @@ task 'build', 'build j3 libarary', (options) ->
     'oo'
     'user-agent'
     'string-builder'
+    'url-query'
     'date-time'
     'string'
     'template'

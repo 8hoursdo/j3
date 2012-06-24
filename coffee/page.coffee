@@ -33,3 +33,19 @@ do (j3) ->
 
       if not @_msgEvtMngr then return
       @_msgEvtMngr.fire name, sender, args
+
+    getQuery : (name) ->
+      if not @_query then return
+      @_query.get name
+
+    setQuery : (name, value) ->
+      if not @_query then @_query = new j3.UrlQuery
+      @_query.set name, value
+
+    unsetQuery : (name) ->
+      if not @_query then return
+      @_query.unset name
+
+    queryString : ->
+      if not @_query then return ''
+      @_query.toString()
