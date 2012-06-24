@@ -58,9 +58,12 @@ j3.Button = j3.cls j3.View,
     @fire (if @_active then 'active' else 'inactive'), this, active : @_active
 
   click : ->
+    if @_disabled then return
+
+    @fire 'click', this
+
     if @_toggle
       @setActive not @getActive()
-    @fire 'click', this
 
   focus : ->
     @el.focus()

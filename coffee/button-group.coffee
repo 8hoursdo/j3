@@ -1,10 +1,11 @@
 do (j3) ->
   __childButton_active = (sender, args) ->
+    @_activeButton = sender
     @fire 'active', sender, args
 
   __childButton_click = (sender, args) ->
     if @_toggle is 'radio' or @_toggle is 'exclusive'
-      if sender is _activeButton then return
+      if sender is @_activeButton then return
 
       if @_activeButton
         @_activeButton.setActive false
@@ -24,8 +25,9 @@ do (j3) ->
       if args.first then options.css = 'first'
       if args.last then options.css = 'last'
 
-      if @_toggle is 'checkbox' or @_toggle is 'exclusive'
+      if @_toggle
         options.toggle = true
+      return
 
     onChildCreated : (child) ->
       child.on 'click', this, __childButton_click
