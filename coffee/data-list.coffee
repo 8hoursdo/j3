@@ -124,9 +124,9 @@ do (j3) ->
       @setDatasource options.datasource
 
       if @_activeItemIndex is -1
-        @_activeItenEl = null
+        @_activeItemEl = null
       else
-        @_activeItenEl = j3.Dom.byIndex @el, @_activeItemIndex
+        @_activeItemEl = j3.Dom.byIndex @el, @_activeItemIndex
 
     onUpdateView : (datasource, eventName, data) ->
       if not @el then return

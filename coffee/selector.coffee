@@ -98,6 +98,14 @@ do (j3) ->
       @_selectedItems = items or []
       __refreshSelectedLabels.call this
 
+    updateSubcomponent : ->
+      @_updatingSubcomponent = true
+      @onUpdateSubcomponent?()
+      @_updatingSubcomponent = false
+
+    isUpdatingSubcomponent : ->
+      @_updatingSubcomponent
+
     onSetWidth : (width) ->
       Dom = j3.Dom
       Dom.offsetWidth @el, width

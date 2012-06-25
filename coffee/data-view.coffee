@@ -16,10 +16,16 @@ j3.DataView =
     @onUpdateData @_datasource
     @_updatingData = false
 
+  isUpdatingData : ->
+    @_updatingData
+
   updateView : (datasource, eventName, args) ->
     if @_updatingView then return
 
     @_updatingView = true
     @onUpdateView datasource, eventName, args
     @_updatingView = false
+
+  isUpdatingView : ->
+    @_updatingView
 
