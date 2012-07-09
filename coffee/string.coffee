@@ -48,7 +48,8 @@ else
     s.replace _regTime, ''
 
   # see: http://blog.stevenlevithan.com/archives/faster-trim-javascript
-  String.prototype.trim = (s) ->
+  String.prototype.trim = () ->
+    s = this
     s = s.replace /^\s\s*/, ''
     ws = /\s/
     i = s.length - 1
