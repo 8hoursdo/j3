@@ -137,6 +137,14 @@ j3.Dom = do ->
           ++pi
       return null
 
+    byCls : (el, cls) ->
+      if !el then return null
+      
+      for node in el.childNodes
+        if node.nodeType == 1
+          if @hasCls node, cls then return node
+      return null
+
     firstChild : (el) ->
       @byIndex el, 0
 
