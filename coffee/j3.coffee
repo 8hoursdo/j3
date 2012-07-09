@@ -51,6 +51,11 @@ j3.isArray = (obj) ->
 j3.isDateTime = (obj) ->
   obj instanceof j3.DateTime
 
+j3.bind = (fn, context, args) ->
+  if args
+    -> fn.apply context, args
+  else
+    -> fn.call context
 
 j3.clone = (obj, properties) ->
   if not @isObject obj then return obj
