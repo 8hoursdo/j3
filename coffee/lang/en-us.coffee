@@ -24,6 +24,8 @@ j3.Lang =
   savedSuccess : "Saved success."
   edit : 'Edit'
   editedSuccess : 'Edited success.'
+  modify : 'Modify'
+  modifiedSuccess : 'Modified success.'
 
   
   # PagePilot
