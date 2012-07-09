@@ -177,6 +177,12 @@ j3.View = do (j3) ->
       parentNode = @el.parentNode
       if !parentNode then return
 
+      # 子类可以重写canLayout函数以决定是不是需要布局（比如控件隐藏的时候）
+      # 如果@canLayout函数返回false，则表示不需要进行布局。
+      canLayout = true
+      @canLayout && canLayout = @canLayout()
+      if not canLayout then return
+
       # 设置正在布局标志
       @_layouting = yes
 

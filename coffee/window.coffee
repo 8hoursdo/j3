@@ -80,14 +80,19 @@ do (j3) ->
 
       @onAction? args
       @fire 'action', this, args
+ 
+    canLayout : ->
+      @_visible
 
     show : ->
       zIndex = j3.Overlay.show()
       @el.style.zIndex = zIndex + 1
       j3.Dom.show @el
-      j3.Dom.center @el
+      @_visible = true
 
       @layout()
+
+      j3.Dom.center @el
 
     close : (result, data) ->
       args =
@@ -101,6 +106,7 @@ do (j3) ->
       if args.stop then return
 
       @hide()
+      @_visible = false
       j3.Overlay.hide()
 
       onClose? args
