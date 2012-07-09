@@ -1,7 +1,7 @@
 j3.ns = (nameSpace) ->
   names = nameSpace.split "."
   
-  curNS = window
+  curNS = if typeof window is 'undefined' then global else window
 
   for name in names
     if not curNS[name]
