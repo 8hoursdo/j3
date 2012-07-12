@@ -69,9 +69,10 @@ do (j3) ->
 
     return
 
-  j3.group = (list, grouper) ->
+  j3.group = (list, groupBy) ->
     groups = {}
 
+    grouper = j3.compileGroupBy groupBy
     forEach = list.forEach || __forEach
     forEach.call list, (eachItem) ->
       groupName = grouper(eachItem)
@@ -121,8 +122,16 @@ do (j3) ->
     rootItems
 
   j3.pickFieldVal = (list, options) ->
-    map = {}
     res = []
+
+    # 如果列表中的字段是唯一的，则不要作判断，这样可以提升性能。
+    if options.distinctField
+      j3.forEach list, (item) ->
+        res.push j3.getVal item, options.fieldName
+      return res
+
+    # 如果列表中的字段不一定唯一，并且可能是数组，则采用较为谨慎的方法。
+    map = {}
 
     j3.forEach list, (item) ->
       value = j3.getVal item, options.fieldName

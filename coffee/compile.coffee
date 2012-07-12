@@ -63,3 +63,18 @@ do (j3) ->
         if res isnt 0 then return res
       0
 
+
+  _compiledGroupBy = {}
+
+  j3.compileGroupBy = (groupBy) ->
+    if j3.isFunction groupBy then return groupBy
+
+    if j3.isString groupBy
+      compiledGroupBy = _compiledGroupBy[groupBy]
+      if compiledGroupBy then return compiledGroupBy
+      
+      _compiledGroupBy[groupBy] = compiledGroupBy = (obj) ->
+        obj[groupBy]
+
+      return compiledGroupBy
+
