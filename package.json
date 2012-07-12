@@ -7,9 +7,8 @@
   "dependencies": {
   },
   "devDependencies": {
-    "coffee-script": ">= 0.0.1"
   },
-  "main": "./lib/js/j3.js",
+  "main": "./lib/js/j3.core.js",
   "contributors": [
     "Fossil Jue <imzshh@gmail.com>"
   ]
