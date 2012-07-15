@@ -18,10 +18,24 @@ j3.Dom = do ->
 
       el
 
-    attr : (el, name) ->
+    attr : (el, name, value) ->
+      if arguments.length is 3
+        el.attributes[name] = value
+        return
+
       node = el.attributes[name]
       if not node then return null
       node.nodeValue
+
+    data : (el, name, value) ->
+      if arguments.length is 3
+        @attr el, "data-#{name}", value
+        return
+
+      if el.dataset
+        el.dataset[name]
+      else
+        @attr el, "data-#{name}"
 
     hasCls : (el, cls) ->
       j3.include el.className, cls, ' '
