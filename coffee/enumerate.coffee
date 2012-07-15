@@ -69,7 +69,7 @@ do (j3) ->
 
     return
 
-  j3.group = (list, groupBy) ->
+  j3.group = (list, groupBy, selector) ->
     groups = {}
 
     grouper = j3.compileGroupBy groupBy
@@ -80,7 +80,7 @@ do (j3) ->
       subList = groups[groupName]
       if not subList then groups[groupName] = subList = []
 
-      subList.push eachItem
+      subList.push if selector then selector eachItem else eachItem
     groups
 
   __getChildItems = (list, parentId, options) ->
