@@ -1,10 +1,14 @@
 do (j3) ->
-  j3.Model = j3.cls
-    ctor : (data) ->
-      data ?= {}
-      @set data
+  j3.Model = Model = (data, options) ->
+      options ?= {}
+
+      @collection = options.collection
+
+      @_data = @get('defaults') or {}
+      if data then j3.ext @_data, data
       return
 
+  j3.ext Model.prototype, j3.EventManager, j3.Datasource,
     has : (name) ->
       @_data.hasOwnProperty name
 
@@ -15,6 +19,11 @@ do (j3) ->
         {}
 
     get : (name, defaultVal) ->
+      if j3.isFunction @[name]
+        return @[name].call this
+
+      if not @_data then return defaultVal
+
       if @_data.hasOwnProperty name
         @_data[name]
       else
@@ -47,8 +56,15 @@ do (j3) ->
           changedData[name] = value
           @_data[name] = value
 
-      args =
+      @notifyChange
         changedData : changedData
+        source : options.source
+
+    notifyChange : (options) ->
+      options ?= {}
+
+      args =
+        changedData : options.changedData
         source : options.source
         model : this
 
@@ -58,8 +74,6 @@ do (j3) ->
 
     toJson : (buffer) ->
       j3.toJson @_data, buffer
-
-  j3.ext j3.Model.prototype, j3.EventManager, j3.Datasource
 
   j3.getVal = (model, name, defaultVal) ->
     if j3.isFunction model.get
