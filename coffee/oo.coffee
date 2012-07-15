@@ -21,18 +21,16 @@ j3.cls = (base, members) ->
     members = base
     base = null
 
-  if base then ctorOfBase = base.prototype.ctor
-
   ctorOfCls = members.ctor
 
-  if ctorOfBase
+  if base
     if ctorOfCls
       members.ctor = ->
-        ctorOfBase.apply this, arguments
+        base.apply this, arguments
         ctorOfCls.apply this, arguments
     else
       members.ctor = ->
-        ctorOfBase.apply this, arguments
+        base.apply this, arguments
   else if !ctorOfCls
     members.ctor = ->
 
