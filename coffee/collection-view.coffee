@@ -72,7 +72,12 @@ do (j3) ->
       @_groupBy = options.groupBy
       @_groupSortBy = options.groupSortBy
 
+      @_model = options.model
+
       @setDatasource options.datasource
+
+    getModel : ->
+      @_model or @getDatasource().getModel() or j3.Model
 
     getSelector : ->
       @_selector
@@ -223,8 +228,9 @@ do (j3) ->
 
       @_models = []
       @_idxId = {}
+      Model = @getModel()
       for model in models
-        newModel = new j3.Model model
+        newModel = new Model model
         newModel.collection = this
 
         @_models.push newModel
@@ -236,6 +242,4 @@ do (j3) ->
 
       @updateViews 'refresh'
 
-  j3.ext j3.CollectionView.prototype, j3.DataView
-  j3.ext j3.CollectionView.prototype, j3.Datasource
-  j3.ext j3.CollectionView.prototype, j3.EventManager
+  j3.ext j3.CollectionView.prototype, j3.DataView, j3.Datasource, j3.EventManager

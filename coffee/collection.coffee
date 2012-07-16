@@ -24,6 +24,9 @@ do (j3) ->
       @_lazyLoad = options.lazyLoad
       @_url = options.url
       return
+
+    getModel : ->
+      @_model
     
     insert : (data, options) ->
       options ?= {}
