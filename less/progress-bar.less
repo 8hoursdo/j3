@@ -1,0 +1,41 @@
+.prg-bar {
+
+  .prg-bar-bg,
+  .prg-bar-done,
+  .prg-bar-text {
+    .border-radius(2px);
+    font-size: 12px;
+    text-align: center;
+  }
+
+  .prg-bar-bg {
+    border: 1px solid @boxBorderColor;
+    color: @activeColor;
+    height: @progressbarHeight - 2px;
+    line-height: @progressbarHeight - 2px;
+  }
+
+  .prg-bar-inner {
+    margin-top: 0 - @progressbarHeight;
+    height: @progressbarHeight;
+    line-height: @progressbarHeight;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .prg-bar-done {
+    background: @activeColor;
+    height: @progressbarHeight;
+  }
+
+  .prg-bar-text {
+    margin-top: 0 - @progressbarHeight;
+    width: 100%;
+    color: #fff;
+  }
+}
+
+.prg-bar-inline {
+  display: inline-block;
+  width: 200px;
+}

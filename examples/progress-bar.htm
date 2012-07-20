@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>progress bar</title>
+    <link rel="Stylesheet" href="../lib/css/j3.css" />
+    <script type="text/javascript" src="../lib/js/j3.js"></script>
+</head>
+<body>
+<div id="progress1" style="text-align:center;"></div>
+<div id="progress2" style="text-align:center;"></div>
+<div id="progress3" style="text-align:center;"></div>
+<script type="text/javascript">
+    j3.ready(function () {
+        var startProgress = function(progress){
+            clearTimeout(progress.stepTimeout);
+            progress.setValue(0);
+            stepProgress(progress);
+        }
+
+        var stepProgress = function(progress){
+          value = progress.getValue();
+          progress.setValue(++value);
+          if(value < 100)
+          {
+            progress.stepTimeout = setTimeout(function(){stepProgress(progress)}, 20);
+          }
+        }
+
+        var progress1 = new j3.ProgressBar({ctnr:'progress1', inline:true});
+        var btn1 = new j3.Button({ctnr: 'progress1', text: 'start'});
+        btn1.on('click', function(){
+          startProgress(progress1);
+          });
+
+        var progress2 = new j3.ProgressBar({ctnr:'progress2', indicator:'progress', inline:true});
+        var btn2 = new j3.Button({ctnr: 'progress2', text: 'start'});
+        btn2.on('click', function(){
+          startProgress(progress2);
+          });
+
+        var progress3 = new j3.ProgressBar({ctnr:'progress3', indicator:'text', preparingText:'click "upload" to start', processingText:'Uploading...', completedText:'Uploaded.', inline:true});
+        var btn3 = new j3.Button({ctnr: 'progress3', text: 'upload'});
+        btn3.on('click', function(){
+          startProgress(progress3);
+          });
+    });
+</script>
+</body>
+</html>

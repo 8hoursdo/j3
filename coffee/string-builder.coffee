@@ -8,6 +8,10 @@ if j3.UA.ie >= 8 or j3.UA.opera or j3.UA.webkit
       @_data += text
       this
 
+    encodeAndAppend : (text) ->
+      @_data += j3.htmlEncode text
+      this
+
     clear : ->
       @_data = ''
       this
@@ -24,6 +28,10 @@ else
       @_data[@_data.length] = text
       this
 
+    encodeAndAppend : (text) ->
+      @_data[@_data.length] = j3.htmlEncode text
+      this
+
     clear : ->
       @_data = []
       this
@@ -31,4 +39,6 @@ else
     toString : ->
       @_data.join ''
 
-j3.StringBuilder.prototype.a = j3.StringBuilder.prototype.append
+_stringBuilder_proto = j3.StringBuilder.prototype
+_stringBuilder_proto.a = _stringBuilder_proto.append
+_stringBuilder_proto.e = _stringBuilder_proto.encodeAndAppend
