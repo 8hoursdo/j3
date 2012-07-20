@@ -6,7 +6,7 @@ do (j3) ->
     elListItem = null
     while el and el isnt @el
       # 如果点击了包含data-cmd属性的元素，则触发command事件
-      cmd = j3.Dom.attr el, 'data-cmd'
+      cmd = j3.Dom.data el, 'cmd'
       if cmd
         evt.stop()
         __fireCommand.call this, cmd, el

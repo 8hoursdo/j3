@@ -2,16 +2,19 @@ do (j3) ->
   __hElClick = (evt) ->
     if not @_commandMode then return
 
+    Dom = j3.Dom
+
     el = evt.src()
     while el and el isnt @el
       if el.tagName is 'A'
-        cmd = j3.Dom.attr el, 'data-cmd'
-        if cmd
-          data = j3.Dom.attr el, 'data-data'
+        cmd = Dom.data el, 'cmd'
+        if not cmd then continue
 
-          evt.stop()
-          @fire 'command', this, src : el, name : cmd, data : data
-          return
+        data = Dom.data el, 'data'
+
+        evt.stop()
+        @fire 'command', this, src : el, name : cmd, data : data
+        return
       el = el.parentNode
 
   j3.LinkList = LinkList = j3.cls j3.View,
@@ -97,6 +100,10 @@ do (j3) ->
 
       sb.a '<a'
       url = j3.getVal model, 'url'
+
+      # 在command模式下自动设置链接地址为javascript:;
+      if not url and options.commandMode
+        url = 'javascript:;'
       if url
         sb.a ' href="' + url + '"'
 
