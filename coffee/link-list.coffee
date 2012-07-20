@@ -14,7 +14,7 @@ do (j3) ->
           return
       el = el.parentNode
 
-  j3.LinkList = j3.cls j3.View,
+  j3.LinkList = LinkList = j3.cls j3.View,
     baseCss : 'link-list'
 
     onInit : (options) ->
@@ -28,76 +28,104 @@ do (j3) ->
         j3.on @el, 'click', this, __hElClick
 
     onRender : (buffer) ->
-      buffer.append '<ul id="' + @id + '" class="' + @getCss() + '">'
-      @renderList buffer
-      buffer.append '</ul>'
+      datasource = @getDatasource() || @_items || []
 
-    renderList : (buffer) ->
-      datasource = @getDatasource()
-      if datasource
-        activeModel = datasource.getActive()
-      else
-        datasource = @_items || []
-
-      renderOptions =
+      options =
+        id : @id
+        css : @getCss()
         target : @_linkTarget
         commandMode : @_commandMode
 
-      j3.forEach datasource, (model, args, index) =>
-        renderOptions.isActive = activeModel is model
-        renderOptions.isFirst = index is 0
-        j3.LinkList.renderLinkListItem buffer,
-          model,
-          renderOptions
+      LinkList.render datasource, options, buffer
 
     onUpdateView : (datasource) ->
       if !@el then return
 
-      buffer = new j3.StringBuilder
-      @renderList buffer
-      @el.innerHTML = buffer.toString()
+      sb = new j3.StringBuilder
 
-  j3.LinkList.renderLinkListItem = (buffer, model, options) ->
-    buffer.append '<li class="'
-    if options.isActive
-      buffer.append ' active"'
-    if options.isFirst
-      buffer.append ' first"'
-    buffer.append '">'
+      list = @getDatasource() || @_items || []
 
-    buffer.append '<a'
-    url = j3.getVal model, 'url'
-    if url
-      buffer.append ' href="' + url + '"'
+      options =
+        target : @_linkTarget
+        commandMode : @_commandMode
 
-    title = j3.getVal model, 'title'
-    if title
-      buffer.append ' title="' + j3.htmlEncode(title) + '"'
+      LinkList.renderList sb, list, options
 
-    target = j3.getVal model, 'target'
-    if not target then target = options.target
-    if target
-      buffer.append ' target="' + target + '"'
+      @el.innerHTML = sb.toString()
 
-    if options.commandMode
-      cmd = j3.getVal model, 'cmd'
-      if cmd
-        buffer.append ' data-cmd="' + cmd + '"'
+  j3.ext LinkList.prototype, j3.DataView
 
-      data = j3.getVal model, 'data'
-      if data
-        buffer.append ' data-data="' + data + '"'
+  j3.ext LinkList,
+    render : (list, options, buffer) ->
+      sb = if buffer then buffer else new j3.StringBuilder
 
-    buffer.append '>'
-    icon = j3.getVal model, 'icon'
-    if icon
-      buffer.append '<i class="' + icon + '"></i>'
+      sb.a '<ul'
+      if options.id
+        sb.a ' id="' + options.id + '"'
+      if options.css
+        sb.a ' class="' + options.css + '"'
+      sb.a '>'
 
-    buffer.append j3.htmlEncode(j3.getVal(model, 'text'))
-    buffer.append '</a>'
+      LinkList.renderList sb, list, options
 
-    buffer.append '</li>'
-   
+      sb.a '</ul>'
 
-  j3.ext j3.LinkList.prototype, j3.DataView
-      
+      if not buffer then return sb.toString()
+
+    renderList : (sb, list, options) ->
+      if list.getActive
+        activeItem = list.getActive()
+
+      listItemOptions =
+        target : options.target
+        commandMode : options.commandMode
+
+      j3.forEach list, (item, args, index) =>
+        listItemOptions.isActive = activeItem is item
+        listItemOptions.isFirst = index is 0
+        LinkList.renderLinkListItem sb,
+          item,
+          listItemOptions
+
+    renderLinkListItem : (sb, model, options) ->
+      sb.a '<li class="'
+      if options.isActive
+        sb.a ' active"'
+      if options.isFirst
+        sb.a ' first"'
+      sb.a '">'
+
+      sb.a '<a'
+      url = j3.getVal model, 'url'
+      if url
+        sb.a ' href="' + url + '"'
+
+      title = j3.getVal model, 'title'
+      if title
+        sb.a ' title="' + j3.htmlEncode(title) + '"'
+
+      target = j3.getVal model, 'target'
+      if not target then target = options.target
+      if target
+        sb.a ' target="' + target + '"'
+
+      if options.commandMode
+        cmd = j3.getVal model, 'cmd'
+        if cmd
+          sb.a ' data-cmd="' + cmd + '"'
+
+        data = j3.getVal model, 'data'
+        if data
+          sb.a ' data-data="' + data + '"'
+
+      sb.a '>'
+      icon = j3.getVal model, 'icon'
+      if icon
+        sb.a '<i class="' + icon + '"></i>'
+
+      sb.a j3.htmlEncode(j3.getVal(model, 'text'))
+      sb.a '</a>'
+
+      sb.a '</li>'
+
+
