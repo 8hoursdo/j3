@@ -18,6 +18,9 @@ do (j3) ->
     goto : (url) ->
       location.href = url
 
+    back : ->
+      history.go -1
+
     refresh : ->
       location.refresh()
 
