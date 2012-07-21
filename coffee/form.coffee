@@ -9,7 +9,7 @@ do (j3) ->
   j3.Form = j3.cls j3.ContainerView,
     baseCss : 'form'
 
-    templateBegin : j3.template '<form id="<%=id%>" class="<%=css%>" method="<%=method%>" target="<%=target%>">'
+    templateBegin : j3.template '<form id="<%=id%>" class="<%=css%>" method="<%=method%>" target="<%=target%>"><%if(title){%><div class="form-title"><%-title%></div><%}%>'
 
     templateEnd : j3.template '</form>'
 
@@ -19,12 +19,15 @@ do (j3) ->
       @_narrowLabel = options.narrowLabel
       @_datasource = options.datasource
 
+      @_title = options.title
+
     getTemplateData : ->
       id : @id
       css : @getCss() +
         (if @_narrowLabel then ' form-narrow-label' else '')
       method : @_method
       target : @_target
+      title : @_title
 
     onCreated : ->
       j3.on @el, 'submit', this, __form_submit
