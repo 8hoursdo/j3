@@ -21,5 +21,8 @@ do (j3) ->
         (if @_align is 'left' then ' ' + @baseCss + '-left' else '') +
         (if @_align is 'center' then ' ' + @baseCss + '-center' else '')
 
+    onCreateChild : (options) ->
+      if not options.cls then options.cls = j3.Button
+
     onChildCreated : (child) ->
       child.on 'click', this, __actionButton_click
