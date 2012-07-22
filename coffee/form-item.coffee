@@ -1,5 +1,15 @@
 do (j3) ->
-  j3.FormItem = j3.cls j3.ContainerView,
+  __getDefaultFormControlOption = (formItem, formItemOptions) ->
+      parent : formItem
+      datasource : formItemOptions.datasource
+      id : formItemOptions.id
+      name : formItemOptions.name
+      width : formItemOptions.controlWidth
+      height : formItemOptions.controlHeight
+      fill : formItemOptions.controlFill
+      on : formItemOptions.on
+
+  j3.FormItem = FormItem = j3.cls j3.ContainerView,
     baseCss : 'form-item'
 
     templateBegin : j3.template '<div id="<%=id%>" class="<%=css%>"><label class="form-label" for="<%=controlId%>"><%=label%></label><div class="form-controls">'
@@ -30,22 +40,19 @@ do (j3) ->
       controlId : @_controlId
       helpText : @_helpText
 
+    createFormControl : (formItemOptions, formControlOptions) ->
+      new formControlOptions.cls j3.ext(__getDefaultFormControlOption(this, formItemOptions), formControlOptions)
+
+  j3.ext FormItem,
 
   j3.TextboxFormItem = j3.cls j3.FormItem,
     createChildren : (options) ->
-      @_textbox = new j3.Textbox
-        id : options.controlId
+      @_textbox = @createFormControl options,
+        cls : j3.Textbox
         text : options.value
         multiline : options.multiline
         type : options.type
         placeholder : options.placeholder
-        name : options.name
-        datasource : options.datasource
-        fill : options.controlFill
-        width : options.controlWidth
-        height : options.controlHeight
-        on : options.on
-        parent : this
 
     textbox : ->
       @_textbox
@@ -55,16 +62,12 @@ do (j3) ->
 
   j3.CheckboxFormItem = j3.cls j3.FormItem,
     createChildren : (options) ->
-      @_checkbox = new j3.Checkbox
-        id : options.controlId
+      @_checkbox = @createFormControl options,
+        cls : j3.Checkbox
         text : options.text
         value : options.value
         name : options.name
         valueName : options.valueName
-        datasource : options.datasource
-        width : options.controlWidth
-        on : options.on
-        parent : this
 
     checkbox : ->
       @_checkbox
@@ -74,17 +77,11 @@ do (j3) ->
 
   j3.DropdownListFormItem = j3.cls j3.FormItem,
     createChildren : (options) ->
-      @_dropdownList = new j3.DropdownList
-        id : options.controlId
+      @_dropdownList = @createFormControl options,
+        cls : j3.DropdownList
         items : options.items
         value : options.value
         placeholder : options.placeholder
-        name : options.name
-        datasource : options.datasource
-        fill : options.controlFill
-        width : options.controlWidth
-        on : options.on
-        parent : this
 
     dropdownList : ->
       @_dropdownList
@@ -94,20 +91,14 @@ do (j3) ->
 
   j3.DropdownTreeFormItem = j3.cls j3.FormItem,
     createChildren : (options) ->
-      @_dropdownTree = new j3.DropdownTree
-        id : options.controlId
+      @_dropdownTree = @createFormControl options,
+        cls : j3.DropdownTree
         placeholder : options.placeholder
         treeOptions : options.treeOptions
-        name : options.name
         textName : options.textName
         itemsValName : options.itemsValName
         itemsTextName : options.itemsTextName
         itemsDatasource : options.itemsDatasource
-        datasource : options.datasource
-        fill : options.controlFill
-        width : options.controlWidth
-        on : options.on
-        parent : this
 
     dropdownTree : ->
       @_dropdownTree
@@ -117,16 +108,10 @@ do (j3) ->
 
   j3.DateSelectorFormItem = j3.cls j3.FormItem,
     createChildren : (options) ->
-      @_dateSelector = new j3.DateSelector
-        id : options.controlId
+      @_dateSelector = @createFormControl options,
+        cls : j3.DateSelector
         date : options.value
-        fill : options.controlFill
-        width : options.controlWidth
         placeholder : options.placeholder
-        name : options.name
-        datasource : options.datasource
-        on : options.on
-        parent : this
 
     dateSelector : ->
       @_dateSelector
@@ -136,13 +121,9 @@ do (j3) ->
 
   j3.SwitchFormItem = j3.cls j3.FormItem,
     createChildren : (options) ->
-      @_switch = new j3.Switch
-        id : options.controlId
+      @_switch = @createFormControl options,
+        cls : j3.Switch
         checked : options.value
-        name : options.name
-        datasource : options.datasource
-        on : options.on
-        parent : this
 
     switch : ->
       @_switch
