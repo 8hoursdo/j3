@@ -31,6 +31,7 @@ _filesClient = [
   'overlay'
   'view'
   'popup'
+  'html-view'
   'container-view'
   'data-list'
   'button'
