@@ -45,6 +45,7 @@ do (j3) ->
       @_disabled = !!options.disabled
       @_multiple = !!options.multiple
       @_placeholder = options.placeholder || ''
+      @_mini = options.mini
 
     onCreated : () ->
       Dom = j3.Dom
@@ -62,6 +63,7 @@ do (j3) ->
     getTemplateData : ->
       id : @id
       css : @getCss() +
+        (if @_mini then ' sel-mini' else '') +
         (if @_disabled then ' disabled' else '')
       cssTrigger : @cssTrigger
       disabled : @_disabled
