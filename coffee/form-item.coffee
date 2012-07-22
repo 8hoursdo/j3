@@ -119,6 +119,27 @@ do (j3) ->
     val : ->
       @_dateSelector.getDate()
 
+  j3.DateDurationFormItem = j3.cls j3.FormItem,
+    createChildren : (options) ->
+      @_beginDateSelector = @createFormControl options,
+        cls : j3.DateSelector
+        date : options.beginValue
+        placeholder : options.beginPlaceholder
+        name : options.beginName
+        mini : yes
+
+      @_endDateSelector = @createFormControl options,
+        cls : j3.DateSelector
+        date : options.endValue
+        placeholder : options.endPlaceholder
+        name : options.endName
+        mini : yes
+
+    renderChildren : (sb) ->
+      @_beginDateSelector.render sb
+      sb.a '<span class="form-controls-connector">-</span>'
+      @_endDateSelector.render sb
+
   j3.SwitchFormItem = j3.cls j3.FormItem,
     createChildren : (options) ->
       @_switch = @createFormControl options,
