@@ -68,7 +68,7 @@ do (j3) ->
             handler : callback
             context : context
 
-        options.icon = icon || options.icon
+      options.icon = icon || options.icon
 
       __getPool().gain options
  

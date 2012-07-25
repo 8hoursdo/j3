@@ -98,10 +98,10 @@ do (j3) ->
             handler : callback
             context : context
 
-        options.icon = icon || options.icon
-        options.buttons = buttons || options.buttons
-        options.silentCloseByCancel = silentCloseByCancel || options.silentCloseByCancel
-        options.title = options.title || j3.Lang[icon]
+      options.icon = icon || options.icon
+      options.buttons = buttons || options.buttons
+      options.silentCloseByCancel = silentCloseByCancel || options.silentCloseByCancel
+      options.title = options.title || j3.Lang[icon]
 
       __getPool().gain options
  
