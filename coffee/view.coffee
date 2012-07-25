@@ -150,21 +150,24 @@ j3.View = do (j3) ->
     createChildren : (options) ->
       if not options.children then return
 
-      lenChildren = options.children.length
+      lastIndex = options.children.length - 1
       for eachOption, i in options.children
         args =
           index : i
           first : i is 0
-          last : i is (lenChildren - 1)
+          last : i is lastIndex
 
         eachOption.parent = this
-        @onCreateChild && @onCreateChild eachOption, args
-
-        if not j3.isFunction eachOption.cls then continue
-
-        child = new eachOption.cls eachOption
-        @onChildCreated && @onChildCreated child, args, eachOption
+        @createChild eachOption, args
       return
+
+    createChild : (options, args) ->
+      @onCreateChild && @onCreateChild options, args
+
+      if not j3.isFunction options.cls then return
+
+      child = new options.cls options
+      @onChildCreated && @onChildCreated child, args, options
 
     getBody : ->
       @elBody || @el

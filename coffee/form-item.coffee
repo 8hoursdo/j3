@@ -28,6 +28,8 @@ do (j3) ->
       if not options.controlId then options.controlId = j3.View.genId()
       @_controlId = options.controlId
 
+      @_datasource = options.datasource
+
     getTemplateData : ->
       id : @id
       label : @_label
@@ -40,10 +42,11 @@ do (j3) ->
       controlId : @_controlId
       helpText : @_helpText
 
+    getDatasource : ->
+      @_datasource
+
     createFormControl : (formItemOptions, formControlOptions) ->
       new formControlOptions.cls j3.ext(__getDefaultFormControlOption(this, formItemOptions), formControlOptions)
-
-  j3.ext FormItem,
 
   j3.TextboxFormItem = j3.cls j3.FormItem,
     createChildren : (options) ->

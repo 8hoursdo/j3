@@ -68,6 +68,8 @@ do (j3) ->
         source : options.source
         model : this
 
+      @fire 'change', this, args
+
       @updateViews 'change', args
 
       if @collection then @collection.updateViews 'change', args
