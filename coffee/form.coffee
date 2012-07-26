@@ -1,6 +1,6 @@
 do (j3) ->
   __form_submit = (evt) ->
-    @fire 'action', this, name : 'ok'
+    @action 'ok'
 
     if @_target is 'ajax'
       evt.stop()
@@ -54,5 +54,8 @@ do (j3) ->
 
       @onAction? args
       @fire 'action', this, args
+
+    getTarget : ->
+      @_target
 
   j3.ext j3.Form.prototype, j3.DataView

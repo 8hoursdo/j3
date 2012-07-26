@@ -41,6 +41,9 @@ do(j3) ->
     onCreated : ->
       j3.on @el, 'click', this, __btn_click
 
+    getPrimary : ->
+      @_primary
+
     getText : ->
       @_text
 

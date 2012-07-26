@@ -1,6 +1,7 @@
 do (j3) ->
   __actionButton_click = (sender, args) ->
-    @_form.action sender.name, sender
+    if not sender.getPrimary()
+      @_form.action sender.name, sender
 
   j3.FormActions = j3.cls j3.ContainerView,
     baseCss : 'form-actions'
