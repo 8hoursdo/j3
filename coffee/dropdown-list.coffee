@@ -52,6 +52,32 @@ do (j3) ->
     dataList.on 'activeItemChange', this, handlerActiveItemChange
     dataList
 
+  __doSetSelectedValue = (value) ->
+    if @_selectedValue is value then return false
+
+    @_selectedValue = value
+
+    @updateSubcomponent()
+
+    selectedModel = null
+    if @_fixedItemsDatasource
+      selectedModel = @_fixedItemsDatasource.getActive()
+      if selectedModel
+        @doSetSelectedItems @_fixedItemDataSelector selectedModel
+
+    if not selectedModel
+      selectedModel = @_itemsDatasource.getActive()
+      if selectedModel
+        @doSetSelectedItems @_itemDataSelector selectedModel
+
+    if not selectedModel
+      @doSetSelectedItems null
+
+    @updateData()
+
+    true
+
+
   j3.DropdownList = j3.cls j3.Dropdown,
     _selectedIndex : null
 
@@ -70,7 +96,7 @@ do (j3) ->
       if j3.isUndefined options.value
         @doSetSelectedItems null
       else
-        @setSelectedValue options.value
+        __doSetSelectedValue.call this, options.value
       @setDatasource options.datasource
 
     onCreateDropdownBox : (elBox) ->
@@ -98,31 +124,11 @@ do (j3) ->
     getSelectedValue : ->
       @_selectedValue
 
-    setSelectedValue : (value, internal) ->
-      if @_selectedValue is value then return
-
-      @_selectedValue = value
-
-      @updateSubcomponent()
-
-      selectedModel = null
-      if @_fixedItemsDatasource
-        selectedModel = @_fixedItemsDatasource.getActive()
-        if selectedModel
-          @doSetSelectedItems @_fixedItemDataSelector selectedModel
-
-      if not selectedModel
-        selectedModel = @_itemsDatasource.getActive()
-        if selectedModel
-          @doSetSelectedItems @_itemDataSelector selectedModel
-
-      if not selectedModel
-        @doSetSelectedItems null
+    setSelectedValue : (value) ->
+      if not __doSetSelectedValue.call this, value then return
 
       @onChange && @onChange()
       @fire 'change', this
-
-      @updateData()
 
     onSetSelectedItems : ->
       if @getMultiple()
