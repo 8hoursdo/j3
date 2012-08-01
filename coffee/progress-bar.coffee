@@ -1,6 +1,10 @@
 do(j3) ->
   __getPercentage = (options) ->
-    Math.floor(options.value * 100 / (options.max - options.min))
+    delta = options.max - options.min
+    if delta
+      Math.floor(options.value * 100 / delta)
+    else
+      0
 
   __getIndicateText = (options) ->
     switch options.indicator
@@ -106,11 +110,11 @@ do(j3) ->
       __getPercentage min : @_min, max : @_max, value : @_value
 
   ProgressBar.render = (sb, options) ->
-    options.css ?= 'prg-bar'
-    options.indicator ?= 'percentage'
-    options.min ?= 0
-    options.max ?= 100
-    options.value ?= 0
+    if j3.isUndefined options.css then options.css = 'prg-bar'
+    if j3.isUndefined options.indicator then options.indicator = 'percentage'
+    if j3.isUndefined options.min then options.min = 0
+    if j3.isUndefined options.max then options.max = 100
+    if j3.isUndefined options.value then options.value = 0
 
     options.percentage = __getPercentage options
     text = __getIndicateText options
