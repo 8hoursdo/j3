@@ -17,9 +17,8 @@ do (j3) ->
     if not data then return
 
     firstItem = yes
-    for name of data
+    for name, value of data
       if data.hasOwnProperty name
-        value = data[name]
         if j3.isNull(value) or j3.isUndefined(value)
           continue
 
@@ -31,6 +30,7 @@ do (j3) ->
         buffer.append encodeURIComponent name
         buffer.append '='
         buffer.append encodeURIComponent value
+    return
 
   # serialize the body to be send
   __serializeBody = (buffer, data, dataType) ->
