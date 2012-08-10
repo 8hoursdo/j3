@@ -57,6 +57,13 @@ do (j3) ->
 
     @_selectedValue = value
 
+    __refreshSelectedValueState.call this
+    true
+
+  __itemsDatasource_onRefresh = ->
+    __refreshSelectedValueState.call this
+
+  __refreshSelectedValueState = ->
     @updateSubcomponent()
 
     selectedModel = null
@@ -74,8 +81,6 @@ do (j3) ->
       @doSetSelectedItems null
 
     @updateData()
-
-    true
 
 
   j3.DropdownList = j3.cls j3.Dropdown,
@@ -98,6 +103,8 @@ do (j3) ->
       else
         __doSetSelectedValue.call this, options.value
       @setDatasource options.datasource
+
+      @_itemsDatasource.on 'refresh', this, __itemsDatasource_onRefresh
 
     onCreateDropdownBox : (elBox) ->
       if @_fixedItemsDatasource
@@ -153,19 +160,17 @@ do (j3) ->
           @_fixedItemsDatasource.setActive null
         @_itemsDatasource.setActive null
       else
-        comparer = (item) ->
-          if selectedValue is j3.getVal(item, 'value')
-            return true
-          else
-            return false
-
         selectedModel = null
         if @_fixedItemsDatasource
-          selectedModel = @_fixedItemsDatasource.tryUntil comparer
+          fixedItemDataSelector = @_fixedItemDataSelector
+          selectedModel = @_fixedItemsDatasource.tryUntil (item) ->
+            fixedItemDataSelector(item).value is selectedValue
           @_fixedItemsDatasource.setActive selectedModel
 
         if not selectedModel
-          selectedModel = @_itemsDatasource.tryUntil comparer
+          itemDataSelector = @_itemDataSelector
+          selectedModel = @_itemsDatasource.tryUntil (item) ->
+            itemDataSelector(item).value is selectedValue
           @_itemsDatasource.setActive selectedModel
       return
 

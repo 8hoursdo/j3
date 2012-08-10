@@ -79,6 +79,7 @@ do (j3) ->
       @_notFoundModels = {}
       if not options.silent
         @updateViews 'refresh'
+        @fire 'refresh', this
 
     loadData : (dataList, options) ->
       options = options || {}
@@ -94,6 +95,7 @@ do (j3) ->
 
       if not silent
         @updateViews 'refresh'
+        @fire 'refresh', this
 
     getActive : ->
       @_activeModel

@@ -83,6 +83,10 @@ do (j3) ->
       @_dropdownList = @createFormControl options,
         cls : j3.DropdownList
         items : options.items
+        itemsDatasource : options.itemsDatasource
+        fixedItemsDatasource : options.fixedItemsDatasource
+        itemDataSelector : options.itemDataSelector
+        fixedItemDataSelector : options.fixedItemDataSelector
         value : options.value
         placeholder : options.placeholder
 
