@@ -85,6 +85,9 @@ do (j3) ->
     addSecond : (seconds) ->
       new DateTime @_value.getTime() + _SECOND * seconds
 
+    addMillisecond : (milliseconds) ->
+      new DateTime @_value.getTime() + milliseconds
+
     toString : (format) ->
       format ?= _FORMAT_LOACL
       DateTime.format @_value, format
