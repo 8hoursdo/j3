@@ -17,6 +17,9 @@ j3.Calendar = do ->
     clickedDate = @_firstDateOfMonthView.addDay (rowIndex - 1) * 7 + cellIndex
     @setCurrentDate clickedDate
 
+  __refreshCalendarHeader = ->
+    @_elCurYearMonth.innerHTML = @_year + ' - ' + @_month
+
   Calendar = j3.cls j3.View,
     baseCss : 'cld'
 
@@ -108,7 +111,6 @@ j3.Calendar = do ->
           @_year--
           @_month = 12
         @refreshMonthView()
-        @_elCurYearMonth.innerHTML = @_year + ' - ' + @_month
 
       j3.on @_elNextMonth, 'click', this, ->
         @_month++
@@ -116,14 +118,15 @@ j3.Calendar = do ->
           @_year++
           @_month = 1
         @refreshMonthView()
-        @_elCurYearMonth.innerHTML = @_year + ' - ' + @_month
 
-      @_elCurYearMonth.innerHTML = @_year + ' - ' + @_month
+      __refreshCalendarHeader.call this
     
     refreshMonthView : ->
       buffer = new j3.StringBuilder
       @renderMonthView buffer
       @_elMonthView.innerHTML = buffer.toString()
+
+      __refreshCalendarHeader.call this
 
     getCurrentDate : ->
       @_date
@@ -133,6 +136,9 @@ j3.Calendar = do ->
 
       oldDate = @_date
       @_date = date
+
+      @_year = @_date.getYear()
+      @_month = @_date.getMonth()
 
       @refreshMonthView()
       @fire 'change', this, oldDate : oldDate, curDate : date

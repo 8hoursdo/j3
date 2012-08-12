@@ -1,8 +1,10 @@
 do (j3) ->
   __calendar_change = (sender, args) ->
+    if @isUpdatingSubcomponent() then return
+
     @close()
     @setDate args.curDate
-    
+
   j3.DateSelector = j3.cls j3.Dropdown,
     cssTrigger : 'icon-calendar'
 
@@ -44,11 +46,16 @@ do (j3) ->
     onSetSelectedItems : ->
       selectedItem = @getSelectedItem()
       @setDate (selectedItem && selectedItem.value) || null, true
+      @updateSubcomponent()
 
     onUpdateData : ->
       @_datasource.set @_name, @_date
-      
+
     onUpdateView : ->
       @setDate @_datasource.get @_name
-  
+      @updateSubcomponent()
+
+    onUpdateSubcomponent : ->
+      if @_calendar then @_calendar.setCurrentDate @_date
+
   j3.ext j3.DateSelector.prototype, j3.DataView
