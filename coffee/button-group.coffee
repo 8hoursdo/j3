@@ -26,7 +26,7 @@ do (j3) ->
       if args.last then options.css = 'last'
 
       if @_toggle
-        options.toggle = true
+        options.toggle = @_toggle
       return
 
     onChildCreated : (child) ->

@@ -17,7 +17,7 @@ do(j3) ->
       @_primary = !!options.primary
       @_disabled = !!options.disabled
       @_active = !!options.active
-      @_toggle = !!options.toggle
+      @_toggle = options.toggle
 
       @_linkButton = !!options.linkButton
       @_url = options.url
@@ -77,8 +77,11 @@ do(j3) ->
     click : ->
       if @_disabled then return
 
-      if @_toggle
-        @setActive not @getActive()
+      isActive = @getActive()
+      if @_toggle is 'exclusive'
+        @setActive not isActive
+      else if @_toggle is 'radio' and not isActive
+        @setActive true
 
       @fire 'click', this
 
