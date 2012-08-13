@@ -4,11 +4,35 @@ do(j3) ->
 
     if @_linkButton and @_commandMode
       evt.stop()
+
+  __btn_mouseover = (evt) ->
+    __showTooltip.call this
+
+  __btn_mouseout = (evt) ->
+    __hideTooltip.call this
+
+  __showTooltip = ->
+    if not @_tip then return
+
+    Dom = j3.Dom
+    pos = Dom.position @el
+    width = Dom.offsetWidth @el
+    height = Dom.offsetHeight @el
+
+    @_tooltip = j3.Tooltip.show
+      text : @_tip
+      pointAt :
+        x : pos.left + (width / 2)
+        y : pos.top + height
+
+  __hideTooltip = ->
+    if not @_tooltip then return
+    @_tooltip.hide()
     
   j3.Button = j3.cls j3.View,
     baseCss : 'btn'
 
-    template : j3.template '<<%=linkButton?"a":"button"%> <%if(linkButton){%>href="<%=url%>"<%}else{%>type="<%=primary ? "submit" : "button"%>"<%}%> id="<%=id%>" class="<%=css%>"<%if(disabled){%> disabled="disabled"<%}%> <%if(title){%> title="<%=title%>"<%}%>><%if(icon){%><i class="<%=icon%>"></i><%}%><%=text%></<%=linkButton?"a":"button"%>>'
+    template : j3.template '<<%=linkButton?"a":"button"%> <%if(linkButton){%>href="<%=url%>"<%}else{%>type="<%=primary ? "submit" : "button"%>"<%}%> id="<%=id%>" class="<%=css%>"<%if(disabled){%> disabled="disabled"<%}%>><%if(icon){%><i class="<%=icon%>"></i><%}%><%=text%></<%=linkButton?"a":"button"%>>'
 
     onInit : (options) ->
       @_text = options.text || ''
@@ -31,7 +55,6 @@ do(j3) ->
         (if @_disabled then ' disabled' else '') +
         (if @_active then ' active' else '')
       text : @_text
-      title : @_tip
       icon : @_icon
       primary : @_primary
       disabled : @_disabled
@@ -40,6 +63,8 @@ do(j3) ->
 
     onCreated : ->
       j3.on @el, 'click', this, __btn_click
+      j3.on @el, 'mouseover', this, __btn_mouseover
+      j3.on @el, 'mouseout', this, __btn_mouseout
 
     getPrimary : ->
       @_primary
@@ -66,7 +91,11 @@ do(j3) ->
       @_active
 
     setActive : (value) ->
-      @_active = !!value
+      value = !!value
+
+      if @_active is value then return
+
+      @_active = value
       if @_active
         j3.Dom.addCls @el, 'active'
       else

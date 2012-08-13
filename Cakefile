@@ -34,6 +34,8 @@ _filesClient = [
   'html-view'
   'container-view'
   'data-list'
+  'box-with-arrow'
+  'tooltip'
   'button'
   'button-group'
   'checkbox'
