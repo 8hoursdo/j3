@@ -144,6 +144,10 @@ j3.View = do (j3) ->
       if not @children then @children = new j3.List
       @children
 
+    getChildByName :  (name) ->
+      if not @children then return null
+      @children.tryUntil (child) -> child.name is name
+
     addChild : (child) ->
       @getChildren().insert child
 
