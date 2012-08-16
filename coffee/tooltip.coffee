@@ -3,19 +3,25 @@ do(j3) ->
     css : 'tooltip'
 
     onInit : (options) ->
-      @_text = options.text || ''
+      @_content = options.content || ''
+      @_encodeContent = !!options.encodeContent
 
       Tooltip.base().onInit.call this, options
 
     renderChildren : (sb) ->
-      sb.e @_text
+      if @_encodeContent
+        sb.e @_content
+      else
+        sb.a @_content
 
-    getText : ->
-      @_text
+    getContent : ->
+      @_content
 
-    setText : (value) ->
-      @_text = value
-      @getBody().innerHTML = j3.htmlEncode @_text
+    setContent : (content, encodeContent) ->
+      @_content = content
+      @_encodeContent = !!encodeContent
+
+      @getBody().innerHTML = if @_encodeContent then j3.htmlEncode @_content else @_content
 
     show : (pointAt) ->
       Dom = j3.Dom
@@ -40,7 +46,7 @@ do(j3) ->
         bar
 
       onInit : (bar, options) ->
-        bar.setText options.text
+        bar.setContent options.content, options.encodeContent
         bar.show options.pointAt
 
   j3.Tooltip.show = (options) ->

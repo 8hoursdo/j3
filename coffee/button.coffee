@@ -20,7 +20,8 @@ do(j3) ->
     height = Dom.offsetHeight @el
 
     @_tooltip = j3.Tooltip.show
-      text : @_tip
+      content : @_tip
+      encodeContent : yes
       pointAt :
         x : pos.left + (width / 2)
         y : pos.top + height

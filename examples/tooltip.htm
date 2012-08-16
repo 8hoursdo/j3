@@ -8,8 +8,10 @@
 <body>
 <script type="text/javascript">
     j3.ready(function () {
-        j3.Tooltip.show({text:'tooltip with top arrow', pointAt : {x:200,y:100}});
-        j3.Tooltip.show({text:'箭头向上的提示', pointAt : {x:200,y:200}});
+        j3.Tooltip.show({content:'tooltip with top arrow', pointAt : {x:200,y:50}});
+        j3.Tooltip.show({content:'箭头向上的提示', pointAt : {x:200,y:100}});
+        j3.Tooltip.show({content:'<i>string</i>', pointAt : {x:200,y:150}});
+        j3.Tooltip.show({content:'<i>string</i>', encodeContent:true, pointAt : {x:200,y:200}});
     });
 </script>
 </body>
