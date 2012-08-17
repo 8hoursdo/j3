@@ -6,6 +6,9 @@ do (j3) ->
 
   __refreshNode = ->
     el = @_elNodeBody
+
+    if not el then return
+
     Dom = j3.Dom
     if @_childrenLoaded and (not @children or not @children.count())
       @collapse()
@@ -32,11 +35,12 @@ do (j3) ->
         
       @_icon = options.icon
       @_expanded = !!options.expanded
-      @_childrenLoaded = !!options.childrenLoaded
+      @_childrenLoaded = !!options.childrenLoaded || options.children
 
       @_checkable = @parent.getCheckable()
       if options.hasOwnProperty 'checkable'
         @_checkable = !!options.checkable
+      @_checked = !!options.checked
 
       @_unselectable = !!options.unselectable
 
@@ -51,10 +55,14 @@ do (j3) ->
       buffer.append '<div class="tree-node-body'
       if @_level is 0
         buffer.append ' tree-node-top'
+
       if @_childrenLoaded and (not @children or not @children.count())
         buffer.append ' tree-node-leaf'
       else if @_expanded
         buffer.append ' tree-node-expanded'
+
+      if @_checked
+        buffer.append ' tree-node-checked'
       buffer.append '">'
 
       buffer.append '<div class="tree-node-indents">'
@@ -80,6 +88,9 @@ do (j3) ->
       buffer.append '</div></div>'
 
     renderNodeContent : (buffer) ->
+      if @_checkable
+        buffer.append '<a class="tree-node-chk" javascript:;><i></i></a>'
+
       if @_icon
         buffer.append '<i class="tree-node-icon ' + @_icon + '"></i>'
 
@@ -122,6 +133,26 @@ do (j3) ->
 
     getCheckable : ->
       @_checkable
+
+    getChecked : ->
+      @_checked
+
+    setChecked : (value, recursive) ->
+      value = !!value
+      if @_checked is value then return
+
+      @_checked = value
+      j3.Dom.toggleCls @_elNodeBody, 'tree-node-checked'
+
+      tree = @_tree
+      args = node : this
+
+      @fire 'check', this, args
+      tree.fire 'nodeCheck', tree, args
+
+      if recursive and @children
+        @children.forEach (child) ->
+          child.setChecked value, true
 
     getUnselectable : ->
       @_unselectable

@@ -9,6 +9,12 @@ do (j3) ->
           treeNode.setExpanded !treeNode.getExpanded()
         return
 
+      if el.className is 'tree-node-chk'
+        treeNode = el.parentNode.parentNode.parentNode._j3TreeNode
+        if treeNode
+          treeNode.setChecked !treeNode.getChecked()
+        return
+
       if el.className is 'tree-node'
         node = el._j3TreeNode
         if node

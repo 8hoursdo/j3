@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>tree</title>
+    <link rel="Stylesheet" href="../lib/css/j3.css" />
+    <script type="text/javascript" src="../lib/js/j3.js"></script>
+</head>
+<body>
+<div id="treeCtnr1"></div>
+<script type="text/javascript">
+    j3.ready(function () {
+        new j3.TreeView({
+          ctnr : 'treeCtnr1',
+          checkable : true,
+          topNodeHidden : false,
+          topNode : {
+            text : 'root',
+            expanded : true,
+            children : [
+              {
+                text : 'child-1',
+                checked : true,
+                children : [
+                  {
+                    text : 'child-1-1'
+                  }
+                ,
+                  {
+                    text : 'child-1-2'
+                  }
+                ]
+              }
+            ,
+              {
+                text : 'child-2'
+              }
+            ]  
+          }
+        });
+    });
+</script>
+</body>
+</html>
