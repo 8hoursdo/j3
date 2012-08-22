@@ -49,9 +49,19 @@ do (j3) ->
       @_dataTextName = options.dataTextName || 'name'
       @_topNodeHidden = !!options.topNodeHidden
 
+      if j3.isUndefined options.checkOnClick
+        @_checkOnClick = true
+      else
+        @_checkOnClick = !!options.checkOnClick
+
+      @_itemDataSelector = j3.compileSelector(options.itemDataSelector || 'id')
+
+      @_itemDataEquals = j3.compileEquals(options.itemDataEquals || ['id'])
+
     createChildren : (options) ->
       nodeOptions = options.topNode || {}
       nodeOptions.parent = this
+      nodeOptions.expanded = true
       @_topNode = new j3.TreeNode nodeOptions
 
     onRender : (buffer, data) ->
@@ -127,4 +137,29 @@ do (j3) ->
 
     removeNode : (node) ->
       node.remove()
+
+    notifyNodeCheck : (node, checked, silent) ->
+      if not @_checkedNodes then @_checkedNodes = new j3.List
+
+      args = {}
+      if checked
+        @_checkedNodes.insert node
+        args.checkedNodes = [node]
+      else
+        @_checkedNodes.remove node
+        args.uncheckedNodes = [node]
+
+      if not silent
+        @fire 'checkedNodesChange', this, args
+
+    getCheckedNodes : ->
+      @_checkedNodes
+
+    getSelectedItems : ->
+      selectedItems = []
+      if not @_checkedNodes then return selectedItems
+
+      @_checkedNodes.forEach (node) ->
+        selectedItems.push node.getItemData()
+
       

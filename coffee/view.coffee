@@ -102,8 +102,7 @@ j3.View = do (j3) ->
 
         __viewCreated.call this
 
-        if not @parent then @layout()
-        else if _creatingStack == 0 then @parent.addChild this
+        if not @parent or _creatingStack is 0 then @layout()
 
       # add me into parent's children
       if @parent

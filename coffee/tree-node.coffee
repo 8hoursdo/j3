@@ -20,6 +20,18 @@ do (j3) ->
       else
         Dom.removeCls el, 'tree-node-expanded'
 
+  __uncheckChildNodesToBeRemoved = (node, includeSelf, uncheckedNodes) ->
+    if not uncheckedNodes then uncheckedNodes = []
+    if includeSelf and node.getChecked()
+      uncheckedNodes.push node
+      node._tree._checkedNodes.remove node
+
+    if not @children then return
+    @children.forEach (node) ->
+      __uncheckChildNodesToBeRemoved node, true, uncheckedNodes
+
+    uncheckedNodes
+
   j3.TreeNode = j3.cls j3.ContainerView,
     baseCss : 'tree-node'
 
@@ -45,6 +57,15 @@ do (j3) ->
       @_unselectable = !!options.unselectable
 
       @_expandOnClick = options.expandOnClick
+
+      if j3.isUndefined options.checkOnClick
+        @_checkOnClick = @_tree._checkOnClick
+      else
+        @_checkOnClick = options.checkOnClick
+
+      @_itemDataSelector = j3.compileSelector(options.itemDataSelector || @_tree._itemDataSelector || 'id')
+
+      @_itemDataEquals = j3.compileEquals(options.itemDataEquals || @_tree._itemDataEquals || ['id'])
 
     onCreateChild : (options) ->
       options.cls = options.cls || j3.TreeNode
@@ -145,10 +166,10 @@ do (j3) ->
       j3.Dom.toggleCls @_elNodeBody, 'tree-node-checked'
 
       tree = @_tree
-      args = node : this
+      args = node : this, checked : value
 
       @fire 'check', this, args
-      tree.fire 'nodeCheck', tree, args
+      tree.notifyNodeCheck this, value
 
       if recursive and @children
         @children.forEach (child) ->
@@ -213,6 +234,9 @@ do (j3) ->
       if @_expandOnClick
         @expand()
 
+      if @_checkOnClick and @_checkable
+        @setChecked not @getChecked()
+
     getActive : ->
       @_tree.getActiveNode() is this
 
@@ -246,43 +270,52 @@ do (j3) ->
       @elBody.appendChild child.el
       child.setLevel @_level + 1
 
-    remove : ->
+    remove : (silent) ->
+      tree = @_tree
+      parentNode = @parent
       # We can't remove top node
-      if @parent is @_tree then return
-
-      @parent.removeNode this
-
-    __doRemove : ->
-      j3.Dom.remove @el
-
-    removeNode : (node) ->
-      if not node then return
+      if parentNode is tree then return
 
       # If the node to be removed is active node, we should set a new active node later
-      if node.getActive()
-        activeNode = node.getNext()
-        if not activeNode then activeNode = node.getPrevious()
-        if not activeNode then activeNode = node.parent
+      if @getActive()
+        activeNode = @getNext()
+        if not activeNode then activeNode = @getPrevious()
+        if not activeNode then activeNode = parentNode
 
-      node.__doRemove()
-      @children.remove node
+      # Remove from checked node list of tree if nodes to be removed is checked.
+      uncheckedNodes = __uncheckChildNodesToBeRemoved this, true
+
+      j3.Dom.remove @el
+      parentNode.children.remove this
 
       if activeNode
-        @_tree._activeNode = null
-        @_tree.setActiveNode activeNode
+        tree._activeNode = null
+        tree.setActiveNode activeNode
 
-    clearChildren : ->
+      __refreshNode.call parentNode
+
+      if uncheckedNodes and uncheckedNodes.length and not silent
+        tree.fire 'checkedNodesChange', tree, uncheckedNodes : uncheckedNodes
+
+    clearChildren : (silent) ->
       if not @children then return
 
       activeNode = @_tree.getActiveNode()
-      while activeNode and activeNode isnt @_tree and activeNode isnt @
+      while activeNode and activeNode isnt @_tree and activeNode isnt this
         activeNode = activeNode.parent
 
-      if activeNode is @
+      if activeNode is this
         @setActive()
+
+      uncheckedNodes = __uncheckChildNodesToBeRemoved this, false
 
       @children.clear()
       @elBody.innerHTML = ''
+
+      __refreshNode.call this
+
+      if uncheckedNodes and uncheckedNodes.length and not silent
+        tree.fire 'checkedNodesChange', tree, uncheckedNodes : uncheckedNodes
 
     getText : ->
       @_text
@@ -301,6 +334,9 @@ do (j3) ->
         dataTextName = @_tree._dataTextName
         if dataTextName
           @setText @_data[dataTextName]
+
+    getItemData : ->
+      @_itemDataSelector @_data
 
     getNodeByDataId : (id) ->
       if @_data && @_data[@_tree._dataIdName] is id
