@@ -10,6 +10,12 @@ do (j3) ->
 
     index
 
+  j3.count = (list) ->
+    if j3.isArray list
+      list.length
+    else
+      list.count()
+
   j3.forEach = (list, context, args, callback) ->
     if not list then return
 
@@ -44,8 +50,8 @@ do (j3) ->
       for eachItem, i in list
         if callback.call context, eachItem, args, i
           return eachItem
-    else if list.forEach
-      list.forEach context, args, callback
+    else if list.tryUntil
+      list.tryUntil context, args, callback
 
     return
 
@@ -64,8 +70,8 @@ do (j3) ->
       for eachItem, i in list
         if not callback.call context, eachItem, args, i
           return eachItem
-    else if list.forEach
-      list.forEach context, args, callback
+    else if list.doWhile
+      list.doWhile context, args, callback
 
     return
 

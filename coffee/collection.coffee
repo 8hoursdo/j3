@@ -13,9 +13,6 @@ do (j3) ->
         _collections[@id] = this
 
       @_idName = options.idName || 'id'
-
-      if options.id then _collections[options.id] = @
-
       @_idxId = {}
       @_model = options.model || j3.Model
       @_models = new j3.List
@@ -51,13 +48,13 @@ do (j3) ->
 
       options ?= {}
 
+      node = @_models.findNode model
       if @_activeModel is model
-        node = @_models.findNode(model)
         newActiveModel = node.next && node.next.value
         if not newActiveModel then newActiveModel = node.prev && node.prev.value
 
-      @_models.remove model
       delete @_idxId[model.get @_idName]
+      @_models.removeNode node
 
       if not options.silent
         @updateViews 'remove', model : model
@@ -118,6 +115,9 @@ do (j3) ->
         index = -1
 
       @setActive @getAt(index), options
+
+    notifyModelChange : (changeName, args) ->
+      @fire changeName, this, args
 
     getById : (id, callback) ->
       if not id

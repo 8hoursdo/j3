@@ -2,13 +2,14 @@ do (j3) ->
   j3.Model = Model = (data, options) ->
       options ?= {}
 
-      @collection = options.collection
-
       @_data = @get('defaults') or {}
       if data then j3.ext @_data, data
+
       return
 
   j3.ext Model.prototype, j3.EventManager, j3.Datasource,
+    notifyChangeName : 'modelDataChange'
+
     has : (name) ->
       @_data.hasOwnProperty name
 
@@ -72,7 +73,8 @@ do (j3) ->
 
       @updateViews 'change', args
 
-      if @collection then @collection.updateViews 'change', args
+      collection = @collection
+      collection && collection.notifyModelChange @notifyChangeName, args
 
     toJson : (buffer) ->
       j3.toJson @_data, buffer

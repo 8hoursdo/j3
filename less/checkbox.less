@@ -1,5 +1,6 @@
 .chk,
 .tree-node-chk,
+.list-group-chk,
 .list-item-chk {
   line-height: @baseLineHeight;
   color: @textColor;
@@ -21,6 +22,7 @@
   }
 }
 
+.list-group-checked .list-group-chk,
 .list-item-checked .list-item-chk,
 .tree-node-checked .tree-node-chk,
 .chk-checked {
@@ -33,6 +35,7 @@
   }
 }
 
+.list-group-disabled .list-group-chk,
 .list-item-disabled .list-item-chk,
 .chk-disabled {
   cursor: default;

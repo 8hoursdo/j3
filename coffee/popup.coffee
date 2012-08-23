@@ -34,3 +34,5 @@ do (j3) ->
       if not inside
         popup.close()
         delete _curPopups[name]
+
+    return

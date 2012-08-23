@@ -20,6 +20,7 @@ _filesCore = [
   'model'
   'collection'
   'collection-view'
+  'grouped-collection'
 ]
 
 _filesClient = [
@@ -34,6 +35,7 @@ _filesClient = [
   'html-view'
   'container-view'
   'data-list'
+  'grouped-data-list'
   'box-with-arrow'
   'tooltip'
   'button'
@@ -76,9 +78,15 @@ _filesClient = [
 ]
 
 task 'build', 'build j3 libarary', (options) ->
+  invoke 'js'
+
+task 'js', 'build js files', (options) ->
   __build _filesCore, 'j3.core'
   __build _filesCore.concat(_filesClient), 'j3'
   __buildLangFiles()
+
+task 'images', 'copy images', (options) ->
+
 
 __build = (coffeeFiles, outputFileName) ->
   coffeeDir = __dirname + '/coffee'

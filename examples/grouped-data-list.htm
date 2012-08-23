@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>grouped data list</title>
+    <link rel="Stylesheet" href="../lib/css/j3.css" />
+</head>
+<body>
+<div id="ctnr"></div>
+selected groups:
+<div id="selected-groups"></div>
+selected items:
+<div id="selected-items"></div>
+<script type="text/coffeescript">
+j3.ready ->
+  collection = new j3.Collection
+  collection.loadData [
+    {name:'kingcat', department:'rd'}
+    {name:'jessie', department:'sales'}
+    {name:'young', department:'creative'}
+    {name:'fossil', department:'rd'}
+    {name:'live', department:'rd'}
+  ]
+
+  groupedCollection = new j3.CollectionView
+    datasource : collection
+    idName : 'name'
+    groupBy : 'department'
+    groupSortBy : 'id'
+    sortBy : 'name'
+
+  groupedDataList = new j3.GroupedDataList
+    ctnr : 'ctnr'
+    datasource : groupedCollection
+    itemCheckable : true
+    groupCheckable : false
+    checkItemOnClick : true
+    checkGroupOnClick : true
+    itemIdName : 'name'
+    itemDataSelector : name : 'name', department : 'department'
+    groupDataSelector : id : 'id'
+    groupRenderer : (sb, dataListGroup) ->
+      if @_groupCheckable
+        sb.a '<a class="list-group-chk"><i></i></a>'
+      sb.a j3.getVal dataListGroup, 'id'
+      sb.a ' (' + dataListGroup.items.length + ')'
+    itemRenderer : (sb, dataListItem) ->
+      if @_itemCheckable
+        sb.a '<a class="list-item-chk"><i></i></a>'
+      sb.a j3.getVal dataListItem.data, 'name'
+      sb.a '\n'
+      sb.a '<a data-cmd="detail" href="javascript:;">detail</a>'
+
+  groupedDataList.on 'selectedGroupsChange', (sender, args) ->
+    sb = new j3.StringBuilder
+    selectedGroups = sender.getSelectedGroups()
+    j3.forEach selectedGroups, (group) ->
+      sb.a j3.getVal(group, 'id') + ', '
+      
+    j3.$('selected-groups').innerHTML = sb.toString()
+
+  groupedDataList.on 'selectedItemsChange', (sender, args) ->
+    sb = new j3.StringBuilder
+    selectedItems = sender.getSelectedItems()
+    j3.forEach selectedItems, (item) ->
+      sb.a j3.getVal(item, 'name') + ', '
+      
+    j3.$('selected-items').innerHTML = sb.toString()
+
+  groupedDataList.on 'command', (sender, args) ->
+    content = args.name + ':' + j3.getVal(args.data, 'name') + ', ' + j3.getVal(args.data, 'department')
+    alert content
+
+</script>
+<script type="text/javascript" src="./coffee-script.js"></script>
+<script type="text/javascript" src="../lib/js/j3.js"></script>
+</body>
+</html>

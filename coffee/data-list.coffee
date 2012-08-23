@@ -188,7 +188,7 @@ do (j3) ->
       if @_listItemRenderer
         @_listItemRenderer buffer, dataListItem, this
       else if not j3.isUndefined dataListItem.data
-        buffer.append dataListItem.data.toString()
+        buffer.e dataListItem.data.toString()
 
     # 获取当前数据项
     getActiveItem : ->

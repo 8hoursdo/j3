@@ -15,7 +15,7 @@ do (j3) ->
     if j3.isFunction groupBy then return groupBy
 
     if j3.isString groupBy
-      return (obj) -> value : obj[groupBy]
+      return (obj) -> id : obj[groupBy]
 
     if j3.isObject groupBy
       if not groupBy.text
@@ -34,34 +34,49 @@ do (j3) ->
         valueName = groupBy.value
         groupValue = (obj) -> obj[valueName]
 
+      if not groupBy.id
+        groupId = null
+      else if j3.isFunction groupBy.id
+        groupId = groupBy.id
+      else
+        idName = groupBy.id
+        groupId = (obj) -> obj[idName]
+
       return (obj) ->
         groupInfo = {}
         if groupText then groupInfo.text = groupText obj
         if groupValue then groupInfo.value = groupValue obj
+        if groupId then groupInfo.id = groupId obj
         groupInfo
 
-  __group = (models, groupBy, groupSortBy) ->
+  __group = ->
+    models = @_models
+    groupIdName = @_groupIdName
+    groupBy = @_groupBy
+    groupSortBy = @_groupSortBy
+
+    if not groupBy then return
+
     grouper = __grouper groupBy
-    groups = {}
+    groupMap = {}
+    groupList = []
 
     for eachModel in models
-      groupInfo = grouper eachModel.getData()
-      modelGroup = groups[groupInfo.value]
+      groupData = grouper eachModel.getData()
+      modelGroup = groupMap[groupData[groupIdName]]
       if not modelGroup
-        groupInfo.text ?= groupInfo.value
-        groupInfo.items = []
-        groups[groupInfo.value] = modelGroup = groupInfo
+        groupData.items = []
+        groupMap[groupData[groupIdName]] = modelGroup = groupData
+        groupList.push modelGroup
 
       modelGroup.items.push eachModel
 
-    modelGroups = []
-    for eachGroupValue, eachGroup of groups
-      modelGroups.push eachGroup
+    if not groupSortBy then groupSortBy = 'id'
+    groupList.sort j3.compileSortBy(groupSortBy)
 
-    if not groupSortBy then groupSortBy = 'value nullGreat'
-    modelGroups.sort j3.compileSortBy(groupSortBy)
-
-    modelGroups
+    @_groupList = groupList
+    @_groupMap = groupMap
+    return
 
   j3.CollectionView = j3.cls
     ctor : (options) ->
@@ -69,6 +84,8 @@ do (j3) ->
       @_selector = options.selector
       @_filterBy = options.filterBy
       @_sortBy = options.sortBy
+
+      @_groupIdName = options.groupIdName || 'id'
       @_groupBy = options.groupBy
       @_groupSortBy = options.groupSortBy
 
@@ -115,9 +132,9 @@ do (j3) ->
     setGroupBy : (groupBy, options) ->
       options = options || {}
       @_groupBy = groupBy
-      @_modelGroups = null
-
+      
       if not options.silent
+        __group.call this
         @updateViews 'group'
 
     getGroupSortBy : ->
@@ -172,9 +189,7 @@ do (j3) ->
       j3.doWhile @_models, context, args, callback
       
     forEachGroup : (context, args, callback) ->
-      if not @_models then return
-
-      if not @_modelGroups then @_modelGroups = __group @_models, @_groupBy, @_groupSortBy
+      if not @_groupList then return
 
       if !args && !callback
         callback = context
@@ -184,8 +199,12 @@ do (j3) ->
         callback = args
         args = null
 
-      for group, i in @_modelGroups
+      for group, i in @_groupList
         callback.call context, group, args, i
+
+    getGroupById : (id) ->
+      if not @_groupMap then return
+      @_groupMap[id]
 
     refresh : ->
       models = []
@@ -238,7 +257,8 @@ do (j3) ->
           id = model[@_idName]
           @_idxId[id] = newModel
 
-      @_modelGroups = null
+      # group
+      __group.call this
 
       @updateViews 'refresh'
 

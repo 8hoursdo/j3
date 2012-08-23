@@ -74,7 +74,7 @@ do (j3) ->
       if compiledGroupBy then return compiledGroupBy
       
       _compiledGroupBy[groupBy] = compiledGroupBy = (obj) ->
-        obj[groupBy]
+        j3.getVal obj, groupBy
 
       return compiledGroupBy
 
