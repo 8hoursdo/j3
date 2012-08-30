@@ -7,6 +7,7 @@
   "dependencies": {
   },
   "devDependencies": {
+      "packflow" : "= 0.1.0"
   },
   "main": "./lib/js/j3.core.js",
   "contributors": [
