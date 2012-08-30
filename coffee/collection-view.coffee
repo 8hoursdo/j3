@@ -15,7 +15,7 @@ do (j3) ->
     if j3.isFunction groupBy then return groupBy
 
     if j3.isString groupBy
-      return (obj) -> id : obj[groupBy]
+      return (obj) -> obj[groupBy]
 
     if j3.isObject groupBy
       if not groupBy.text

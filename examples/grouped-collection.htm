@@ -44,15 +44,16 @@ j3.ready ->
     itemDataSelector : name : 'name', department : 'department'
     groupDataSelector : name : 'name'
     groupRenderer : (sb, dataListGroup) ->
+      data = dataListGroup.data
       if @_groupCheckable
         sb.a '<a class="list-group-chk"><i></i></a>'
-      sb.a j3.getVal dataListGroup, 'name'
-      if dataListGroup.items and dataListGroup.items.length
+      sb.a j3.getVal data, 'name'
+      if data.items and data.items.length
         sb.a ' (' + dataListGroup.items.length + ')'
-    itemRenderer : (sb, dataListItem) ->
+    itemRenderer : (sb, listItemInfo) ->
       if @_itemCheckable
         sb.a '<a class="list-item-chk"><i></i></a>'
-      sb.a j3.getVal dataListItem.data, 'name'
+      sb.a j3.getVal listItemInfo.data, 'name'
       sb.a '\n'
       sb.a '<a data-cmd="detail" href="javascript:;">detail</a>'
 

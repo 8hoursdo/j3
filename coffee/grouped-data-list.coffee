@@ -205,34 +205,36 @@ do (j3) ->
     renderDataListGroups : (sb, datasource) ->
       if not datasource then return
 
-      datasource.forEachGroup this, (groupInfo) ->
-        dataListGroup = j3.ext {}, groupInfo
-        dataListGroup.checked = @shouldListGroupSelected groupInfo
+      datasource.forEachGroup this, (groupData) ->
+        listGroupInfo =
+          data : groupData
+          checkable : @_groupCheckable
+          checked : @shouldListGroupSelected groupData
 
-        @renderDataListGroup sb, dataListGroup
+        @renderDataListGroup sb, listGroupInfo
 
-    renderDataListGroup : (sb, dataListGroup) ->
+    renderDataListGroup : (sb, listGroupInfo) ->
       groupCss = 'list-group'
-      if dataListGroup.checked
+      if listGroupInfo.checked
         groupCss += ' list-group-checked'
 
-      groupId = j3.getVal dataListGroup, @_groupIdName
+      groupId = j3.getVal listGroupInfo.data, @_groupIdName
       sb.a '<div class="' + groupCss + '" data-id="' + groupId + '">'
 
       sb.a '<div class="list-group-header">'
-      @onRenderDataListGroup sb, dataListGroup
+      @onRenderDataListGroup sb, listGroupInfo
       sb.a '</div>'
 
-      @renderDataList sb, dataListGroup.items
+      @renderDataList sb, listGroupInfo.data.items
 
       sb.a '</div>'
 
     # 呈现列表分组内容，派生类可以重载此函数
-    onRenderDataListGroup : (sb, dataListGroup) ->
+    onRenderDataListGroup : (sb, listGroupInfo) ->
       if @_groupRenderer
-        @_groupRenderer.call this, sb, dataListGroup
-      else if not j3.isUndefined dataListGroup.data
-        sb.e dataListGroup.data.toString()
+        @_groupRenderer.call this, sb, listGroupInfo
+      else if not j3.isUndefined listGroupInfo.data
+        sb.e listGroupInfo.data.toString()
 
     renderDataList : (sb, dataItems) ->
       listCss = 'data-list'
@@ -259,6 +261,7 @@ do (j3) ->
             count : count
             data : model
             active : isActive
+            checkable : @_itemCheckable
             checked : @shouldListItemSelected model
 
           @renderDataListItem buffer, dataListItem
@@ -321,5 +324,20 @@ do (j3) ->
       itemData = @_itemDataSelector model
       !!j3.tryUntil @_selectedItemsEx, (item) ->
         if @_itemDataEquals item, itemData then return true
+
+    getItemCheckable : ->
+      @_itemCheckable
+
+    setItemCheckable : (value) ->
+      @_itemCheckable = !!value
+
+    getGroupCheckable : ->
+      @_groupCheckable
+
+    setGroupCheckable : (value) ->
+      @_groupCheckable = !!value
+
+    setSelectedItemsEx : (value) ->
+      @_selectedItemsEx = value
 
   j3.ext j3.GroupedDataList.prototype, j3.DataView

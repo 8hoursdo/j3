@@ -69,7 +69,6 @@ do (j3) ->
         cls : j3.Checkbox
         text : options.text
         value : options.value
-        name : options.name
         valueName : options.valueName
 
     checkbox : ->

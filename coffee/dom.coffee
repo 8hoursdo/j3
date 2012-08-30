@@ -398,7 +398,6 @@ j3.Dom = do ->
       position : __position
       getStyle : __getStyle_ie
       opacity : __opacity_ie
-      position : __position
   else
     if UA.gecko
       j3.ext Dom,

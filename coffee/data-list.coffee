@@ -156,6 +156,7 @@ do (j3) ->
             count : count
             data : model
             active : isActive
+            checkable : @_checkable
             checked : @shouldListItemSelected model
 
           @renderDataListItem buffer, dataListItem
