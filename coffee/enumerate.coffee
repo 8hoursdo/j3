@@ -75,6 +75,10 @@ do (j3) ->
 
     return
 
+  j3.sortBy = (list, sortBy) ->
+    comparer = j3.compileSortBy sortBy
+    list.sort comparer
+
   j3.group = (list, groupBy, selector) ->
     groups = {}
 
