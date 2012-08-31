@@ -248,6 +248,10 @@ do (j3) ->
 
       @setActive @getAt(index), options
 
+    notifyModelChange : (changeName, args) ->
+      @updateViews changeName, args
+      @fire changeName, this, args
+
     getById : (id, callback) ->
       if not id then return null
 
