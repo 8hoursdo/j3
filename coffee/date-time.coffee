@@ -221,6 +221,9 @@ do (j3) ->
     today : ->
       (new DateTime).justDate()
 
+    fromMongoObjectId : (id) ->
+      new DateTime 1000 * parseInt id[0...8], 16
+
     equals : (dateTime1, dateTime2) ->
       if dateTime1 then return dateTime1.equals dateTime2
       return !dateTime2
