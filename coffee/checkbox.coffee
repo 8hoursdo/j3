@@ -91,8 +91,8 @@ do (j3) ->
       if @_valueName
         datasource.set @_valueName, if checked then @_value else null
 
-    onUpdateView : (datasource) ->
-      if @name
-        @setChecked datasource.get @name
+    onUpdateView : (datasource, eventName, args) ->
+      if args and args.changedData and not args.changedData.hasOwnProperty @name then return
+      @setChecked datasource.get @name
       
   j3.ext j3.Checkbox.prototype, j3.DataView

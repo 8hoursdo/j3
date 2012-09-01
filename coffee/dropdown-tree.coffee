@@ -86,9 +86,8 @@ do (j3) ->
         __setSelectedItemInternal.call this, selectedItem
 
     onUpdateView : (datasource, eventName, args) ->
-      value = datasource.get @name
-
-      @setSelectedValue value
+      if args and args.changedData and not args.changedData.hasOwnProperty @name then return
+      @setSelectedValue datasource.get @name
 
     onUpdateData : ->
       datasource = @getDatasource()

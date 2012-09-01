@@ -10,7 +10,6 @@ do (j3) ->
     template : j3.template '<div id="<%=id%>" class="<%=css%>"><a href="javascript:;"><span class="swt-on">YES</span><span class="swt-btn"></span><span class="swt-off">NO</span></a></div>'
 
     onInit : (options) ->
-      @_name = options.name
       @_checked = !!options.checked
 
     getTemplateData : ->
@@ -41,10 +40,11 @@ do (j3) ->
       @setChecked !@getChecked()
 
     onUpdateData : ->
-      @_datasource.set @_name, @_checked
+      @_datasource.set @name, @_checked
 
-    onUpdateView : ->
-      @setChecked @_datasource.get @_name
+    onUpdateView : (datasource, eventName, args) ->
+      if args and args.changedData and not args.changedData.hasOwnProperty @name then return
+      @setChecked datasource.get @name
 
   j3.ext j3.Switch.prototype, j3.DataView
 

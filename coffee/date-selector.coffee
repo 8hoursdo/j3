@@ -8,11 +8,6 @@ do (j3) ->
   j3.DateSelector = j3.cls j3.Dropdown,
     cssTrigger : 'icon-calendar'
 
-    onInit : (options) ->
-      j3.DateSelector.base().onInit.call this, options
-
-      @_name = options.name
-
     onCreated : (options) ->
       j3.DateSelector.base().onCreated.call this
 
@@ -49,10 +44,11 @@ do (j3) ->
       @updateSubcomponent()
 
     onUpdateData : ->
-      @_datasource.set @_name, @_date
+      @_datasource.set @name, @_date
 
-    onUpdateView : ->
-      @setDate @_datasource.get @_name
+    onUpdateView : (datasource, eventName, args) ->
+      if args and args.changedData and not args.changedData.hasOwnProperty @name then return
+      @setDate datasource.get @name
       @updateSubcomponent()
 
     onUpdateSubcomponent : ->

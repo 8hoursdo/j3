@@ -160,7 +160,7 @@ j3.Dom = do ->
       return null
 
     firstChild : (el) ->
-      @byIndex el, 0
+      el.children[0]
 
     lastChild : (el) ->
       el = el.lastChild

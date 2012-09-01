@@ -149,8 +149,9 @@ do (j3) ->
     onUpdateData : ->
       @_datasource.set @name, @_selectedValue
 
-    onUpdateView : ->
-      @setSelectedValue @_datasource.get @name
+    onUpdateView : (datasource, eventName, args) ->
+      if args and args.changedData and not args.changedData.hasOwnProperty @name then return
+      @setSelectedValue datasource.get @name
 
     onUpdateSubcomponent : ->
       selectedValue = @_selectedValue

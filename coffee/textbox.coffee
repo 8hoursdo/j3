@@ -122,8 +122,9 @@ do (j3) ->
     onUpdateData : ->
       @_datasource.set @name, @_text
 
-    onUpdateView : ->
-      @setText @_datasource.get @name
+    onUpdateView : (datasource, eventName, args) ->
+      if args and args.changedData and not args.changedData.hasOwnProperty @name then return
+      @setText datasource.get @name
 
   j3.ext j3.Textbox.prototype, j3.DataView
 

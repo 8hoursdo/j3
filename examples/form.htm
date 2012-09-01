@@ -79,14 +79,14 @@
                   cls : j3.Button,
                   text : 'Register',
                   primary : true,
-                  name : 'register'
+                  name : 'ok'
                 }
               ]
             }
           ],
           on : {
             action : function(sender, args){
-              if(args.name == 'register')
+              if(args.name == 'ok')
               {
                 j3.$('data').innerHTML = sender.getDatasource().toJson();
               }         
