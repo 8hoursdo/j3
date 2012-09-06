@@ -17,8 +17,9 @@ do (j3) ->
       @refresh()
       return
 
-    refresh : ->
-      @onRefresh?()
+    refresh : (params) ->
+      @_params = params
+      @onRefresh && @onRefresh()
 
     onMessage : ->
       @_msgEvtMngr ?= j3.createEventManager()
@@ -33,6 +34,10 @@ do (j3) ->
 
       if not @_msgEvtMngr then return
       @_msgEvtMngr.fire name, sender, args
+
+    getParam : (name) ->
+      if not @_params then return
+      @_params[name]
 
     getQuery : (name) ->
       if not @_query then return

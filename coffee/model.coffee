@@ -2,8 +2,12 @@ do (j3) ->
   j3.Model = Model = (data, options) ->
       options ?= {}
 
-      @_data = @get('defaults') or {}
-      if data then j3.ext @_data, data
+      if data and not options.noParse and @parse then data = @parse data
+
+      if defaults = @get('defaults')
+        data = j3.ext defaults, data
+
+      @_data = data || {}
 
       return
 
@@ -41,37 +45,41 @@ do (j3) ->
 
       if not @_originalData then @_originalData = j3.clone @_data
 
+      eventName = 'change'
       if !data
         if j3.equals @_data[name], value then return
         changedData = {}
         changedData[name] = value
         @_data[name] = value
       else
-        if not options.append
-          @_data = {}
-
-        for name of data
-          value = data[name]
-          if j3.equals @_data[name], value then continue
-          if not changedData then changedData = {}
-          changedData[name] = value
-          @_data[name] = value
+        if options.append
+          for name of data
+            value = data[name]
+            if j3.equals @_data[name], value then continue
+            if not changedData then changedData = {}
+            changedData[name] = value
+            @_data[name] = value
+        else
+          eventName = 'refresh'
+          @_data = j3.clone data
 
       @notifyChange
+        eventName : eventName
         changedData : changedData
         source : options.source
 
     notifyChange : (options) ->
       options ?= {}
 
+      {eventName} = options
       args =
         changedData : options.changedData
         source : options.source
         model : this
 
-      @fire 'change', this, args
+      @fire eventName, this, args
 
-      @updateViews 'change', args
+      @updateViews eventName, args
 
       collection = @collection
       collection && collection.notifyModelChange @notifyChangeName, args

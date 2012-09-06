@@ -137,8 +137,9 @@ j3.Calendar = do ->
       oldDate = @_date
       @_date = date
 
-      @_year = @_date.getYear()
-      @_month = @_date.getMonth()
+      curMonthDay = @_date || j3.DateTime.today()
+      @_year = curMonthDay.getYear()
+      @_month = curMonthDay.getMonth()
 
       @refreshMonthView()
       @fire 'change', this, oldDate : oldDate, curDate : date

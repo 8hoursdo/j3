@@ -214,6 +214,7 @@ do (j3) ->
     convertFromJson : (obj, attrs...) ->
       for attr in attrs
         obj[attr] = j3.DateTime.parse obj[attr]
+      return
 
     now : ->
       new DateTime
