@@ -3,14 +3,20 @@ j3.EventManager =
     if not @_eventHandlers
       @_eventHandlers = {}
 
-
     if arguments.length == 1
+      # on
+      #   eventName1 : handler
+      #   eventName2 : [context, handler]
+      #   eventName3 : context/ctx/c : context, handler/hdl/h : handler
       handlers = name
       for handlerName, handler of handlers
         handlerList = @_eventHandlers[handlerName]
         if j3.isArray handler
           context = handler[0]
           handler = handler[1]
+        else if j3.isObject handler
+          context = handler.c || handler.ctx || handler.context
+          handler = handler.h || handler.hdl || handler.handler
         else
           context = null
         if not handlerList
