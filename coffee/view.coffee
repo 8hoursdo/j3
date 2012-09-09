@@ -66,10 +66,16 @@ j3.View = do (j3) ->
       # handle the 'message' event of the page in the 'onCreated' method if you are instrested at the status changing of other views.
       @page = options.page || (@parent && @parent.page) || @parent || null
 
-      # container of this view, it should be a dom element
+      # container of this view, it should be a dom element or id of element
       @ctnr = j3.$ options.ctnr
       if not @ctnr and @parent then @ctnr = @parent.getBody()
       if not @ctnr then @ctnr = document.body
+
+      # give a chance to extend views to change default options of base view
+      if @defaultOptions
+        defaultOptions = @defaultOptions()
+        for optName, optValue of defaultOptions
+          if not options.hasOwnProperty optName then options[optName] = optValue
 
       # override the default css class if specified
       if options.css then @css = options.css
