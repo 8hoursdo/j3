@@ -1,8 +1,8 @@
 .navbar {
+  border-bottom: 1px solid @boxBorderColor;
   height: @navbarHeight;
   background: #fff;
-  border-bottom: 1px solid @boxBorderColor;
-
+  margin-bottom: 10px;
 }
 
 .navbar .link-list {
@@ -10,18 +10,43 @@
   margin: 0;
   padding: 0;
   font-size: 14px;
-  
+
   li {
     float: left;
     height: @navbarHeight;
 
     a {
-      position: relative;
       display: inline-block;
       padding: 0 15px;
-      line-height: @navbarHeight + 1px;
-      color: lighten(@textColor, 20%);
+      line-height: @navbarHeight;
       text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    &.active a {
+      color: @textColor;
+
+      &:hover {
+        text-decoration: none;
+      }
+    }
+  }
+}
+
+.topnavbar {
+  height: @topNavbarHeight;
+}
+
+.topnavbar .link-list {
+  li {
+    height: @topNavbarHeight;
+
+    a {
+      line-height: @topNavbarHeight + 1px;
+      color: lighten(@textColor, 20%);
 
       &:hover {
         text-decoration: none;
@@ -31,12 +56,11 @@
 
     &.active a {
       background: url(../img/top-nav-active.gif) no-repeat center bottom;
-      color: @textColor;
     }
   }
 }
 
-.navbar .brand {
+.topnavbar .brand {
   float: left;
   padding: 0 20px 0 5px;
   height: @navbarHeight;
@@ -49,3 +73,4 @@
     text-decoration: none;
   }
 }
+
