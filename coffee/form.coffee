@@ -16,7 +16,8 @@ do (j3) ->
     onInit : (options) ->
       @_method = options.method || 'GET'
       @_target = options.target || 'ajax'
-      @_narrowLabel = options.narrowLabel
+      @_narrowLabel = !!options.narrowLabel
+      @_stackedLabel = !!options.stackedLabel
       @_datasource = options.datasource
 
       @_title = options.title
@@ -24,7 +25,8 @@ do (j3) ->
     getTemplateData : ->
       id : @id
       css : @getCss() +
-        (if @_narrowLabel then ' form-narrow-label' else '')
+        (if @_narrowLabel then ' form-narrow-label' else '') +
+        (if @_stackedLabel then ' form-stacked-label' else '')
       method : @_method
       target : @_target
       title : @_title

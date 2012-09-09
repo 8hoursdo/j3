@@ -28,6 +28,7 @@ do (j3) ->
       if not options.controlId then options.controlId = j3.View.genId()
       @_controlId = options.controlId
 
+      options.datasource ?= @parent.getDatasource()
       @_datasource = options.datasource
 
     getTemplateData : ->
@@ -69,13 +70,29 @@ do (j3) ->
         cls : j3.Checkbox
         text : options.text
         value : options.value
-        valueName : options.valueName
+        bindingMode : options.bindingMode
 
     checkbox : ->
       @_checkbox
 
     val : ->
       @_checkbox.getValue()
+
+  j3.CheckboxListFormItem = j3.cls j3.FormItem,
+    createChildren : (options) ->
+      @_checkboxList = @createFormControl options,
+        cls : j3.CheckboxList
+        items : options.items
+        itemsDatasource : options.itemsDatasource
+        itemInline : options.listItemInline
+        itemWidth : options.listItemWidth
+        bindingMode : options.bindingMode
+
+    checkboxList : ->
+      @_checkboxList
+
+    val : ->
+      @_checkboxList.getSelectedValue()
 
   j3.DropdownListFormItem = j3.cls j3.FormItem,
     createChildren : (options) ->

@@ -16,7 +16,8 @@
     float: left;
     width: @formLabelWidth;
     text-align: right;
-    line-height: 30px;
+    padding-top: (30px - @baseLineHeight) / 2;
+    line-height: @baseLineHeight;
   }
 
   .form-controls {
@@ -34,6 +35,15 @@
 
     .chk {
       margin-top: (30px - @baseLineHeight) / 2;
+      margin-bottom: (30px - @baseLineHeight) / 2;
+    }
+
+    .chk-list {
+      padding-top: (30px - @baseLineHeight) / 2;
+
+      .chk {
+        margin-top: 0;
+      }
     }
   }
 
@@ -51,13 +61,24 @@
   }
 }
 
+.form-narrow-label .form-item {
+  .form-label {
+    width: @formNarrowLabelWidth;
+  }
+
+  .form-controls {
+    margin-left: @formNarrowLabelWidth;
+  }
+}
+
 // stacked form item
+.form-stacked-label .form-item,
 .form-item-stacked {
   .form-label {
     float: none;
     width: auto;
     display: inline-block;
-    line-height: @baseLineHeight;
+    padding-top: 0;
     margin-bottom: @baseSpace;
   }
 
@@ -74,32 +95,42 @@
   vertical-align: top;
 }
 
-// compact inline form item
-.form-item-compact {
-  .form-label {
-    width: auto;
-  }
-
-  .form-controls {
-    display: inline-block;
-    margin-left: 0;
-  }
-}
-
-.form-item-nolabel {
-  .form-label {
-    display: none;
-  }
-}
-
 .form-item-first {
   margin-left: 0;
+}
+
+.form {
+  // compact inline form item
+  .form-item-compact {
+    .form-label {
+      width: auto;
+    }
+
+    .form-controls {
+      display: inline-block;
+      margin-left: 0;
+    }
+  }
+
+  .form-item-nolabel {
+    .form-label {
+      display: none;
+    }
+  }
 }
 
 // styles of form actions
 .form-actions {
   padding-top: @formItemSpaceHeight;
   padding-left: @formLabelWidth + 10px;
+}
+
+.form-narrow-label .form-actions {
+  padding-left: @formNarrowLabelWidth + 10px;
+}
+
+.form-stacked-label .form-actions {
+  padding-left: 0;
 }
 
 .form-actions-left {
@@ -139,12 +170,3 @@
   margin: @formItemSpaceHeight 0 @formItemSpaceHeight*2;
 }
 
-.form-narrow-label .form-item {
-  .form-label {
-    width: @formNarrowLabelWidth;
-  }
-
-  .form-controls {
-    margin-left: @formNarrowLabelWidth;
-  }
-}

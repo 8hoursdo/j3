@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>checkbox list</title>
+    <link rel="Stylesheet" href="../lib/css/j3.css" />
+</head>
+<body>
+<div id="ctnr"></div>
+<script type="text/coffeescript">
+j3.ready ->
+  items = [
+    text : 'CoffeeScript', value : 1
+  ,
+    text : 'JavaScript', value : 2
+  ,
+    text : 'C', value : 4
+  ,
+    text : 'C++', value : 8
+  ,
+    text : 'C#', value : 16
+  ,
+    text : 'Java', value : 32
+  ]
+
+  model = new j3.Model
+
+  new j3.Form
+    ctnr : 'ctnr'
+    datasource : model
+    children : [
+      cls : j3.CheckboxFormItem
+      label : 'checkbox'
+      text : 'select all'
+      value : 63
+      bindingMode : 'value'
+      name : 'lang'
+    ,
+      cls : j3.CheckboxListFormItem
+      label : 'stacked checkbox list'
+      items : items
+      bindingMode : 'bit'
+      name : 'lang'
+    ,
+      cls : j3.CheckboxListFormItem
+      label : 'inline checkbox list'
+      items : items
+      bindingMode : 'bit'
+      name : 'lang'
+      listItemInline : yes
+    ,
+      cls : j3.CheckboxListFormItem
+      label : 'inline list with fixed width (150px)'
+      items : items
+      bindingMode : 'bit'
+      name : 'lang'
+      listItemInline : yes
+      listItemWidth : 150
+    ]
+</script>
+<script type="text/javascript" src="./coffee-script.js"></script>
+<script type="text/javascript" src="../lib/js/j3.js"></script>
+</body>
+</html>

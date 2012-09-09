@@ -15,6 +15,7 @@ do (j3) ->
     baseCss : 'form-item-group'
 
     onInit : (options) ->
+      # individual / map / array
       @_bindingMode = options.bindingMode || 'individual'
       @_childOptionsProvider = options.childOptionsProvider
       @_formToItemModelConvertor = options.formToItemModelConvertor || __defaultFormToItemModelConvertor

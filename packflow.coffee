@@ -38,6 +38,7 @@ _filesClient = [
   'button'
   'button-group'
   'checkbox'
+  'checkbox-list'
   'textbox'
   'progress-bar'
   'calendar'

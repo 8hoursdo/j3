@@ -14,7 +14,9 @@ do (j3) ->
       @_disabled = !!options.disabled
       @_checked = !!options.checked
       @_value = options.value
-      @_valueName = options.valueName
+
+      # checked / value
+      @_bindingMode = options.bindingMode || 'checked'
 
     getTemplateData : ->
       id : @id
@@ -44,7 +46,7 @@ do (j3) ->
     setValue : (value) ->
       @_value = value
 
-      if @_checked && @_valueName then @updateData()
+      if @_checked && @_bindingMode is 'value' then @updateData()
 
     getDisabled : ->
       @_disabled
@@ -85,14 +87,21 @@ do (j3) ->
       @el.blur()
 
     onUpdateData : (datasource) ->
-      checked = @getChecked()
+      if @_bindingMode is 'value'
+        value = if @getChecked() then @getValue() else null
+      else
+        value = @getChecked()
+
       if @name
-        datasource.set @name, checked
-      if @_valueName
-        datasource.set @_valueName, if checked then @_value else null
+        datasource.set @name, value
 
     onUpdateView : (datasource, eventName, args) ->
       if args and args.changedData and not args.changedData.hasOwnProperty @name then return
-      @setChecked datasource.get @name
+
+      value = datasource.get @name
+      if @_bindingMode is 'value'
+        @setChecked @getValue() is value
+      else
+        @setChecked value
       
   j3.ext j3.Checkbox.prototype, j3.DataView
