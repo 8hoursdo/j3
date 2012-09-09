@@ -34,12 +34,18 @@ do (j3) ->
 
   __elBar_click = (evt) ->
     @onTriggerClick && @onTriggerClick()
-    
+
+  __el_keydown = (evt) ->
+    keyCode = evt.keyCode()
+    # press 'enter' or 'arrow down'
+    if keyCode is 13 or keyCode is 40
+      @onTriggerClick && @onTriggerClick()
+      evt.stop()
 
   j3.Selector = j3.cls j3.View,
     baseCss : 'sel'
 
-    template : j3.template '<div id="<%=id%>" class="<%=css%>"<%if(disabled){%> disabled="disabled"<%}%>><div class="sel-inner"><div class="sel-bar"><div class="sel-lbls"></div></div><a class="sel-trigger"><i class="<%=cssTrigger%>"></i></a></div></div>'
+    template : j3.template '<div id="<%=id%>" class="<%=css%>"<%if(disabled){%> disabled="disabled"<%}%> tabindex="0"><div class="sel-inner"><div class="sel-bar"><div class="sel-lbls"></div></div><a class="sel-trigger"><i class="<%=cssTrigger%>"></i></a></div></div>'
 
     onInit : (options) ->
       @_disabled = !!options.disabled
@@ -59,6 +65,7 @@ do (j3) ->
         @onTriggerClick && @onTriggerClick()
 
       j3.on @_elBar, 'click', this, __elBar_click
+      j3.on @el, 'keydown', this, __el_keydown
 
     getTemplateData : ->
       id : @id
