@@ -49,8 +49,8 @@ do (j3) ->
         data = __getItemDataByListItemEl.call this, el
         break
 
-      if Dom.hasCls el, 'list-group-header'
-        # 点击了分组头中的某个元素
+      if Dom.hasCls el, 'list-group'
+        # 点击了分组中的某个元素
         data = __getGroupDataByListGroupEl.call this, el
         break
 
@@ -241,11 +241,16 @@ do (j3) ->
       if @_listCss
         listCss += ' ' + @_listCss
 
+      args = buffer : sb
+      @beforeRenderDataList && @beforeRenderDataList args
+      @fire 'beforeRenderDataList', this, args
+
       sb.a '<div class="' + listCss + '">'
-
       @renderDataListItems sb, dataItems, null
-
       sb.a '</div>'
+
+      @afterRenderDataList && @afterRenderDataList args
+      @fire 'afterRenderDataList', this, args
 
     renderDataListItems : (buffer, datasource, activeModel) ->
       # 在每次刷新列表的时候重置当前项索引
