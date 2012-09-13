@@ -69,9 +69,13 @@ do (j3) ->
 
     onCreated : ->
       Dom = j3.Dom
-      @_elClose = Dom.firstChild Dom.firstChild @el
-      @_elTitle = Dom.lastChild Dom.firstChild @el
-      @elBody = Dom.firstChild Dom.byIndex(@el, 1)
+      @_elWndHeader = Dom.firstChild @el
+      @_elWndBody = Dom.next @_elWndHeader
+      @_elWndFooter = Dom.next @_elWndBody
+
+      @_elClose = Dom.firstChild @_elWndHeader
+      @_elTitle = Dom.lastChild @_elWndHeader
+      @elBody = Dom.firstChild @_elWndBody
 
       j3.on @_elClose, 'click', this, __elClose_click
       j3.on @el, 'blur', this, __el_blur
@@ -127,3 +131,18 @@ do (j3) ->
     getActionButton : (name) ->
       if not @_windowActions then return null
       @_windowActions.getActionButton name
+
+    onSetHeight : (height) ->
+      if not height
+        # 窗口的高度根据内容自适应调整
+        @el.style.height = ''
+        @_elWndBody.style.height = ''
+        return
+
+      Dom = j3.Dom
+      Dom.offsetHeight @el, height
+      bodyHeight = Dom.height(@el) - Dom.offsetHeight(@_elWndHeader)
+      if @_elWndFooter
+        bodyHeight -= Dom.offsetHeight(@_elWndFooter)
+      Dom.offsetHeight @_elWndBody, bodyHeight
+
