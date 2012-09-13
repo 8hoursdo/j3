@@ -37,6 +37,12 @@ do (j3) ->
 
       el = el.parentNode
 
+  __commandArgs_getGroupData = ->
+    elGroup = j3.Dom.parent @src, '.list-group'
+    if not elGroup then return null
+
+    __getGroupDataByListGroupEl.call @sender, elGroup
+
   # 点击包含data-cmd属性的元素
   __commandEl_click = (name, elCommand) ->
     Dom = j3.Dom
@@ -57,9 +63,11 @@ do (j3) ->
       el = el.parentNode
 
     args =
+      sender : this
       name : name
       data : data
       src : elCommand
+      getGroupData : __commandArgs_getGroupData
 
     @onCommand? args
     @fire 'command', this, args
