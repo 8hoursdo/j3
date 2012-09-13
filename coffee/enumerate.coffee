@@ -3,10 +3,14 @@ do (j3) ->
     for eachItem in this
       callback eachItem
 
-  j3.indexOf = (list, item) ->
+  j3.indexOf = (list, item, equals) ->
     index = -1
-    for eachItem in list
-      if j3.equals(eachItem, item) then index = _i
+    equals ?= j3.equals
+
+    j3.tryUntil list, (eachItem, args, i) ->
+      if equals(eachItem, item)
+        index = i
+        true
 
     index
 
