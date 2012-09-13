@@ -1,7 +1,4 @@
 do (j3) ->
-  ModelGroup = j3.cls j3.Model,
-    notifyChangeName : 'groupDataChange'
-
   __insertModelToGroup = (model, group) ->
     model.group = group
 
@@ -18,6 +15,14 @@ do (j3) ->
     items = group.items
     if items then items.remove model
 
+  __getFirstNodeGreatThan = (list, value, comparer) ->
+    node = list.firstNode()
+    while node
+      if node.value isnt value and 0 < comparer node.value._data, value._data
+        return node
+      node = node.next
+    null
+
   j3.GroupedCollection = GroupedCollection = j3.cls
     ctor : (options) ->
       options ?= {}
@@ -33,24 +38,38 @@ do (j3) ->
 
       @_groupIdName = options.groupIdName || 'id'
       @_groupMap = {}
+      @_groupModel = options.groupModel || j3.Model
       @_groupList = new j3.List
       if options.groupBy
         @_groupBy = j3.compileGroupBy options.groupBy
+      if options.groupSortBy
+        @_groupSortBy = j3.compileSortBy options.groupSortBy
       return
 
     getModel : ->
       @_model
 
+    getData : (name) ->
+      if not @_data then return null
+      @_data[name]
+
+    setData : (name, value) ->
+      if not @_data then @_data = {}
+      @_data[name] = value
+
     insertGroup : (data, options) ->
       options ?= {}
 
-      group = new ModelGroup data
+      group = new @_groupModel data
+      group.notifyChangeName = 'groupDataChange'
       group.collection = this
 
       id = group.get @_groupIdName
       if id then @_groupMap[id] = group
 
-      @_groupList.insert group
+      if @_groupSortBy
+        groupNodeToInsert = __getFirstNodeGreatThan @_groupList, group, @_groupSortBy
+      @_groupList.insert group, groupNodeToInsert
 
       if not options.silent
         @updateViews 'groupAdd', group : group
@@ -249,6 +268,14 @@ do (j3) ->
       @setActive @getAt(index), options
 
     notifyModelChange : (changeName, args) ->
+      if changeName is 'groupDataChange'
+        if @_groupSortBy
+          group = args.model
+          if group
+            targetNode = __getFirstNodeGreatThan @_groupList, group, @_groupSortBy
+            groupNode = @_groupList.findNode group
+            @_groupList.insertNode groupNode, targetNode
+
       @updateViews changeName, args
       @fire changeName, this, args
 

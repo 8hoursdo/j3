@@ -19,6 +19,49 @@ j3.List = j3.cls
     @_count
 
   insertNode : (node, target) ->
+    if node is target then return this
+
+    if node.list
+      if target
+        # move to position of target
+        # pick out
+        if node.next
+          node.next.prev = node.prev
+        else
+          @_last = node.prev
+        if node.prev
+          node.prev.next = node.next
+        else
+          @_first = node.next
+
+        # put in
+        node.prev = target.prev
+        node.next = target
+        if target.prev
+          target.prev.next = node
+          target.prev = node
+        else
+          @_first = node
+
+      else
+        # move to end
+        if @_last is node then return this
+
+        # pick out
+        node.next.prev = node.prev
+        if node.prev
+          node.prev.next = node.next
+        else
+          @_first = node.next
+
+        # put in
+        node.prev = @_last
+        node.next = null
+        @_last.next = node
+        @_last = node
+
+      return this
+ 
     node.list = this
 
     if !@_first
