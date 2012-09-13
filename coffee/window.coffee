@@ -28,6 +28,10 @@ do (j3) ->
     onInit : (options) ->
       @_title = options.title
 
+      # save context data here if necessary.
+      # you can get it by calling 'getContextData()' after the window closed to continue your work.
+      @_contextData = options.contextData
+
     getTemplateData : ->
       id : @id
       css : @getCss()
@@ -74,6 +78,12 @@ do (j3) ->
 
     setTitle : (value) ->
       @_elTitle.innerHTML = j3.htmlEncode value
+
+    getContextData : ->
+      @_contextData
+
+    setContextData : (value) ->
+      @_contextData = value
 
     action : (name, src) ->
       args = name : name, src : src
