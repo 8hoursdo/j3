@@ -95,6 +95,8 @@ do (j3) ->
       j3.Dom.center @el
 
     close : (result, data) ->
+      if not @_visible then return
+
       args =
         result : result
         data : data
