@@ -61,6 +61,7 @@ do (j3) ->
             @_data[name] = value
         else
           eventName = 'refresh'
+          if @parse then data = @parse data
           @_data = j3.clone data
 
       @notifyChange
