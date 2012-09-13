@@ -178,6 +178,8 @@ do (j3) ->
       @format value, format, true
 
     parse : (str) ->
+      if str instanceof DateTime then return str
+
       res = _regParseUTC.exec str
       if res
         # UTC String
