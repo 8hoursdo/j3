@@ -63,6 +63,10 @@ do (j3) ->
 
     for eachModel in models
       groupData = grouper eachModel.getData()
+      
+      if not groupData then groupData = @_defaultGroupData
+      if not groupData then continue
+
       modelGroup = groupMap[groupData[groupIdName]]
       if not modelGroup
         groupData.items = []
@@ -88,6 +92,8 @@ do (j3) ->
       @_groupIdName = options.groupIdName || 'id'
       @_groupBy = options.groupBy
       @_groupSortBy = options.groupSortBy
+
+      @_defaultGroupData = options.defaultGroupData
 
       @_model = options.model
 
