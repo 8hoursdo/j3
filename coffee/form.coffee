@@ -60,4 +60,11 @@ do (j3) ->
     getTarget : ->
       @_target
 
+    focus : ->
+      if not @children then return false
+
+      @children.tryUntil (child) ->
+        child.focus && child.focus()
+      return true
+
   j3.ext j3.Form.prototype, j3.DataView

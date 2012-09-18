@@ -114,7 +114,10 @@ do (j3) ->
       @el.readOnly = !!value
 
     focus : ->
+      if @getDisabled() then return false
+
       @el.focus()
+      true
 
     blur : ->
       @el.blur()

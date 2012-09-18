@@ -345,5 +345,11 @@ j3.View = do (j3) ->
   view.genId = ->
     'v_' + (++_idSeed)
 
+  view.focusChild = ->
+    if not @children then return false
+
+    @children.tryUntil (child) ->
+      child.focus && child.focus()
+
   view
 

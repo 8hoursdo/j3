@@ -64,6 +64,9 @@ do (j3) ->
     val : ->
       @_textbox.getText()
 
+    focus : ->
+      @_textbox.focus()
+
   j3.CheckboxFormItem = j3.cls j3.FormItem,
     createChildren : (options) ->
       @_checkbox = @createFormControl options,

@@ -108,6 +108,10 @@ do (j3) ->
 
       j3.Dom.center @el
 
+      j3.View.focusChild.call this
+      @onActive && @onActive()
+      @fire 'active', this
+
     close : (result, data) ->
       if not @_visible then return
 
