@@ -1,12 +1,16 @@
 .tree-view {
   overflow: auto;
+  padding-bottom: 16px; // hack for safari and chrome on mac
 }
 
 .tree-node {
+  display: table;
+  width: 100%;
   overflow: visible;
 }
 
 .tree-node-body {
+  display: block;
   white-space: nowrap;
   padding: 3px 0 3px 15px;
   cursor: default;
@@ -71,6 +75,7 @@
 }
 
 .tree-node-children {
+  overflow: visible;
 }
 
 .tree-node-active {

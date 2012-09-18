@@ -1,9 +1,7 @@
 .data-list {
-  clear: both;
 }
 
 .list-item {
-  clear: both;
   border-bottom: 1px solid @splitLineColor;
   padding: 10px;
 
@@ -22,20 +20,17 @@
 
 .list-item-detail {
   float: left;
-  margin-left: 15px;
+  padding: 5px 5px 5px 10px;
 }
 
 .list-item-title {
-  clear: both;
-  float: left;
-  margin-right: 10px;
   font-size: 14px;
   font-weight: bold;
   line-height: @baseLineHeight;
 }
 
 .list-item-subtitle-inline {
-  float: left;
+  margin-left: 5px;
 }
 
 .list-item-subtitle {
@@ -75,8 +70,46 @@
   color: #999999;
 }
 
+.list-group {
+  .clearfix();
+}
+
 .list-group-header {
-  padding: 5px 10px;
-  background: #eee;
+  margin-bottom: 15px;
+  height: 15px;
+  border-bottom: 1px solid @splitLineColor;
+
+  .group-title {
+    position: relative;
+    display: inline-block;
+    padding: 0 10px 0 0;
+    font-size: 14px;
+    font-weight: bold;
+    background: #fff;
+    line-height: 30px;
+    height: 30px;
+  }
+
+  .action-links {
+    float: right;
+    position: relative;
+    display: inline-block;
+    background: #fff;
+    padding: 6px 0 6px 10px;
+  }
+}
+
+.list-group-actions {
+  margin-bottom: 15px;
+  height: 15px;
+  border-bottom: 1px solid @splitLineColor;
+
+  .action-links {
+    position: relative;
+    float: left;
+    padding-top: 6px;
+    padding-right: 10px;
+    background: #fff;
+  }
 }
 
