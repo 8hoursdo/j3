@@ -1,6 +1,9 @@
 do (j3) ->
   __form_submit = (evt) ->
-    @action 'ok'
+    try
+      @action 'ok'
+    catch ex
+      console.log ex
 
     if @_target is 'ajax'
       evt.stop()
