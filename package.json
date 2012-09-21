@@ -1,13 +1,13 @@
 {
   "name": "j3",
   "description": "An Useful Javascript Library for Building Website.",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "author": "Fossil Jue <imzshh@gmail.com>",
   "repository": {"type": "git", "url": "git://github.com/imzshh/j3.git"},
   "dependencies": {
   },
   "devDependencies": {
-      "packflow" : "= 0.1.0"
+      "packflow" : "= 0.2.0"
   },
   "main": "./lib/js/j3.core.js",
   "contributors": [
