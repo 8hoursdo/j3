@@ -31,17 +31,30 @@
 
 .list-item-subtitle-inline {
   margin-left: 5px;
+  font-weight: normal;
+  font-size: 12px;
+  line-height: @baseLineHeight;
 }
 
 .list-item-subtitle {
   clear: both;
   float: none;
+  font-weight: normal;
 }
 
 .list-item-subtitle,
 .list-item-subtitle-inline {
   color: #999;
   line-height: @baseLineHeight;
+}
+
+.list-item-title a {
+  color: @textColor;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
 }
 
 .list-item-attrs {
