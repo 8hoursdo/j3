@@ -38,7 +38,10 @@ do (j3) ->
         @_idxId[id] = model
 
       model.collection = this
-      @_models.insert model
+      target = null
+      if not j3.isUndefined options.targetIndex
+        target = @_models.getNodeAt options.targetIndex
+      @_models.insert model, target
 
       if not options.silent
         @updateViews 'add', model : model
