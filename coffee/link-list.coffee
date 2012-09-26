@@ -17,6 +17,20 @@ do (j3) ->
         return
       el = el.parentNode
 
+  __refreshLinks = ->
+    sb = new j3.StringBuilder
+
+    list = @getDatasource() || @_items || []
+
+    options =
+      target : @_linkTarget
+      commandMode : @_commandMode
+
+    LinkList.renderList sb, list, options
+
+    @el.innerHTML = sb.toString()
+
+
   j3.LinkList = LinkList = j3.cls j3.View,
     baseCss : 'link-list'
 
@@ -43,18 +57,11 @@ do (j3) ->
 
     onUpdateView : (datasource) ->
       if !@el then return
+      __refreshLinks.call this
 
-      sb = new j3.StringBuilder
-
-      list = @getDatasource() || @_items || []
-
-      options =
-        target : @_linkTarget
-        commandMode : @_commandMode
-
-      LinkList.renderList sb, list, options
-
-      @el.innerHTML = sb.toString()
+    setItems : (value) ->
+      @_items = value
+      __refreshLinks.call this
 
   j3.ext LinkList.prototype, j3.DataView
 
