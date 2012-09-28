@@ -12,18 +12,18 @@ do (j3) ->
           isEmpty = false
 
           sb.a '<div class="sel-lbl">'
-          sb.a j3.htmlEncode(item.text || item.name || item.value)
+          sb.e item.text || item.name || item.value
           sb.a '<i data-cmd="unselect" class="sel-icon-unselect"></i>'
           sb.a '</div>'
       else
-        sb.a j3.htmlEncode(@_placeholder)
+        sb.e @_placeholder
     else
       item = @getSelectedItem()
       if item
         isEmpty = false
-        sb.a j3.htmlEncode(item.text)
+        sb.e item.text || item.name || item.value
       else
-        sb.a j3.htmlEncode(@_placeholder)
+        sb.e @_placeholder
     @_elLbls.innerHTML = sb.toString()
 
     emptyCss = @baseCss + '-empty'
