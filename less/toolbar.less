@@ -19,4 +19,20 @@
     margin-right: 0;
     float: right;
   }
+
+  .sel,
+  .btn {
+    background-color: #f6f6f6;
+    #gradient.vertical(#fefefe, #eee);
+  }
+
+  .btn.active {
+    background: #999999;
+    .box-shadow(0 0 10px rgba(0,0,0,.2) inset)
+  }
+
+  .btn-primary {
+    background-color: @btnPrimaryBgColor;
+    #gradient.vertical(lighten(@btnPrimaryBgColor, 5%), darken(@btnPrimaryBgColor, 5%));
+  }
 }
