@@ -43,6 +43,7 @@ _filesClient = [
   'progress-bar'
   'calendar'
   'selector'
+  'selector-group'
   'dropdown'
   'dropdown-list'
   'dropdown-tree'

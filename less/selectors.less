@@ -30,7 +30,7 @@
 .sel-bar {
   display: inline-block;
   margin: 0;
-  padding: 5px;
+  padding: 5px 0 5px 5px;
   line-height: @baseLineHeight;
   height : @baseLineHeight;
   vertical-align: top;
@@ -108,3 +108,18 @@
   }
 }
 
+
+.sel-grp {
+  padding-left: 1px;
+
+  .sel {
+    position: relative;
+    margin-left: -1px;
+    margin-right: 0;
+  }
+
+  .sel-active,
+  .sel:focus {
+    z-index: 1;
+  }
+}
