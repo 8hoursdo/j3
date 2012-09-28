@@ -45,18 +45,20 @@ do (j3) ->
   j3.Selector = j3.cls j3.View,
     baseCss : 'sel'
 
-    template : j3.template '<div id="<%=id%>" class="<%=css%>"<%if(disabled){%> disabled="disabled"<%}%> tabindex="0"><div class="sel-inner"><div class="sel-bar"><div class="sel-lbls"></div></div><a class="sel-trigger"><i class="<%=cssTrigger%>"></i></a></div></div>'
+    template : j3.template '<div id="<%=id%>" class="<%=css%>"<%if(disabled){%> disabled="disabled"<%}%> tabindex="0"><div class="sel-inner"><%if(icon){%><div class="sel-icon"><i class="<%=icon%>"></i></div><%}%><div class="sel-bar"><div class="sel-lbls"></div></div><a class="sel-trigger"><i class="<%=cssTrigger%>"></i></a></div></div>'
 
     onInit : (options) ->
       @_disabled = !!options.disabled
       @_multiple = !!options.multiple
       @_placeholder = options.placeholder || ''
       @_mini = options.mini
+      @_icon = options.icon
 
     onCreated : () ->
       Dom = j3.Dom
       @elInner = Dom.firstChild @el
-      @_elBar = Dom.firstChild @elInner
+      @_elIcon = Dom.byCls @elInner, 'sel-icon'
+      @_elBar = Dom.byCls @elInner, 'sel-bar'
       @_elTrigger = Dom.next @_elBar
 
       @_elLbls = Dom.firstChild @_elBar
@@ -74,6 +76,7 @@ do (j3) ->
         (if @_disabled then ' disabled' else '')
       cssTrigger : @cssTrigger
       disabled : @_disabled
+      icon : @_icon
 
     getDisabled : ->
       @_disabled
@@ -119,5 +122,7 @@ do (j3) ->
       Dom = j3.Dom
       Dom.offsetWidth @el, width
       widthLabel = Dom.width(@el) - Dom.offsetWidth(@_elTrigger)
+      if @_elIcon
+        widthLabel -= Dom.offsetWidth @_elIcon
       Dom.offsetWidth @_elBar, widthLabel
 

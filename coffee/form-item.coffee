@@ -108,6 +108,7 @@ do (j3) ->
         fixedItemDataSelector : options.fixedItemDataSelector
         value : options.value
         placeholder : options.placeholder
+        icon : options.controlIcon
 
     dropdownList : ->
       @_dropdownList
@@ -125,6 +126,7 @@ do (j3) ->
         itemsValName : options.itemsValName
         itemsTextName : options.itemsTextName
         itemsDatasource : options.itemsDatasource
+        icon : options.controlIcon
 
     dropdownTree : ->
       @_dropdownTree
@@ -138,6 +140,7 @@ do (j3) ->
         cls : j3.DateSelector
         date : options.value
         placeholder : options.placeholder
+        icon : options.controlIcon
 
     dateSelector : ->
       @_dateSelector
@@ -153,6 +156,7 @@ do (j3) ->
         placeholder : options.beginPlaceholder
         name : options.beginName
         mini : yes
+        icon : options.beginControlIcon
 
       @_endDateSelector = @createFormControl options,
         cls : j3.DateSelector
@@ -160,6 +164,7 @@ do (j3) ->
         placeholder : options.endPlaceholder
         name : options.endName
         mini : yes
+        icon : options.endControlIcon
 
     renderChildren : (sb) ->
       @_beginDateSelector.render sb
