@@ -8,6 +8,39 @@
   }
 }
 
+.arrow_box {
+	position: relative;
+	background: #f9f9f9;
+	border: 1px solid #cccccc;
+
+  .box-shadow(0 1px 1px @panelBorderColor inset);
+}
+.arrow_box:after, .arrow_box:before {
+	bottom: 100%;
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+}
+
+.arrow_box:after {
+	border-color: rgba(249, 249, 249, 0);
+	border-bottom-color: #f9f9f9;
+	border-width: 8px;
+	left: 30px;
+	margin-left: -8px;
+  margin-bottom: -2px;
+}
+.arrow_box:before {
+	border-color: rgba(204, 204, 204, 0);
+	border-bottom-color: #cccccc;
+	border-width: 8px;
+	left: 30px;
+	margin-left: -8px;
+}
+
 .tooltip {
   position: absolute;
   top: 0;
