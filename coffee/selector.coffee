@@ -67,6 +67,8 @@ do (j3) ->
         @onTriggerClick && @onTriggerClick()
 
       j3.on @_elBar, 'click', this, __elBar_click
+      if @_elIcon
+        j3.on @_elIcon, 'click', this, __elBar_click
       j3.on @el, 'keydown', this, __el_keydown
 
     getTemplateData : ->
