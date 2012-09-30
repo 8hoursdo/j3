@@ -18,6 +18,8 @@ do (j3) ->
     if j3.isArray list
       list.length
     else
+      if not list then return 0
+
       list.count()
 
   j3.forEach = (list, context, args, callback) ->
