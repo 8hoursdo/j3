@@ -14,7 +14,7 @@ do (j3) ->
 
     templateBegin : j3.template '<div id="<%=id%>" class="<%=css%>"><label class="form-label" for="<%=controlId%>"><%=label%></label><div class="form-controls">'
 
-    templateEnd : j3.template '<%if(helpText){%><span class="form-help"><%=helpText%><span><%}%></div></div>'
+    templateEnd : j3.template '<%if(helpText){%><div class="form-help"><%=helpText%></div><%}%></div></div>'
 
     onInit : (options) ->
       @_label = options.label
