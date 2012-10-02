@@ -123,7 +123,7 @@ do (j3) ->
     onSetWidth : (width) ->
       Dom = j3.Dom
       Dom.offsetWidth @el, width
-      widthLabel = Dom.width(@el) - Dom.offsetWidth(@_elTrigger)
+      widthLabel = Dom.width(@elInner) - Dom.offsetWidth(@_elTrigger)
       if @_elIcon
         widthLabel -= Dom.offsetWidth @_elIcon
       Dom.offsetWidth @_elBar, widthLabel

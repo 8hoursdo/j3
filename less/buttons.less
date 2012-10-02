@@ -9,6 +9,7 @@
   color: @btnTextColor;
   line-height: @baseLineHeight;
   text-decoration: none;
+  #gradient.vertical(#fefefe, #eee);
 }
 
 .btn.disabled,
@@ -22,13 +23,17 @@
 .btn.active
 {
   background-color: @btnActiveBgColor;
+  background-image: none;
   color: @btnActiveTextColor;
+  .box-shadow(0 0 10px rgba(0,0,0,.2) inset);
+  filter: none;
 }
 
 .btn-primary {
   border-color: @btnPrimaryBorderColor;
   background-color: @btnPrimaryBgColor;
   color: @btnPrimaryTextColor;
+  #gradient.vertical(lighten(@btnPrimaryBgColor, 5%), darken(@btnPrimaryBgColor, 5%));
 }
 
 .btn-primary.disabled,

@@ -1,16 +1,14 @@
 .sel {
   display: inline-block;
   margin: 0;
-  border: 1px solid @inputBorderColor;
-  .border-radius(2px);
-  background-color: @inputBgColor;
-  height: 28px;
+  height: 30px;
   width: 198px;
+  background-color: @inputBgColor;
 }
 
-.sel:focus {
-  border-color:@inputActiveBorderColor;
-  outline: 0;
+.sel-inner {
+  border: 1px solid @inputBorderColor;
+  .border-radius(2px);
 }
 
 .sel-mini {
@@ -84,9 +82,21 @@
   border-color:@inputActiveBorderColor;
 }
 
+.sel-active,
+.sel:focus {
+  outline: 0;
+
+  .sel-inner {
+    border-color:@inputActiveBorderColor;
+  }
+}
+
 .sel-readonly {
-  border-color: @inputBorderColor;
-  background-color: @inputDisabledBgColor;
+  background: @inputDisabledBgColor;
+
+  .sel-inner {
+    border-color: @inputBorderColor;
+  }
 }
 
 .drp-box {
@@ -113,13 +123,14 @@
   padding-left: 1px;
 
   .sel {
-    position: relative;
     margin-left: -1px;
     margin-right: 0;
   }
 
   .sel-active,
   .sel:focus {
-    z-index: 1;
+    .sel-inner {
+      z-index: 1;
+    }
   }
 }
