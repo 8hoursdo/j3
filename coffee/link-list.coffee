@@ -91,7 +91,10 @@ do (j3) ->
         commandMode : options.commandMode
 
       j3.forEach list, (item, args, index) =>
-        listItemOptions.isActive = activeItem is item
+        if item.hasOwnProperty 'isActive'
+          listItemOptions.isActive = item.isActive
+        else
+          listItemOptions.isActive = activeItem is item
         listItemOptions.isFirst = index is 0
         LinkList.renderLinkListItem sb,
           item,
@@ -100,16 +103,16 @@ do (j3) ->
     renderLinkListItem : (sb, model, options) ->
       sb.a '<li class="'
       if options.isActive
-        sb.a ' active"'
+        sb.a ' active'
       if options.isFirst
-        sb.a ' first"'
+        sb.a ' first'
       sb.a '">'
 
       sb.a '<a'
       url = j3.getVal model, 'url'
 
       # 在command模式下自动设置链接地址为javascript:;
-      if not url and options.commandMode
+      if not url and options.commandMode and j3.getVal model, 'cmd'
         url = 'javascript:;'
       if url
         sb.a ' href="' + url + '"'

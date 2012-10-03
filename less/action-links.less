@@ -31,4 +31,29 @@
   .first a {
     margin-left: 0;
   }
+
+  .active {
+    margin-top: 3px;
+
+    i {
+      margin-top: -3px;
+    }
+
+    a {
+      color: #fff;
+      height: 13px;
+      line-height: 14px;
+      padding: 0 7px 0 5px;
+      background: #cccccc;
+      .border-radius(7px);
+
+      &:hover {
+        text-decoration: none;
+      }
+
+      &[href]:hover {
+        background: #ACACAC;
+      }
+    }
+  }
 }
