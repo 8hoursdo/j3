@@ -1,5 +1,7 @@
 do (j3) ->
   j3.MessageBox = MessageBox = j3.cls j3.Window,
+    css : 'msg-wnd'
+
     renderChildren : (buffer) ->
       buffer.append '<div class="msg-box-icon"></div>'
       buffer.append '<div class="msg-box-content">'

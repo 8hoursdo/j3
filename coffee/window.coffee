@@ -149,4 +149,7 @@ do (j3) ->
       if @_elWndFooter
         bodyHeight -= Dom.offsetHeight(@_elWndFooter)
       Dom.offsetHeight @_elWndBody, bodyHeight
+      Dom.offsetHeight @_elWndBody.firstChild, Dom.height @_elWndBody
 
+    center : ->
+      j3.Dom.center @el
