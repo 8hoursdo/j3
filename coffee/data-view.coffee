@@ -5,6 +5,8 @@ j3.DataView =
   setDatasource : (datasource) ->
     if @_datasource == datasource then return
 
+    if @_datasource then @_datasource.unbind this
+
     @_datasource = datasource
     if datasource then datasource.bind this
 
