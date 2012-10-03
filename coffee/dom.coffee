@@ -254,7 +254,11 @@ j3.Dom = do ->
         y = top
       else
         y = (ch - eh)*top + st
-        
+
+      if x < 0
+        x = 0
+      if y < 0
+        y = 0
       @place el, x, y
 
   __width_ie = (el) ->
