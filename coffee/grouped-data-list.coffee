@@ -112,7 +112,7 @@ do (j3) ->
 
     @fire 'selectedItemsChange', this, args
 
-  # 更新@_selectItems中的数据
+  # 更新@_selectedItems中的数据
   __updateSelectedItems = (selectedItems, unselectedItems) ->
     if not @_selectedItems then @_selectedItems = []
 
@@ -168,6 +168,14 @@ do (j3) ->
   __getGroupDataByListGroupEl = (elListGroup) ->
     @_groupDataSelector @getDatasource().getGroupById(j3.Dom.data elListGroup, 'id')
 
+  # 刷新列表，在数据源发生改变，或者setSelectedItems时被调用
+  __refreshList = ->
+    if not @el then return
+
+    buffer = new j3.StringBuilder
+    @renderDataListGroups buffer, @getDatasource()
+    @el.innerHTML = buffer.toString()
+
   j3.GroupedDataList = j3.cls j3.View,
     baseCss : 'data-list-groups'
 
@@ -199,11 +207,7 @@ do (j3) ->
       @setDatasource options.datasource
 
     onUpdateView : (datasource, eventName, data) ->
-      if not @el then return
-
-      buffer = new j3.StringBuilder
-      @renderDataListGroups buffer, @getDatasource()
-      @el.innerHTML = buffer.toString()
+      __refreshList.call this
 
     onRender : (sb, tplData) ->
       sb.a '<div id="' + tplData.id + '" class="' + tplData.css + '">'
@@ -318,6 +322,10 @@ do (j3) ->
     getSelectedItems : ->
       @_selectedItems
 
+    setSelectedItems : (value) ->
+      @_selectedItems = value
+      __refreshList.call this
+
     # 判断一个列表组是否应该被选中
     shouldListGroupSelected : (model) ->
       if @_shouldListGroupSelected then return @_shouldListGroupSelected model
@@ -332,10 +340,10 @@ do (j3) ->
     shouldListItemSelected : (model) ->
       if @_shouldListItemSelected then return @_shouldListItemSelected model
 
-      if not @_selectedItemsEx then return
+      if not @_selectedItems then return
 
       itemData = @_itemDataSelector model
-      !!j3.tryUntil @_selectedItemsEx, (item) ->
+      !!j3.tryUntil @_selectedItems, this, (item) ->
         if @_itemDataEquals item, itemData then return true
 
     getItemCheckable : ->
