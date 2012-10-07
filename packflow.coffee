@@ -24,6 +24,7 @@ _filesClient = [
   'json'
   'dom'
   'event'
+  'dd'
   'http'
   'data-items-view'
   'overlay'

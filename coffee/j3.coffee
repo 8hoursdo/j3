@@ -13,6 +13,8 @@ else
 
 j3.version = '0.0.2'
 
+j3.fnRetFalse = -> false
+
 j3.isRunInServer = ->
   j3.UA.name is 'server'
 

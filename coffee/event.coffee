@@ -95,7 +95,12 @@ do (j3) ->
     node = _handlerInfoList.firstNode()
     while node
       info = node.value
-      if info.e is el and info.n is eventName and info.h is handler and info.context is context then break
+      if info.e is el and info.n is eventName and info.h is handler and info.c is context
+        if el.removeEventListener
+          el.removeEventListener eventName, info.h, true
+        else
+          el.dettachEvent 'on' + eventName, info.h
+        break
       node = node.next
 
     if !node then return
