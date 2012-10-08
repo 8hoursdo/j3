@@ -68,10 +68,18 @@ do (j3) ->
         return
 
       if @_bindingMode is 'array'
-        subItemsValue = []
+        subItemsValue = @getDatasource().get @name
+        if not subItemsValue then subItemsValue = []
         j3.forEach @getChildren(), this, (child, args, index) ->
-          formModelData = @_itemToFormModelConvertor child.getDatasource(), child
-          subItemsValue.push formModelData
+          originFormModelData = null
+          if index < subItemsValue.length
+            originFormModelData = subItemsValue[index]
+          formModelData = @_itemToFormModelConvertor child.getDatasource(), child, originFormModelData
+
+          if index < subItemsValue.length
+            subItemsValue[index] = formModelData
+          else
+            subItemsValue.push formModelData
         @getDatasource().set @name, subItemsValue
         return
 
