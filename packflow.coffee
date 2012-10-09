@@ -34,6 +34,7 @@ _filesClient = [
   'container-view'
   'data-list'
   'grouped-data-list'
+  'pagination'
   'box-with-arrow'
   'tooltip'
   'button'
