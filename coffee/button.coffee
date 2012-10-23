@@ -62,7 +62,7 @@ do(j3) ->
       linkButton : @_linkButton
       url : @_url
 
-    onCreated : ->
+    onCreated : (options) ->
       j3.on @el, 'click', this, __btn_click
       j3.on @el, 'mouseover', this, __btn_mouseover
       j3.on @el, 'mouseout', this, __btn_mouseout

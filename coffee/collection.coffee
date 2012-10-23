@@ -20,10 +20,20 @@ do (j3) ->
 
       @_lazyLoad = options.lazyLoad
       @_url = options.url
+
+      @_contextData = options.contextData
       return
 
     getModel : ->
       @_model
+
+    getContextData : ->
+      @_contextData
+
+    setContextData : (value) ->
+      if @_contextData is value then return
+
+      @_contextData = value
     
     insert : (data, options) ->
       options ?= {}

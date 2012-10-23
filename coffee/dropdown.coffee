@@ -68,7 +68,7 @@ j3.Dropdown = j3.cls j3.Selector,
     maxHeight = 28 * 10
     minHeight = 28 * 5
 
-    if Dom.offsetHeight(@_elDropdownBox) is maxHeight then return
+    if Dom.height(@_elDropdownBox) is maxHeight then return
 
     @_elDropdownBox.style.height = ''
     wndHeight = Dom.clientHeight()
@@ -77,7 +77,7 @@ j3.Dropdown = j3.cls j3.Selector,
     spaceBottom = wndHeight - posEl.top - heightEl - 2 + scrollTop
 
     showOnTop = false
-    boxHeight = Dom.offsetHeight @_elDropdownBox
+    boxHeight = Dom.height @_elDropdownBox
     if boxHeight > maxHeight
       boxHeight = maxHeight
       needAdjustHeight = true
@@ -91,8 +91,8 @@ j3.Dropdown = j3.cls j3.Selector,
       else if spaceTop < boxHeight
         showOnTop = false
 
-    if Dom.offsetHeight(@_elDropdownBox) > boxHeight
-      Dom.offsetHeight @_elDropdownBox, boxHeight
+    if Dom.height(@_elDropdownBox) > boxHeight
+      Dom.height @_elDropdownBox, boxHeight
 
     if showOnTop
       topBox = posEl.top - boxHeight - 2

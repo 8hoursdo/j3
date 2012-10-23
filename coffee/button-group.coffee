@@ -6,7 +6,7 @@ do (j3) ->
 
       @_activeButton = sender
 
-    @fire 'active', sender, args
+    @fire 'active', this, button : sender
 
   __childButton_click = (sender, args) ->
     if @_toggle is 'exclusive'
@@ -32,6 +32,8 @@ do (j3) ->
     onChildCreated : (child) ->
       child.on 'click', this, __childButton_click
       child.on 'active', this, __childButton_active
+
+      if child.getActive() then @_activeButton = child
 
     setActiveButtonByName : (name) ->
       @getChildren().forEach (btn) ->

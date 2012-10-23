@@ -181,6 +181,7 @@ do (j3) ->
 
     onInit : (options) ->
       # DataList Options
+      @_listCss = options.listCss
       @_itemRenderer = options.itemRenderer
       @_activeItemOnClick = options.activeItemOnClick
       @_itemCheckable = options.itemCheckable

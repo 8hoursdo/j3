@@ -34,7 +34,9 @@ do (j3) ->
     buffer.append '{'
 
     firstItem = yes
-    for key of obj
+    for key, value of obj
+      if j3.isUndefined value then continue
+
       if firstItem
         firstItem = no
       else
@@ -42,7 +44,7 @@ do (j3) ->
 
       __stringToJson key, buffer
       buffer.append ':'
-      __toJson obj[key], buffer
+      __toJson value, buffer
 
     buffer.append '}'
 

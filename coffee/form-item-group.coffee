@@ -54,6 +54,7 @@ do (j3) ->
       if @_bindingMode is 'array'
         itemModel = new j3.Model
         itemModel.on 'change', this, __subItemModel_change
+        itemModel.on 'refresh', this, __subItemModel_change
         options.datasource = itemModel
 
       return

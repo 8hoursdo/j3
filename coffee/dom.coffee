@@ -261,7 +261,11 @@ j3.Dom = do ->
         y = 0
       @place el, x, y
 
-  __width_ie = (el) ->
+  __width_ie = (el, width) ->
+    if arguments.length is 2
+      el.style.width = width + 'px'
+      return
+
     cs = el.currentStyle
     borderLeft = parseInt(cs.borderLeftWidth) || 0
     borderRight = parseInt(cs.borderRightWidth) || 0
@@ -270,7 +274,11 @@ j3.Dom = do ->
 
     el.offsetWidth - borderLeft - borderRight - paddingLeft - paddingRight
 
-  __height_ie = (el) ->
+  __height_ie = (el, height) ->
+    if arguments.length is 2
+      el.style.height = height + 'px'
+      return
+
     cs = el.currentStyle
     borderTop = parseInt(cs.borderTopWidth) || 0
     borderBottom = parseInt(cs.borderBottomWidth) || 0
@@ -279,10 +287,18 @@ j3.Dom = do ->
 
     el.offsetHeight - borderTop - borderBottom - paddingTop - paddingBottom
 
-  __width_other = (el) ->
+  __width_other = (el, width) ->
+    if arguments.length is 2
+      el.style.width = width + 'px'
+      return
+
     parseInt document.defaultView.getComputedStyle(el, null).getPropertyValue 'width'
 
-  __height_other = (el) ->
+  __height_other = (el, height) ->
+    if arguments.length is 2
+      el.style.height = height + 'px'
+      return
+
     parseInt document.defaultView.getComputedStyle(el, null).getPropertyValue 'height'
 
   __position = (el, clientAbs) ->

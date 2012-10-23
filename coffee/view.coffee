@@ -36,6 +36,17 @@ j3.View = do (j3) ->
     @onCreated && @onCreated options
 
     options.on && this.on options.on
+    return
+
+  __viewLoad = ->
+    if @children
+      node = @children.firstNode()
+      while node
+        __viewLoad.call node.value
+        node = node.next
+
+    @onLoad && @onLoad @_options
+
     delete @_options
     return
 
@@ -108,7 +119,7 @@ j3.View = do (j3) ->
 
         __viewCreated.call this
 
-        if not @parent or _creatingStack is 0 then @layout()
+        @layout()
 
       # add me into parent's children
       if @parent
@@ -117,7 +128,8 @@ j3.View = do (j3) ->
         _topViews[@id] = this
 
       # override this to do sth like loading data.
-      @onLoad? options
+      if not @parent or _creatingStack == 0
+        __viewLoad.call this
 
       return
 
