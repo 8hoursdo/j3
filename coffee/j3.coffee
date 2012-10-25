@@ -59,7 +59,7 @@ j3.bind = (fn, context, args) ->
   else
     -> fn.call context
 
-j3.clone = (obj, properties) ->
+j3.clone = (obj, properties, ignoreUndefined) ->
   if not j3.isObject obj then return obj
 
   if obj is null then return null
@@ -81,7 +81,11 @@ j3.clone = (obj, properties) ->
   else
     for prop in properties
       if obj.hasOwnProperty prop
-        res[prop] = j3.clone obj[prop]
+        if ignoreUndefined
+          if not j3.isUndefined obj[prop]
+            res[prop] = j3.clone obj[prop]
+        else
+          res[prop] = j3.clone obj[prop]
   res
 
 j3.equals = (obj1, obj2) ->
