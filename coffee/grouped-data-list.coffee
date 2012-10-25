@@ -218,16 +218,19 @@ do (j3) ->
     renderDataListGroups : (sb, datasource) ->
       if not datasource then return
 
-      datasource.forEachGroup this, (groupData) ->
+      datasource.forEachGroup this, (groupData, args, index) ->
         listGroupInfo =
           data : groupData
           checkable : @_groupCheckable
           checked : @shouldListGroupSelected groupData
+          index : index
 
         @renderDataListGroup sb, listGroupInfo
 
     renderDataListGroup : (sb, listGroupInfo) ->
       groupCss = 'list-group'
+      if listGroupInfo.index is 0
+        groupCss += ' list-group-first'
       if listGroupInfo.checked
         groupCss += ' list-group-checked'
 
