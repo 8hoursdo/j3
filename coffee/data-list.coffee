@@ -1,7 +1,7 @@
 do (j3) ->
   # 点击列表事件处理
   __el_click = (evt) ->
-    el = evt.src()
+    el = src = evt.src()
 
     elListItem = null
     while el and el isnt @el
@@ -22,13 +22,12 @@ do (j3) ->
     # 如果elListItem不为null（为null的话，就是直接点击了@el）
     # 则进行点击列表项事件的处理
     if elListItem and el is @el
-      __elListItem_click.call this, elListItem
+      __elListItem_click.call this, elListItem, src
 
   # 点击列表项事件处理
-  __elListItem_click = (el) ->
+  __elListItem_click = (el, src) ->
     # 记录被点击项的索引
-    if (@_activeItemOnClick) or (@_checkable and @_checkItemOnClick)
-      indexOfListItem = j3.Dom.indexOf el
+    indexOfListItem = j3.Dom.indexOf el
 
     # 设置被点击列表项为当前项
     if @_activeItemOnClick
@@ -37,6 +36,15 @@ do (j3) ->
     # 切换被点击列表项的选中/未选中状态
     if @_checkable and @_checkItemOnClick
       @toggleSelectedIndex indexOfListItem, el
+
+    data = @getDatasource().getAt indexOfListItem
+    args =
+      data : data
+      src : src
+      index : indexOfListItem
+
+    @onItemClick && @onItemClick args
+    @fire 'itemClick', this, args
 
   # 触发command事件
   __fireCommand = (name, src) ->
