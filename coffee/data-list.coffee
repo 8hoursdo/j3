@@ -174,7 +174,7 @@ do (j3) ->
       itemCss = 'list-item'
       if dataListItem.index is 0
         itemCss += ' list-item-first'
-      else if dataListItem.index is (dataListItem.count - 1)
+      if dataListItem.index is (dataListItem.count - 1)
         itemCss += ' list-item-last'
 
       if dataListItem.index % 2
@@ -185,6 +185,9 @@ do (j3) ->
 
       if dataListItem.checked
         itemCss += ' list-item-checked'
+
+      if dataListItem.count is 1
+        itemCss += ' list-item-single'
 
       buffer.append '<div class="' + itemCss + '">'
 
