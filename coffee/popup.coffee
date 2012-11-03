@@ -3,26 +3,34 @@ do (j3) ->
 
   _curPopups = {}
 
-  __isChildElement = (parent, child) ->
-    while child
-      if child is parent then return true
-      child = child.parentNode
+  # 判断child是不是parents的子元素
+  __isChildElement = (parents, child) ->
+    if j3.isArray parents
+      while child
+        if child in parents then return true
+        child = child.parentNode
+    else
+      while child
+        if child is parents then return true
+        child = child.parentNode
     false
-    
-  j3.regPopup = (obj, name) ->
+
+  j3.regPopup = (obj, name, trigger) ->
     name ?= ''
     curPopup = _curPopups[name]
 
-    if curPopup is obj then return
+    if curPopup
+      if curPopup.view is obj then return
+      curPopup.view.close()
 
-    if curPopup then curPopup.close()
-
-    _curPopups[name] = obj
+    _curPopups[name] =
+      view : obj
+      trigger : trigger
 
   j3.unregPopup = (obj, name) ->
     name ?= ''
     curPopup = _curPopups[name]
-    if curPopup is obj
+    if curPopup && curPopup.view is obj
       delete _curPopups[name]
 
   j3.on window, 'mousedown', (evt) ->
@@ -30,9 +38,13 @@ do (j3) ->
     for name, popup of _curPopups
       if not popup then continue
 
-      inside = __isChildElement popup.el, src
+      parentEls = [popup.view.el]
+      if popup.trigger
+        parentEls = parentEls.concat popup.trigger
+
+      inside = __isChildElement parentEls, src
       if not inside
-        popup.close()
+        popup.view.close()
         delete _curPopups[name]
 
     return
