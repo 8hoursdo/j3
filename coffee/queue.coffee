@@ -15,7 +15,7 @@ do (j3) ->
 
       @_rear = (@_rear + 1) % @_data.length
       @_size += 1
-      @_data[@_rear] = entry
+      @_data[@_rear] = value
       return
 
     dequeue : ->
