@@ -43,6 +43,9 @@ do (j3) ->
       controlId : @_controlId
       helpText : @_helpText
 
+    onCreated : ->
+      @elBody = j3.Dom.byIndex @el, 1
+
     getDatasource : ->
       @_datasource
 
