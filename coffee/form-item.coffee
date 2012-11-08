@@ -49,6 +49,8 @@ do (j3) ->
     createFormControl : (formItemOptions, formControlOptions) ->
       new formControlOptions.cls j3.ext(__getDefaultFormControlOption(this, formItemOptions), formControlOptions)
 
+    setDisabled : ->
+
   j3.TextboxFormItem = j3.cls j3.FormItem,
     createChildren : (options) ->
       @_textbox = @createFormControl options,
@@ -57,6 +59,7 @@ do (j3) ->
         multiline : options.multiline
         type : options.type
         placeholder : options.placeholder
+        disabled : options.disabled
 
     textbox : ->
       @_textbox
@@ -67,6 +70,9 @@ do (j3) ->
     focus : ->
       @_textbox.focus()
 
+    setDisabled : (value) ->
+      @_textbox.setDisabled value
+
   j3.CheckboxFormItem = j3.cls j3.FormItem,
     createChildren : (options) ->
       @_checkbox = @createFormControl options,
@@ -74,12 +80,16 @@ do (j3) ->
         text : options.text
         value : options.value
         bindingMode : options.bindingMode
+        disabled : options.disabled
 
     checkbox : ->
       @_checkbox
 
     val : ->
       @_checkbox.getValue()
+
+    setDisabled : (value) ->
+      @_checkbox.setDisabled value
 
   j3.CheckboxListFormItem = j3.cls j3.FormItem,
     createChildren : (options) ->
@@ -90,12 +100,16 @@ do (j3) ->
         itemInline : options.listItemInline
         itemWidth : options.listItemWidth
         bindingMode : options.bindingMode
+        disabled : options.disabled
 
     checkboxList : ->
       @_checkboxList
 
     val : ->
       @_checkboxList.getSelectedValue()
+
+    setDisabled : (value) ->
+      @_checkboxList.setDisabled value
 
   j3.DropdownListFormItem = j3.cls j3.FormItem,
     createChildren : (options) ->
@@ -109,12 +123,16 @@ do (j3) ->
         value : options.value
         placeholder : options.placeholder
         icon : options.controlIcon
+        disabled : options.disabled
 
     dropdownList : ->
       @_dropdownList
 
     val : ->
       @_dropdownList.getSelectedValue()
+
+    setDisabled : (value) ->
+      @_dropdownList.setDisabled value
 
   j3.DropdownTreeFormItem = j3.cls j3.FormItem,
     createChildren : (options) ->
@@ -127,12 +145,16 @@ do (j3) ->
         itemsTextName : options.itemsTextName
         itemsDatasource : options.itemsDatasource
         icon : options.controlIcon
+        disabled : options.disabled
 
     dropdownTree : ->
       @_dropdownTree
 
     val : ->
       @_dropdownTree.getSelectedValue()
+
+    setDisabled : (value) ->
+      @_dropdownTree.setDisabled value
 
   j3.DateSelectorFormItem = j3.cls j3.FormItem,
     createChildren : (options) ->
@@ -141,12 +163,16 @@ do (j3) ->
         date : options.value
         placeholder : options.placeholder
         icon : options.controlIcon
+        disabled : options.disabled
 
     dateSelector : ->
       @_dateSelector
 
     val : ->
       @_dateSelector.getDate()
+
+    setDisabled : (value) ->
+      @_dateSelector.setDisabled value
 
   j3.DateDurationFormItem = j3.cls j3.FormItem,
     createChildren : (options) ->
@@ -157,6 +183,7 @@ do (j3) ->
         name : options.beginName
         mini : yes
         icon : options.beginControlIcon
+        disabled : options.disabled
 
       @_endDateSelector = @createFormControl options,
         cls : j3.DateSelector
@@ -165,11 +192,16 @@ do (j3) ->
         name : options.endName
         mini : yes
         icon : options.endControlIcon
+        disabled : options.disabled
 
     renderChildren : (sb) ->
       @_beginDateSelector.render sb
       sb.a '<span class="form-controls-connector">-</span>'
       @_endDateSelector.render sb
+
+    setDisabled : (value) ->
+      @_beginDateSelector.setDisabled value
+      @_endDateSelector.setDisabled value
 
   j3.SwitchFormItem = j3.cls j3.FormItem,
     createChildren : (options) ->
