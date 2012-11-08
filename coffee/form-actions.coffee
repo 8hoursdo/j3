@@ -27,3 +27,14 @@ do (j3) ->
 
     onChildCreated : (child) ->
       child.on 'click', this, __actionButton_click
+
+    getActionButtonByName : (name) ->
+      if not @children then return null
+
+      node = @children.firstNode()
+      while node
+        if node.value.name is name
+          return node.value
+        node = node.next
+      null
+

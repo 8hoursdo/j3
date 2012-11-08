@@ -54,6 +54,16 @@ do (j3) ->
         node = node.next
       null
 
+    getActionButtonByName : (name) ->
+      if not @children then return null
+
+      node = @children.firstNode()
+      while node
+        if node.value.getActionButtonByName
+          return node.value.getActionButtonByName name
+        node = node.next
+      null
+
     action : (name, src) ->
       args = name : name, src : src
 
