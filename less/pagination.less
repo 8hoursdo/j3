@@ -1,6 +1,27 @@
 .pgn {
   .clearfix();
+  position: relative;
   text-align: center;
+  border-top: 1px solid @boxBorderColor;
+  height: 38px;
+
+  .pgn-prev,
+  .pgn-next {
+    position: absolute;
+    display: block;
+    line-height: 38px;
+    width: 90px;
+    text-decoration: none;
+  }
+
+  .pgn-prev {
+    left: 0;
+    border-right: 1px solid @boxBorderColor;
+  }
+  .pgn-next {
+    right: 0;
+    border-left: 1px solid @boxBorderColor;
+  }
 
   ul {
     list-style: none;
@@ -11,21 +32,26 @@
     li {
       float: left;
       padding: 0;
-      width: 25px;
       height: 25px;
-      line-height: 25px;
-      margin-right: 5px;
       text-align: center;
 
       a {
+        color: @textColor;
         display: block;
-        
-        &:hover {
-          background: @activeColor;
-          color: #fff;
-          .border-radius(3px);
-        }
+        padding: 0 9px;
+        line-height: 24px;
+        text-decoration: none;
       }
+    }
+
+    li a:hover,
+    li.active a {
+      padding: 1px 8px 0;
+      border-bottom: 2px solid @activeColor;
+      border-left: 1px solid @boxBorderColor;
+      border-right: 1px solid @boxBorderColor;
+      margin-top: -1px;
+      background: #fff;
     }
   }
 }
