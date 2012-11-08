@@ -10,7 +10,6 @@ do (j3) ->
   __textbox_blur = ->
     @_updatingView = true
     if not @_text
-      @el.value = @_placeholder
       j3.Dom.addCls @el, @baseCss + '-empty'
     @_updatingView = false
 
@@ -32,14 +31,14 @@ do (j3) ->
   j3.Textbox = j3.cls j3.View,
     baseCss : 'input'
 
-    templateInput : j3.template '<input type="<%=type%>" id="<%=id%>" class="<%=css%>" name="<%=name%>"<%if(disabled){%> disabled="disabled"<%}%><%if(readonly){%> readonly="readonly"<%}%> value="<%-text%>" />'
-    templateTextarea : j3.template '<textarea id="<%=id%>" class="<%=css%>" name="<%=name%>"<%if(disabled){%> disabled="disabled"<%}%><%if(readonly){%> readonly="readonly"<%}%> row="<%=row%>"><%-text%></textarea>'
+    templateInput : j3.template '<input type="<%=type%>" id="<%=id%>" class="<%=css%>" name="<%=name%>"<%if(disabled){%> disabled="disabled"<%}%><%if(readOnly){%> readonly="readonly"<%}%><%if(placeholder){%> placeholder="<%-placeholder%>"<%}%> value="<%-text%>" />'
+    templateTextarea : j3.template '<textarea id="<%=id%>" class="<%=css%>" name="<%=name%>"<%if(disabled){%> disabled="disabled"<%}%><%if(readOnly){%> readonly="readonly"<%}%> row="<%=row%>"><%-text%></textarea>'
 
     onInit : (options) ->
       @_text = options.text || ''
       @_primary = !!options.primary
       @_disabled = !!options.disabled
-      @_readonly = !!options.readonly
+      @_readOnly = !!options.readOnly
       @_type = options.type || 'text'
       @_multiline = @_type == 'text' && !!options.multiline
       if @_multiline
@@ -52,12 +51,13 @@ do (j3) ->
         (if @_disabled then ' disabled' else '') +
         (if @_multiline then ' input-multiline' else '') +
         (if !@_text then ' ' + @baseCss + '-empty')
-      text : @_text || @_placeholder
+      text : @_text
       disabled : @_disabled
-      readonly : @_readonly
+      readOnly : @_readOnly
       type : @_type
       name : @name
       row : @_row
+      placeholder : @_placeholder
 
     onRender : (buffer) ->
       if @_multiline then template = @templateTextarea else template = @templateInput
@@ -88,7 +88,7 @@ do (j3) ->
 
       @_updatingView = true
       if not @_text
-        @el.value = @_placeholder
+        @el.value = ''
         j3.Dom.addCls @el, @baseCss + '-empty'
       else
         @el.value = @_text
