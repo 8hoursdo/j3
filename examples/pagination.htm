@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>pagination</title>
+    <link rel="Stylesheet" href="../lib/css/j3.css" />
+</head>
+<body>
+<div id="c1" style="width: 500px; margin:200px auto"></div>
+<script type="text/coffeescript">
+j3.ready ->
+  new j3.Pagination
+    ctnr : 'c1'
+    pageSize : 5
+    entryCount : 30
+    pageNum : 2
+</script>
+<script type="text/javascript" src="./coffee-script.js"></script>
+<script type="text/javascript" src="../lib/js/j3.js"></script>
+</body>
+</html>

@@ -8,6 +8,7 @@ _filesCore = [
   'string'
   'template'
   'list'
+  'queue'
   'compile'
   'enumerate'
   'pool'
