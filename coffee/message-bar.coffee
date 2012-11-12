@@ -22,9 +22,18 @@ do (j3) ->
 
       @_elContent.innerHTML = value
 
-    show : ->
+    show : (options) ->
       MessageBar.base().show.apply this, arguments
-      j3.Dom.center @el, 30
+
+      el = @el
+      ctnr = options.ctnr
+      if ctnr
+        ctnr.appendChild el
+        el.style.top = '0'
+        el.style.left = '0'
+      else
+        document.body.appendChild el
+        j3.Dom.center el, 30
       @_timerClose = setTimeout (=> @close()), 4000
 
     close : ->
@@ -48,7 +57,8 @@ do (j3) ->
         bar.setIcon options.icon
         bar.setContent options.content, options.encodeContent
         bar._onCloseOnce = options.onClose
-        bar.show()
+
+        bar.show options
 
   __genShowMethod = (icon) ->
     # show (options)

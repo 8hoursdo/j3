@@ -152,3 +152,11 @@ j3.$ = (id) ->
   if typeof id is 'string'
     return document.getElementById id
   return id
+
+j3.guid = ->
+  s = ""
+  for i in [1...33]
+    n = Math.floor(Math.random()*16.0).toString(16)
+    s += n
+    if i==8 or i==12 or i==16 or i==20 then s += "-"
+  s

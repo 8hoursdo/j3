@@ -56,6 +56,15 @@ do(j3) ->
       Math.floor((@_entryCount - 1) / @_pageSize) + 1
 
   __renderPagination = (sb) ->
+    pageCount = @getPageCount()
+
+    if not @_hidePrevNextButtons
+      if @_pageNum isnt 1
+        sb.a '<a class="pgn-prev" href="javascript:;" data-cmd="prev">&lt;</a>'
+
+      if @_pageNum isnt pageCount
+        sb.a '<a class="pgn-next" href="javascript:;" data-cmd="next">&gt;</a>'
+
     sb.a '<ul class="'
     if @_align is 'left'
       sb.a 'pull-left'
@@ -63,26 +72,14 @@ do(j3) ->
       sb.a 'pull-right'
     sb.a '">'
 
-    pageCount = @getPageCount()
-    if not @_hidePrevNextButtons
-      if @_pageNum is 1
-        sb.a '<li>&lt;</li>'
-      else
-        sb.a '<li><a href="javascript:;" data-cmd="prev">&lt;</a></li>'
-
     for i in [1..pageCount]
-      sb.a '<li>'
       if @_pageNum is i
-        sb.a i
+        sb.a '<li class="active">'
+        sb.a '<a>' + i + '</a>'
       else
+        sb.a '<li>'
         sb.a '<a href="javascript:;" data-cmd="page" data-page="' + i + '">' + i + '</a>'
       sb.a '</li>'
-
-    if not @_hidePrevNextButtons
-      if  @_pageNum is pageCount
-        sb.a '<li>&gt;</li>'
-      else
-        sb.a '<li><a href="javascript:;" data-cmd="next">&gt;</a></li>'
 
     sb.a '</ul>'
 
