@@ -22,6 +22,8 @@ do (j3) ->
       @_url = options.url
 
       @_contextData = options.contextData
+
+      options.on && @on options.on
       return
 
     getModel : ->
@@ -54,7 +56,10 @@ do (j3) ->
       @_models.insert model, target
 
       if not options.silent
-        @updateViews 'add', model : model
+        args =
+          model : model
+        @updateViews 'add', args
+        @fire 'addModel', this, args
 
     remove : (model, options) ->
       if not model then return
@@ -70,7 +75,10 @@ do (j3) ->
       @_models.removeNode node
 
       if not options.silent
-        @updateViews 'remove', model : model
+        args =
+          model : model
+        @updateViews 'remove', args
+        @fire 'removeModel', this, args
       if newActiveModel
         @setActive newActiveModel, options
 

@@ -35,7 +35,7 @@ j3.View = do (j3) ->
     # like binding dom events
     @onCreated && @onCreated options
 
-    options.on && this.on options.on
+    options.on && @on options.on
     return
 
   __viewLoad = ->

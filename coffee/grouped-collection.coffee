@@ -44,6 +44,8 @@ do (j3) ->
         @_groupBy = j3.compileGroupBy options.groupBy
       if options.groupSortBy
         @_groupSortBy = j3.compileSortBy options.groupSortBy
+
+      options.on && @on options.on
       return
 
     getModel : ->

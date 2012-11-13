@@ -99,6 +99,8 @@ do (j3) ->
 
       @setDatasource options.datasource
 
+      options.on && @on options.on
+
     getModel : ->
       @_model or @getDatasource().getModel() or j3.Model
 
