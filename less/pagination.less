@@ -28,30 +28,30 @@
     display: inline-block;
     margin: 0 auto;
     padding: 0;
+  }
 
-    li {
-      float: left;
-      padding: 0;
-      height: 25px;
-      text-align: center;
+  li {
+    float: left;
+    padding: 0;
+    height: 25px;
+    text-align: center;
 
-      a {
-        color: @textColor;
-        display: block;
-        padding: 0 9px;
-        line-height: 24px;
-        text-decoration: none;
-      }
+    a {
+      color: @textColor;
+      display: block;
+      padding: 0 9px;
+      line-height: 24px;
+      text-decoration: none;
     }
+  }
 
-    li a:hover,
-    li.active a {
-      padding: 1px 8px 0;
-      border-bottom: 2px solid @activeColor;
-      border-left: 1px solid @boxBorderColor;
-      border-right: 1px solid @boxBorderColor;
-      margin-top: -1px;
-      background: #fff;
-    }
+  li a:hover,
+  li.active a {
+    padding: 1px 8px 0;
+    border-bottom: 2px solid @activeColor;
+    border-left: 1px solid @boxBorderColor;
+    border-right: 1px solid @boxBorderColor;
+    margin-top: -1px;
+    background: #fff;
   }
 }
