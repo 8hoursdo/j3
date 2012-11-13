@@ -146,6 +146,7 @@ do (j3) ->
         # 窗口的高度根据内容自适应调整
         @el.style.height = ''
         @_elWndBody.style.height = ''
+        @_elWndBody.firstChild.style.height = ''
         return
 
       Dom = j3.Dom
