@@ -215,11 +215,18 @@ do (j3) ->
     setActiveIndex : (index) ->
       if @_activeItemIndex is index then return
 
+      data = __getDataItemByIndex.call this, index
+      args = {data, index}
+      @beforeActiveItem && @beforeActiveItem args
+      if args.stop then return
+      @fire 'beforeActiveItem', this, args
+      if args.stop then return
+
       datasource = @getDatasource()
       if datasource
         datasource.setActive datasource.getAt(index)
 
-      @fire 'activeItemChange', this
+      @fire 'activeItemChange', this, args
 
     # 切换索引指定的列表项的选中/未选中状态
     toggleSelectedIndex : (index) ->

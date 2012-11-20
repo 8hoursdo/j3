@@ -1,4 +1,15 @@
 do (j3) ->
+  __dataList_beforeActiveItem = (sender, args) ->
+    data = args.data
+    if data.text is '-'
+      args.stop = true
+    else if data.cmd
+      args.stop = true
+      @close()
+      @fire 'command', this,
+        name : data.cmd
+        data : data
+
   # 列表当前项改变的事件处理
   __dataList_activeItemChange = (sender) ->
     if @isUpdatingSubcomponent() then return
@@ -23,7 +34,7 @@ do (j3) ->
     @close()
 
   # 默认的列表项数据选择器
-  _defaultItemDataSelector = j3.compileSelector ['text', 'value']
+  _defaultItemDataSelector = j3.compileSelector ['text', 'value', 'cmd']
 
   # 将数据项数组转换为数据集合
   __convertItemsToCollection = (items, datasource) ->
@@ -48,8 +59,10 @@ do (j3) ->
       datasource : datasource
       itemDataSelector : itemDataSelector
       activeItemOnClick : yes
+      on :
+        beforeActiveItem : c : this, h : __dataList_beforeActiveItem
+        activeItemChange : c : this, h : handlerActiveItemChange
 
-    dataList.on 'activeItemChange', this, handlerActiveItemChange
     dataList
 
   __doSetSelectedValue = (value) ->
@@ -183,6 +196,11 @@ do (j3) ->
 
     onRenderDataListItem : (sb, dataListItem) ->
       itemData = dataListItem.data
-      sb.a '<a>'
-      sb.a j3.getVal(itemData, 'text') or j3.getVal(itemData, 'name') or j3.getVal(itemData, 'value')
-      sb.a '</a>'
+
+      textDisplay = j3.getVal(itemData, 'text') or j3.getVal(itemData, 'name') or j3.getVal(itemData, 'value')
+      if textDisplay is '-'
+        sb.a '<div class="drp-list-divider"></div>'
+      else
+        sb.a '<a>'
+        sb.a textDisplay
+        sb.a '</a>'
