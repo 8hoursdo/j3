@@ -85,7 +85,10 @@ do (j3) ->
 
     setDisabled : (value) ->
       @_disabled = !!value
-      j3.Dom.toggleCls @el, 'disabled'
+      if @_disabled
+        j3.Dom.addCls @el, 'disabled'
+      else
+        j3.Dom.removeCls @el, 'disabled'
 
     getMultiple : ->
       @_multiple
