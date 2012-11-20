@@ -39,9 +39,9 @@ do (j3) ->
       if not @_params then return
       @_params[name]
 
-    getQuery : (name) ->
-      if not @_query then return
-      @_query.get name
+    getQuery : (name, defaultValue) ->
+      if not @_query then return defaultValue
+      @_query.get name, defaultValue
 
     setQuery : (name, value) ->
       if not @_query then @_query = new j3.UrlQuery

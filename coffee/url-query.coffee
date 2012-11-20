@@ -3,9 +3,11 @@ j3.UrlQuery = j3.cls
     @_query = {}
     return
 
-  get : (name) ->
-    if not @_query then return
-    @_query[name]
+  get : (name, defaultValue) ->
+    if not @_query then return defaultValue
+    if @_query.hasOwnProperty name
+      return @_query[name]
+    return defaultValue
 
   set : (name, value) ->
     @_query ?= {}
