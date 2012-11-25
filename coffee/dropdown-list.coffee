@@ -1,35 +1,41 @@
 do (j3) ->
-  __dataList_beforeActiveItem = (sender, args) ->
-    data = args.data
-    if data.text is '-'
+  __dataList_beforeItemClick = (sender, args) ->
+    selectedItem = args.data
+    if selectedItem.divider
+      # 点击分割线
       args.stop = true
-    else if data.cmd
+      return
+    else if selectedItem.cmd
+      # 点击命令项
       args.stop = true
       @close()
       @fire 'command', this,
-        name : data.cmd
-        data : data
+        name : selectedItem.cmd
+        data : selectedItem
+      return
 
-  # 列表当前项改变的事件处理
-  __dataList_activeItemChange = (sender) ->
+  # 列表项点击的事件处理
+  __dataList_itemClick = (sender, args) ->
+    # 更新控件时触发的事件不应该再次改变控件对外状态
     if @isUpdatingSubcomponent() then return
 
+    # 一个列表中的项目被选中时，另一个列表中的当前选中项应该取消选中
     triggerDataList = sender
     if triggerDataList is @_dataList
       theOtherDataList = @_fixedDataList
     else
       theOtherDataList = @_dataList
+    theOtherDataList && theOtherDataList.setSelectedItems null
 
-    theOtherDataList && theOtherDataList.getDatasource().setActive null
+    # 若选中项发生改变，则更新控件对外状态
+    selectedItem = args.data
+    if not j3.equals @_selectedValue, selectedItem.value
+      @_selectedValue = selectedItem.value
+      @doSetSelectedItems selectedItem
+      @updateData()
 
-    selectedItem = sender.getActiveItem()
-
-    @_selectedValue = selectedItem.value
-    @doSetSelectedItems selectedItem
-    @updateData()
-
-    @onChange && @onChange()
-    @fire 'change', this
+      @onChange && @onChange()
+      @fire 'change', this
 
     @close()
 
@@ -50,51 +56,67 @@ do (j3) ->
     datasource
 
   # 创建数据列表控件
-  __createDataList = (ctnr, datasource, itemDataSelector, handlerActiveItemChange) ->
+  __createDataList = (ctnr, datasource, itemDataSelector, handlerItemClick) ->
     if not datasource then return null
 
     dataList = new DropdownDataList
       parent : this
       ctnr : ctnr
       datasource : datasource
+      selectedItemOnClick : yes
+      selectedItems : @_selectedItems
       itemDataSelector : itemDataSelector
-      activeItemOnClick : yes
       on :
-        beforeActiveItem : c : this, h : __dataList_beforeActiveItem
-        activeItemChange : c : this, h : handlerActiveItemChange
+        beforeItemClick : c : this, h : __dataList_beforeItemClick
+        itemClick : c : this, h : handlerItemClick
 
     dataList
 
+  # 设置选中值，在控件初始化时以及外部调用setSelectedValue()时调用。
+  # 返回选中值是否发生改变
   __doSetSelectedValue = (value) ->
-    if @_selectedValue is value then return false
+    if j3.equals @_selectedValue, value then return false
 
     @_selectedValue = value
-
-    __refreshSelectedValueState.call this
+    __refreshControlViaSelectedValue.call this
     true
 
+  # 当数据源发生改变时调用
   __itemsDatasource_onRefresh = ->
-    __refreshSelectedValueState.call this
+    __refreshControlViaSelectedValue.call this
 
-  __refreshSelectedValueState = ->
+  # 根据选中值，更新控件
+  __refreshControlViaSelectedValue = ->
+    # 更新下拉控件
     @updateSubcomponent()
 
-    selectedModel = null
-    if @_fixedItemsDatasource
-      selectedModel = @_fixedItemsDatasource.getActive()
-      if selectedModel
-        @doSetSelectedItems @_fixedItemDataSelector selectedModel
+    # 更新Selector
+    @doSetSelectedItems __getSelectedItemFromDatasourceBySelectedValue.call this, @_selectedValue
 
-    if not selectedModel
-      selectedModel = @_itemsDatasource.getActive()
-      if selectedModel
-        @doSetSelectedItems @_itemDataSelector selectedModel
-
-    if not selectedModel
-      @doSetSelectedItems null
-
+    # 更新数据源的值
     @updateData()
 
+  __getSelectedItemFromDatasourceBySelectedValue = (selectedValue) ->
+    if selectedValue is null then return null
+
+    selectedItem = null
+    if @_fixedItemsDatasource
+      fixedItemDataSelector = @_fixedItemDataSelector
+      @_fixedItemsDatasource.tryUntil (item) ->
+        itemData = fixedItemDataSelector item
+        if itemData.value is selectedValue
+          selectedItem = itemData
+          return true
+
+    if not selectedItem
+      itemDataSelector = @_itemDataSelector
+      @_itemsDatasource.tryUntil (item) ->
+        itemData = itemDataSelector item
+        if itemData.value is selectedValue
+          selectedItem = itemData
+          return true
+
+    selectedItem
 
   j3.DropdownList = j3.cls j3.Dropdown,
     _selectedIndex : null
@@ -121,9 +143,9 @@ do (j3) ->
 
     onCreateDropdownBox : (elBox) ->
       if @_fixedItemsDatasource
-        @_fixedDataList = __createDataList.call this, elBox, @_fixedItemsDatasource, @_fixedItemDataSelector, __dataList_activeItemChange
+        @_fixedDataList = __createDataList.call this, elBox, @_fixedItemsDatasource, @_fixedItemDataSelector, __dataList_itemClick
 
-      @_dataList = __createDataList.call this, elBox, @_itemsDatasource, @_itemDataSelector, __dataList_activeItemChange
+      @_dataList = __createDataList.call this, elBox, @_itemsDatasource, @_itemDataSelector, __dataList_itemClick
 
     getItemsDatasource : ->
       @_itemsDatasource
@@ -167,25 +189,34 @@ do (j3) ->
       @setSelectedValue datasource.get @name
 
     onUpdateSubcomponent : ->
+      # 子控件未创建，无需更新状态
+      if not @_dataList then return
+
       selectedValue = @_selectedValue
 
       if selectedValue is null
-        if @_fixedItemsDatasource
-          @_fixedItemsDatasource.setActive null
-        @_itemsDatasource.setActive null
+        if @_fixedDataList
+          @_fixedDataList.setSelectedItems null
+        @_dataList.setSelectedItems null
       else
-        selectedModel = null
-        if @_fixedItemsDatasource
+        selectedItem = null
+        if @_fixedDataList
           fixedItemDataSelector = @_fixedItemDataSelector
-          selectedModel = @_fixedItemsDatasource.tryUntil (item) ->
-            fixedItemDataSelector(item).value is selectedValue
-          @_fixedItemsDatasource.setActive selectedModel
+          @_fixedItemsDatasource.tryUntil (item) ->
+            itemData = fixedItemDataSelector item
+            if itemData.value is selectedValue
+              selectedItem = itemData
+              return true
+          @_fixedDataList.setSelectedItem selectedItem
 
-        if not selectedModel
+        if not selectedItem
           itemDataSelector = @_itemDataSelector
-          selectedModel = @_itemsDatasource.tryUntil (item) ->
-            itemDataSelector(item).value is selectedValue
-          @_itemsDatasource.setActive selectedModel
+          @_itemsDatasource.tryUntil (item) ->
+            itemData = itemDataSelector item
+            if itemData.value is selectedValue
+              selectedItem = itemData
+              return true
+          @_dataList.setSelectedItem selectedItem
       return
 
   j3.ext j3.DropdownList.prototype, j3.DataView

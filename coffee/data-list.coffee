@@ -29,6 +29,17 @@ do (j3) ->
     # 记录被点击项的索引
     indexOfListItem = j3.Dom.indexOf el
 
+    data = __getDataItemByIndex.call this, indexOfListItem
+    args =
+      data : data
+      src : src
+      index : indexOfListItem
+
+    @beforeItemClick && @beforeItemClick args
+    if args.stop then return
+    @fire 'beforeItemClick', this, args
+    if args.stop then return
+
     # 设置被点击列表项为当前项
     if @_activeItemOnClick
       @setActiveIndex indexOfListItem
@@ -37,11 +48,8 @@ do (j3) ->
     if @_checkable and @_checkItemOnClick
       @toggleSelectedIndex indexOfListItem, el
 
-    data = @getDatasource().getAt indexOfListItem
-    args =
-      data : data
-      src : src
-      index : indexOfListItem
+    if @_selectItemOnClick
+      __setSelectedIndex.call this, indexOfListItem, el
 
     @onItemClick && @onItemClick args
     @fire 'itemClick', this, args
@@ -55,7 +63,7 @@ do (j3) ->
       el = el.parentNode
 
     if el is @el
-      data = @getDatasource().getAt j3.Dom.indexOf(elListItem)
+      data = __getDataItemByIndex.call this, j3.Dom.indexOf(elListItem)
 
       args =
         name : name
@@ -83,7 +91,17 @@ do (j3) ->
 
     @fire 'selectedItemsChange', this, args
 
-  # 更新@_selectItems中的数据
+  __setSelectedIndex = (index, elListItem) ->
+    Dom = j3.Dom
+
+    css = 'list-item-checked'
+    if @_selectedItemEl
+      Dom.removeCls @_selectedItemEl, css
+
+    Dom.addCls elListItem, css
+    @_selectedItemEl = elListItem
+
+  # 更新@_selectedItems中的数据
   __updateSelectedItems = (selectedItems, unselectedItems) ->
     if not @_selectedItems then @_selectedItems = []
 
@@ -101,6 +119,19 @@ do (j3) ->
   __getDataItemByIndex = (index) ->
     datasource = @getDatasource()
     @_itemDataSelector datasource.getAt(index)
+
+  __refreshDataListSelecteStates = ->
+    Dom = j3.Dom
+    elListItem = @el.firstChild
+    datasource = @getDatasource()
+    datasource.forEach this, (model) ->
+      itemData = @_itemDataSelector model
+      if j3.indexOf(@_selectedItems, itemData) < 0
+        Dom.removeCls elListItem, 'list-item-checked'
+      else
+        Dom.addCls elListItem, 'list-item-checked'
+
+      elListItem = Dom.next elListItem
 
   j3.DataList = j3.cls j3.View,
     baseCss : 'data-list'
@@ -120,11 +151,19 @@ do (j3) ->
       # 指定是否在点击列表项时切换被点击列表项的选中/未选中状态
       @_checkItemOnClick = !!options.checkItemOnClick
 
+      # 指示是否在点击列表项时选中被点击列表项
+      @_selectItemOnClick = !!options.selectedItemOnClick
+
       # 指定如何从数据源中的数据项转换成外部需要的数据项
-      @_itemDataSelector = j3.compileSelector(options.itemDataSelector || 'id')
+      @_itemDataSelector = j3.compileSelector(options.itemDataSelector)
 
       # 指定如何判断数据源中的一个数据项是选中数据项
       @_itemDataEquals = j3.compileEquals(options.itemDataEquals || ['id'])
+
+      if j3.isArray options.selectedItems
+        @_selectedItems = options.selectedItems
+      else
+        @_selectedItems = options.selectedItems || []
 
     onCreated : (options) ->
       j3.on @el, 'click', this, __el_click
@@ -135,6 +174,11 @@ do (j3) ->
         @_activeItemEl = null
       else
         @_activeItemEl = j3.Dom.byIndex @el, @_activeItemIndex
+
+      if @_selectedItemIndex is -1
+        @_selectedItemEl = null
+      else
+        @_selectedItemEl = j3.Dom.byIndex @el, @_selectedItemIndex
 
     onUpdateView : (datasource, eventName, data) ->
       if not @el then return
@@ -152,20 +196,26 @@ do (j3) ->
     renderDataListItems : (buffer, datasource) ->
       # 在每次刷新列表的时候重置当前项索引
       @_activeItemIndex = -1
+      @_selectedItemIndex = -1
 
       if datasource
-        activeModel = datasource.getActive()
+        activeModel = null
+        if @_activeItemOnClick
+          activeModel = datasource.getActive()
         count = datasource.count()
         datasource.forEach this, (model, args, index) ->
           isActive = activeModel is model
           if isActive then @_activeItemIndex = index
+
+          isChecked = @shouldListItemSelected model
+          if isChecked then @_selectedItemIndex = index
           dataListItem =
             index : index
             count : count
             data : model
             active : isActive
             checkable : @_checkable
-            checked : @shouldListItemSelected model
+            checked : isChecked
 
           @renderDataListItem buffer, dataListItem
 
@@ -233,19 +283,30 @@ do (j3) ->
       elListItem = j3.Dom.byIndex @el, index
       __toggleSelectedIndex.call this, index, elListItem
 
-
     # 获取选中的数据项
     getSelectedItems : ->
       @_selectedItems
+
+    getSelectedItem : ->
+      if not @_selectedItems or @_selectedItems.length is 0 then return null
+      @_selectedItems[0]
+
+    setSelectedItems : (value) ->
+      if value and not j3.isArray value
+        value = [value]
+
+      @_selectedItems = value
+      __refreshDataListSelecteStates.call this
+
+    setSelectedItem : (value) ->
+      if not value then @setSelectedItems null
+      @setSelectedItems [value]
 
     # 判断一个列表项是否应该被选中
     shouldListItemSelected : (model) ->
       if not @_selectedItems then return
 
       itemData = @_itemDataSelector model
-      for item in @_selectedItems
-        if @_itemDataEquals item, itemData then return true
-
-      false
+      j3.indexOf(@_selectedItems, itemData) >= 0
 
   j3.ext j3.DataList.prototype, j3.DataView
