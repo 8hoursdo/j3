@@ -14,11 +14,12 @@ do (j3) ->
 
     @fire 'click', sender, args
 
-  j3.ButtonGroup = j3.cls j3.ContainerView,
+  j3.ButtonGroup = ButtonGroup = j3.cls j3.ContainerView,
     baseCss : 'btn-grp'
 
     onInit : (options) ->
       @_toggle = options.toggle
+      @_label = options.label
 
     onCreateChild : (options, args) ->
       options.cls = j3.Button
@@ -28,6 +29,13 @@ do (j3) ->
       if @_toggle
         options.toggle = @_toggle
       return
+
+    renderChildren : (sb) ->
+      if @_label
+        sb.a '<div class="btn-grp-lbl">'
+        sb.e @_label
+        sb.a '</div>'
+      ButtonGroup.base().renderChildren.apply this, arguments
 
     onChildCreated : (child) ->
       child.on 'click', this, __childButton_click
