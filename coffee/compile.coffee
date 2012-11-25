@@ -1,5 +1,7 @@
 do (j3) ->
   j3.compileSelector = (selector) ->
+    if not selector then return (source) -> source
+      
     if j3.isFunction selector then return selector
 
     if j3.isString selector
