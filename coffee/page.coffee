@@ -40,7 +40,7 @@ do (j3) ->
       @_params[name]
 
     getQuery : (name, defaultValue) ->
-      if not @_query then return defaultValue
+      if not @_query then @_query = new j3.UrlQuery
       @_query.get name, defaultValue
 
     setQuery : (name, value) ->
@@ -51,6 +51,11 @@ do (j3) ->
       if not @_query then return
       @_query.unset name
 
+    commitQuery : ->
+      # 即使queryString为空，任然保留井号，
+      # 因为从有井号切换到没有井号时，浏览器会刷新。
+      location.href = location.origin + location.pathname + '#' + @queryString()
+
     queryString : ->
-      if not @_query then return ''
+      if not @_query then @_query = new j3.UrlQuery
       @_query.toString()

@@ -1,6 +1,7 @@
 j3.UrlQuery = j3.cls
   ctor : ->
     @_query = {}
+    @parse()
     return
 
   get : (name, defaultValue) ->
@@ -25,3 +26,16 @@ j3.UrlQuery = j3.cls
       sb.a name + '=' + encodeURIComponent(value)
 
     sb.toString()
+
+  parse : ->
+    url = location.href
+    idxSharp = url.indexOf('#')
+    if idxSharp < 0 then return
+
+    hash = url.substr(idxSharp + 1)
+    kvStrings = hash.split '&'
+    for eachKvStr in kvStrings
+      kv = eachKvStr.split '='
+      key = kv[0]
+      if key
+        @set key, kv[1]
