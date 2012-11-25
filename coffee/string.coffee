@@ -16,6 +16,9 @@ j3.ext j3,
   isNullOrEmpty : (s) ->
     typeof s is 'undefined' or s is null or s is ''
 
+  isNullOrWhiteSpace : (s) ->
+    j3.isNullOrEmpty(s) or s.trim() is ''
+
   hyphenlize : (s) ->
     converted = ''
     i = -1
@@ -37,6 +40,26 @@ j3.ext j3,
      .replace(/"/g, '&quot;')
      .replace(/'/g, '&#x27;')
      .replace(/\//g, '&#x2F;')
+
+  substrEx : (s, bytes) ->
+    if j3.isNullOrEmpty s then return ''
+
+    i = 0
+    uFF61 = 65377	#parseInt("FF61", 16)
+    uFF9F = 65439	#parseInt("FF9F", 16)
+    uFFE8 = 65512	#parseInt("FFE8", 16)
+    uFFEE = 65518	#parseInt("FFEE", 16)
+    while i < s.length and bytes > 0
+      c = s.charCodeAt i
+      if c < 256 or ((uFF61 <= c) and (c <= uFF9F)) or ((uFFE8 <= c) and (c <= uFFEE))
+        bytes -= 1
+      else
+        bytes -= 2
+      i++
+
+    if(s.length > i)
+      return s.substr(0, i) + "..."
+    return s.substr(0, i)
 
 if String.prototype.trim
   j3.trim = (s) ->
