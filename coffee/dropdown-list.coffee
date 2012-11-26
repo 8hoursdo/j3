@@ -40,7 +40,7 @@ do (j3) ->
     @close()
 
   # 默认的列表项数据选择器
-  _defaultItemDataSelector = j3.compileSelector ['text', 'value', 'cmd']
+  _defaultItemDataSelector = j3.compileSelector ['text', 'value', 'cmd', 'divider']
 
   # 将数据项数组转换为数据集合
   __convertItemsToCollection = (items, datasource) ->
@@ -104,6 +104,7 @@ do (j3) ->
       fixedItemDataSelector = @_fixedItemDataSelector
       @_fixedItemsDatasource.tryUntil (item) ->
         itemData = fixedItemDataSelector item
+        if itemData.cmd or itemData.divider then return false
         if itemData.value is selectedValue
           selectedItem = itemData
           return true
@@ -112,6 +113,7 @@ do (j3) ->
       itemDataSelector = @_itemDataSelector
       @_itemsDatasource.tryUntil (item) ->
         itemData = itemDataSelector item
+        if itemData.cmd or itemData.divider then return false
         if itemData.value is selectedValue
           selectedItem = itemData
           return true
@@ -228,10 +230,10 @@ do (j3) ->
     onRenderDataListItem : (sb, dataListItem) ->
       itemData = dataListItem.data
 
-      textDisplay = j3.getVal(itemData, 'text') or j3.getVal(itemData, 'name') or j3.getVal(itemData, 'value')
-      if textDisplay is '-'
+      if j3.getVal(itemData, 'divider')
         sb.a '<div class="drp-list-divider"></div>'
       else
+        textDisplay = j3.getVal(itemData, 'text') or j3.getVal(itemData, 'name') or j3.getVal(itemData, 'value')
         sb.a '<a>'
         sb.a textDisplay
         sb.a '</a>'
