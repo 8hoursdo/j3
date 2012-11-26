@@ -73,7 +73,7 @@ do (j3) ->
         __stringToJson obj.toString(), buffer
     return
 
-  j3.toJson = (obj, buffer) ->
+  j3.toJSON = j3.toJson = (obj, buffer) ->
     if j3.isUndefined buffer
       buffer = new j3.StringBuilder
       __toJson obj, buffer
@@ -81,6 +81,5 @@ do (j3) ->
     else
       __toJson obj, buffer
 
-
-  j3.fromJson = (json) ->
+  j3.fromJSON = j3.fromJson = (json) ->
     eval "(#{json})"
