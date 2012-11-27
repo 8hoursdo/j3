@@ -11,7 +11,7 @@ if typeof exports isnt 'undefined'
 else
   root.j3 = j3
 
-j3.version = '0.3.5'
+j3.version = '0.3.6'
 
 j3.fnRetFalse = -> false
 
