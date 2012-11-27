@@ -107,12 +107,12 @@ do (j3) ->
 
     if selectedItems
       for item in selectedItems
-        index = j3.indexOf @_selectedItems, item
+        index = j3.indexOf @_selectedItems, item, @_itemDataEquals
         if index is -1 then @_selectedItems.push item
 
     if unselectedItems
       for item in unselectedItems
-        index = j3.indexOf @_selectedItems, item
+        index = j3.indexOf @_selectedItems, item, @_itemDataEquals
         if index isnt -1 then @_selectedItems.splice index, 1
 
   # 获取指定索引的数据项
@@ -120,13 +120,15 @@ do (j3) ->
     datasource = @getDatasource()
     @_itemDataSelector datasource.getAt(index)
 
-  __refreshDataListSelecteStates = ->
+  __refreshListItemSelecteStates = ->
+    if not @el then return
+
     Dom = j3.Dom
     elListItem = @el.firstChild
     datasource = @getDatasource()
     datasource.forEach this, (model) ->
       itemData = @_itemDataSelector model
-      if j3.indexOf(@_selectedItems, itemData) < 0
+      if j3.indexOf(@_selectedItems, itemData, @_itemDataEquals) < 0
         Dom.removeCls elListItem, 'list-item-checked'
       else
         Dom.addCls elListItem, 'list-item-checked'
@@ -296,17 +298,19 @@ do (j3) ->
         value = [value]
 
       @_selectedItems = value
-      __refreshDataListSelecteStates.call this
+      __refreshListItemSelecteStates.call this
 
     setSelectedItem : (value) ->
-      if not value then @setSelectedItems null
-      @setSelectedItems [value]
+      if value
+        @setSelectedItems [value]
+      else
+        @setSelectedItems null
 
     # 判断一个列表项是否应该被选中
     shouldListItemSelected : (model) ->
       if not @_selectedItems then return
 
       itemData = @_itemDataSelector model
-      j3.indexOf(@_selectedItems, itemData) >= 0
+      j3.indexOf(@_selectedItems, itemData, @_itemDataEquals) >= 0
 
   j3.ext j3.DataList.prototype, j3.DataView

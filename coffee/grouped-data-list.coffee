@@ -109,6 +109,7 @@ do (j3) ->
       Dom.addCls elListItem, css
 
     __updateSelectedItems.call this, args.selectedItems, args.unselectedItems
+    __refreshListItemSelecteStates.call this
 
     @fire 'selectedItemsChange', this, args
 
@@ -118,15 +119,36 @@ do (j3) ->
 
     if selectedItems
       for item in selectedItems
-        index = j3.indexOf @_selectedItems, item
+        index = j3.indexOf @_selectedItems, item, @_itemDataEquals
         if index is -1 then @_selectedItems.push item
 
     if unselectedItems
       for item in unselectedItems
-        index = j3.indexOf @_selectedItems, item
+        index = j3.indexOf @_selectedItems, item, @_itemDataEquals
         if index isnt -1 then @_selectedItems.splice index, 1
 
     return
+
+  # 刷新列表项的选中状态
+  __refreshListItemSelecteStates = ->
+    if not @el then return
+
+    Dom = j3.Dom
+    elListGroup = @el.firstChild
+    while elListGroup
+      elList = elListGroup.lastChild
+      elListItem = elList.firstChild
+
+      while elListItem
+        itemData = __getItemDataByListItemEl.call this, elListItem
+        if j3.indexOf(@_selectedItems, itemData, @_itemDataEquals) < 0
+          Dom.removeCls elListItem, 'list-item-checked'
+        else
+          Dom.addCls elListItem, 'list-item-checked'
+
+        elListItem = Dom.next elListItem
+
+      elListGroup = Dom.next elListGroup
 
   # 切换列表组的选中/未选中状态
   __toggleSelectListGroup = (elListGroup) ->
@@ -152,12 +174,12 @@ do (j3) ->
 
     if selectedGroups
       for group in selectedGroups
-        index = j3.indexOf @_selectedGroups, group
+        index = j3.indexOf @_selectedGroups, group, @_groupDataEquals
         if index is -1 then @_selectedGroups.push group
 
     if unselectedGroups
       for group in unselectedGroups
-        index = j3.indexOf @_selectedGroups, group
+        index = j3.indexOf @_selectedGroups, group, @_groupDataEquals
         if index isnt -1 then @_selectedGroups.splice index, 1
 
     return
@@ -168,7 +190,7 @@ do (j3) ->
   __getGroupDataByListGroupEl = (elListGroup) ->
     @_groupDataSelector @getDatasource().getGroupById(j3.Dom.data elListGroup, 'id')
 
-  # 刷新列表，在数据源发生改变，或者setSelectedItems时被调用
+  # 刷新列表，在数据源发生改变时被调用
   __refreshList = ->
     if not @el then return
 
@@ -328,7 +350,7 @@ do (j3) ->
 
     setSelectedItems : (value) ->
       @_selectedItems = value
-      __refreshList.call this
+      __refreshListItemSelecteStates.call this
 
     # 判断一个列表组是否应该被选中
     shouldListGroupSelected : (model) ->

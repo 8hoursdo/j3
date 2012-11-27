@@ -66,6 +66,7 @@ do (j3) ->
       selectedItemOnClick : yes
       selectedItems : @_selectedItems
       itemDataSelector : itemDataSelector
+      itemDataEquals : ['value']
       on :
         beforeItemClick : c : this, h : __dataList_beforeItemClick
         itemClick : c : this, h : handlerItemClick
