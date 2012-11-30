@@ -33,7 +33,7 @@ do (j3) ->
     if curPopup && curPopup.view is obj
       delete _curPopups[name]
 
-  j3.on window, 'mousedown', (evt) ->
+  j3.on document.body, 'mousedown', (evt) ->
     src = evt.src()
     for name, popup of _curPopups
       if not popup then continue
