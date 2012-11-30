@@ -5,11 +5,18 @@ j3.UA = do ->
     webkit : 0
     opera : 0
     name : ''
+
     N_IE : 'MSIE'
     N_FIREFOX : 'Firefox'
     N_OPERA : 'Opera'
     N_CHROME : 'Chrome'
     N_SAFARI : 'Safari'
+    N_ANDROID : 'Android'
+
+    P_IPOD : 'iPod'
+    P_IPAD : 'iPad'
+    P_IPHONE : 'iPhone'
+    P_ANDROID : 'Android'
 
   if !this.navigator
     o.name = 'server'
@@ -25,12 +32,23 @@ j3.UA = do ->
   else if ua.indexOf(o.N_OPERA) > -1
     o.opera = true
     o.name = o.N_OPERA
-  else if ua.indexOf(o.N_CHROME) > -1
+  else if ua.indexOf('AppleWebKit') > -1
     o.webkit = true
-    o.name = o.N_CHROME
-  else if ua.indexOf(o.N_SAFARI) > -1
-    o.webkit = true
-    o.name = o.N_SAFARI
+    if ua.indexOf(o.N_ANDROID) > -1
+      o.name = o.N_ANDROID
+    else if ua.indexOf(o.N_CHROME) > -1
+      o.name = o.N_CHROME
+    else if ua.indexOf(o.N_SAFARI) > -1
+      o.name = o.N_SAFARI
+
+  if ua.indexOf(o.P_IPOD) > -1
+    o.platform = o.P_IPOD
+  else if ua.indexOf(o.P_IPAD) > -1
+    o.platform = o.P_IPAD
+  else if ua.indexOf(o.P_IPHONE) > -1
+    o.platform = o.P_IPHONE
+  else if ua.indexOf(o.P_ANDROID) > -1
+    o.platform = o.P_ANDROID
   
   if o.name is o.N_OPERA or o.name is o.N_SAFARI
     nStart = ua.indexOf('Version') + 8
