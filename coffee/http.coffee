@@ -1,6 +1,8 @@
 do (j3) ->
   if j3.isRunInServer() then return
 
+  _reqSeed = 0
+
   _contentTypes =
     text : 'text/pain'
     json : 'application/json'
@@ -56,10 +58,18 @@ do (j3) ->
   __doRequest = (req) ->
     xhr = __getXHR()
     url = req.url
+    # make async requests as default
     async = req.async isnt false
     headers = req.headers
 
-    xhr.open req.method, req.url, async, req.username, req.password
+    if j3.UA.ie and req.method is 'GET'
+      if url.indexOf('?') is -1
+        url += '?'
+      else
+        url += '&'
+      url += '_j3ts=' + (new Date().getTime()) + (_reqSeed++)
+
+    xhr.open req.method, url, async, req.username, req.password
 
     # set headers
     xhr.setRequestHeader 'Content-Type', _contentTypes[req.dataType] || _contentTypes.form
