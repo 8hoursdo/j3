@@ -4,6 +4,8 @@ do (j3) ->
       callback eachItem
 
   j3.indexOf = (list, item, equals) ->
+    if not list then return -1
+
     index = -1
     equals ?= j3.equals
 
