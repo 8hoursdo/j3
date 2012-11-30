@@ -146,6 +146,7 @@ do (j3) ->
     if j3.isString options
       options =
         ensureUnique : false
+        ignoreEmpty : false
         fieldName : options
 
     res = []
@@ -153,6 +154,8 @@ do (j3) ->
     # 如果列表中的字段是唯一的，则不要作判断，这样可以提升性能。
     if not options.ensureUnique
       j3.forEach list, (item) ->
+        if options.ignoreEmpty and j3.isNullOrUndefined item then return
+
         res.push j3.getVal item, options.fieldName
       return res
 
@@ -163,10 +166,14 @@ do (j3) ->
       value = j3.getVal item, options.fieldName
       if j3.isArray value
         for eachVal in value
+          if options.ignoreEmpty and j3.isNullOrUndefined eachVal then return
+          
           if not map[eachVal]
             map[eachVal] = true
             res.push eachVal
       else
+        if options.ignoreEmpty and j3.isNullOrUndefined value then return
+
         if not map[value]
           map[value] = true
           res.push value
