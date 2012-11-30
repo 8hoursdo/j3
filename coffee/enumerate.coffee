@@ -141,10 +141,15 @@ do (j3) ->
     rootItems
 
   j3.pickFieldVal = (list, options) ->
+    if j3.isString options
+      options =
+        ensureUnique : false
+        fieldName : options
+
     res = []
 
     # 如果列表中的字段是唯一的，则不要作判断，这样可以提升性能。
-    if options.distinctField
+    if not options.ensureUnique
       j3.forEach list, (item) ->
         res.push j3.getVal item, options.fieldName
       return res
