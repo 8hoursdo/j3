@@ -167,6 +167,17 @@ do (j3) ->
       else
         @_selectedItems = options.selectedItems || []
 
+    getTemplateData : ->
+      id : @id
+      css : @getCss() +
+        (if @_checkable then ' data-list-checkable' else '')
+
+    onRender : (sb, tplData) ->
+      sb.a '<div id="' + tplData.id + '" class="' + tplData.css + '">'
+      @renderDataListItems sb, @getDatasource()
+
+      sb.a '</div>'
+
     onCreated : (options) ->
       j3.on @el, 'click', this, __el_click
 
@@ -188,12 +199,6 @@ do (j3) ->
       buffer = new j3.StringBuilder
       @renderDataListItems buffer, @getDatasource()
       @el.innerHTML = buffer.toString()
-
-    onRender : (buffer, tplData) ->
-      buffer.append '<div id="' + tplData.id + '" class="' + tplData.css + '">'
-      @renderDataListItems buffer, @getDatasource()
-
-      buffer.append '</div>'
 
     renderDataListItems : (buffer, datasource) ->
       # 在每次刷新列表的时候重置当前项索引

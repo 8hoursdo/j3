@@ -224,6 +224,11 @@ do (j3) ->
       @_shouldListGroupSelected = options.shouldListGroupSelected
       @_selectedGroupsEx = options.selectedGroupsEx
 
+    onRender : (sb, tplData) ->
+      sb.a '<div id="' + tplData.id + '" class="' + tplData.css + '">'
+      @renderDataListGroups sb, @getDatasource()
+      sb.a '</div>'
+
     onCreated : (options) ->
       j3.on @el, 'click', this, __el_click
 
@@ -231,11 +236,6 @@ do (j3) ->
 
     onUpdateView : (datasource, eventName, data) ->
       __refreshList.call this
-
-    onRender : (sb, tplData) ->
-      sb.a '<div id="' + tplData.id + '" class="' + tplData.css + '">'
-      @renderDataListGroups sb, @getDatasource()
-      sb.a '</div>'
 
     renderDataListGroups : (sb, datasource) ->
       if not datasource then return
@@ -276,6 +276,8 @@ do (j3) ->
 
     renderDataList : (sb, dataItems) ->
       listCss = 'data-list'
+      if @_itemCheckable
+        listCss += ' data-list-checkable'
       if @_listCss
         listCss += ' ' + @_listCss
 
