@@ -60,7 +60,6 @@ do (j3) ->
     url = req.url
     # make async requests as default
     async = req.async isnt false
-    headers = req.headers
 
     if j3.UA.ie and req.method is 'GET'
       if url.indexOf('?') is -1
@@ -69,9 +68,15 @@ do (j3) ->
         url += '&'
       url += '_j3ts=' + (new Date().getTime()) + (_reqSeed++)
 
+    if req.method is 'POST'
+      # for safari iOS 6
+      if not req.headers then req.headers = {}
+      req.headers['Cache-Control'] = 'no-cache'
+
     xhr.open req.method, url, async, req.username, req.password
 
     # set headers
+    headers = req.headers
     xhr.setRequestHeader 'Content-Type', _contentTypes[req.dataType] || _contentTypes.form
     if headers
       for name of headers
