@@ -106,6 +106,8 @@ do (j3) ->
         sb.a ' active'
       if options.isFirst
         sb.a ' first'
+      if j3.getVal model, 'isHighlight'
+        sb.a ' highlight'
       sb.a '">'
 
       sb.a '<a'
