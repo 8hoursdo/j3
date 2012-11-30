@@ -123,6 +123,15 @@ do (j3) ->
     isUpdatingSubcomponent : ->
       @_updatingSubcomponent
 
+    getPlaceholder : ->
+      @_placeholder
+
+    setPlaceholder : (value) ->
+      @_placeholder = value || ''
+
+      if j3.Dom.hasCls @el, @baseCss + '-empty'
+        @_elLbls.innerHTML = j3.htmlEncode @_placeholder
+
     onSetWidth : (width) ->
       Dom = j3.Dom
       Dom.offsetWidth @el, width
