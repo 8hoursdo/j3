@@ -54,7 +54,7 @@ do (j3) ->
     commitQuery : ->
       # 即使queryString为空，任然保留井号，
       # 因为从有井号切换到没有井号时，浏览器会刷新。
-      location.href = location.origin + location.pathname + '#' + @queryString()
+      location.href = location.protocol + '//' + location.host + location.pathname + '#' + @queryString()
 
     queryString : ->
       if not @_query then @_query = new j3.UrlQuery
