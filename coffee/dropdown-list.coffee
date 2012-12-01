@@ -207,6 +207,7 @@ do (j3) ->
           fixedItemDataSelector = @_fixedItemDataSelector
           @_fixedItemsDatasource.tryUntil (item) ->
             itemData = fixedItemDataSelector item
+            if itemData.cmd or itemData.divider then return
             if itemData.value is selectedValue
               selectedItem = itemData
               return true
@@ -216,6 +217,7 @@ do (j3) ->
           itemDataSelector = @_itemDataSelector
           @_itemsDatasource.tryUntil (item) ->
             itemData = itemDataSelector item
+            if itemData.cmd or itemData.divider then return
             if itemData.value is selectedValue
               selectedItem = itemData
               return true
