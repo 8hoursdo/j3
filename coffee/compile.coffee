@@ -12,14 +12,18 @@ do (j3) ->
       return (source) ->
         result = {}
         for name in selector
-          result[name] = j3.getVal source, name
+          val = j3.getVal source, name
+          if not j3.isUndefined val
+            result[name] = val
         result
 
     if j3.isObject selector
       return (source) ->
         result = {}
         for name, value of selector
-          result[name] = j3.getVal source, value
+          val = j3.getVal source, value
+          if not j3.isUndefined val
+            result[name] = val
         result
 
   j3.compileEquals = (equals) ->
