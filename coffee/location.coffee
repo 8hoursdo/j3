@@ -13,7 +13,7 @@ do (j3) ->
   j3.Location =
     start : ->
       __check()
-      setInterval __check, 250
+      #setInterval __check, 250
 
     goto : (url) ->
       location.href = url

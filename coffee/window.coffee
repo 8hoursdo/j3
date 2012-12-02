@@ -32,6 +32,10 @@ do (j3) ->
       # you can get it by calling 'getContextData()' after the window closed to continue your work.
       @_contextData = options.contextData
 
+      if j3.isUndefined options.autoFocusChild
+        options.autoFocusChild = true
+      @_autoFocusChild = !!options.autoFocusChild
+
     getTemplateData : ->
       id : @id
       css : @getCss()
@@ -113,7 +117,9 @@ do (j3) ->
 
       j3.Dom.center @el
 
-      j3.View.focusChild.call this
+      if @_autoFocusChild
+        j3.View.focusChild.call this
+
       @onActive && @onActive()
       @fire 'active', this
 

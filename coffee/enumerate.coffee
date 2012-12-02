@@ -4,6 +4,8 @@ do (j3) ->
       callback eachItem
 
   j3.indexOf = (list, item, equals) ->
+    if not list then return -1
+
     index = -1
     equals ?= j3.equals
 
@@ -13,6 +15,9 @@ do (j3) ->
         true
 
     index
+
+  j3.in = (list, item, equals) ->
+    -1 isnt j3.indexOf list, item, equals
 
   j3.count = (list) ->
     if j3.isArray list
@@ -138,11 +143,19 @@ do (j3) ->
     rootItems
 
   j3.pickFieldVal = (list, options) ->
+    if j3.isString options
+      options =
+        ensureUnique : false
+        ignoreEmpty : false
+        fieldName : options
+
     res = []
 
     # 如果列表中的字段是唯一的，则不要作判断，这样可以提升性能。
-    if options.distinctField
+    if not options.ensureUnique
       j3.forEach list, (item) ->
+        if options.ignoreEmpty and j3.isNullOrUndefined item then return
+
         res.push j3.getVal item, options.fieldName
       return res
 
@@ -153,10 +166,14 @@ do (j3) ->
       value = j3.getVal item, options.fieldName
       if j3.isArray value
         for eachVal in value
+          if options.ignoreEmpty and j3.isNullOrUndefined eachVal then return
+          
           if not map[eachVal]
             map[eachVal] = true
             res.push eachVal
       else
+        if options.ignoreEmpty and j3.isNullOrUndefined value then return
+
         if not map[value]
           map[value] = true
           res.push value

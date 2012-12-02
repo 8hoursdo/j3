@@ -1,5 +1,7 @@
 do (j3) ->
   j3.compileSelector = (selector) ->
+    if not selector then return (source) -> source
+      
     if j3.isFunction selector then return selector
 
     if j3.isString selector
@@ -10,14 +12,18 @@ do (j3) ->
       return (source) ->
         result = {}
         for name in selector
-          result[name] = j3.getVal source, name
+          val = j3.getVal source, name
+          if not j3.isUndefined val
+            result[name] = val
         result
 
     if j3.isObject selector
       return (source) ->
         result = {}
         for name, value of selector
-          result[name] = j3.getVal source, value
+          val = j3.getVal source, value
+          if not j3.isUndefined val
+            result[name] = val
         result
 
   j3.compileEquals = (equals) ->
@@ -25,13 +31,31 @@ do (j3) ->
 
     if j3.isString equals
       return (obj1, obj2) ->
-        j3.equals j3.getVal(obj1, equals), j3.getVal(obj2, equals)
+        if obj1 is null
+          if obj2 is null
+            return true
+          else
+            return false
+        else
+          if obj2 is null
+            return false
+          else
+            j3.equals j3.getVal(obj1, equals), j3.getVal(obj2, equals)
 
     if j3.isArray equals
       return (obj1, obj2) ->
-        for name in equals
-          if not j3.equals j3.getVal(obj1, name), j3.getVal(obj2, name) then return false
-        true
+        if obj1 is null
+          if obj2 is null
+            return true
+          else
+            return false
+        else
+          if obj2 is null
+            return false
+          else
+            for name in equals
+              if not j3.equals j3.getVal(obj1, name), j3.getVal(obj2, name) then return false
+            true
 
   j3.compileSortBy = (sortBy) ->
     if j3.isFunction sortBy then return sortBy

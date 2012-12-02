@@ -11,8 +11,18 @@ do(j3) ->
       @_hidePrevNextButtons = options.hidePrevNextButtons
       @_hidePageButtons = options.hidePageButtons
 
+      # 指示是否在只有一页时自动隐藏分页条
+      @_autoHide = options.autoHide
+
     render : (sb) ->
-      sb.a '<div id="' + @id + '" class="' + @getCss() + '">'
+      sb.a '<div id="' + @id + '" class="' + @getCss() + '"'
+
+      if @_autoHide
+        pageCount = @getPageCount()
+        if pageCount is 1
+          sb.a ' style="display:none"'
+
+      sb.a '>'
       __renderPagination.call this, sb
       sb.a '</div>'
 
@@ -23,6 +33,13 @@ do(j3) ->
       sb = new j3.StringBuilder
       __renderPagination.call this, sb
       @el.innerHTML = sb.toString()
+
+      if @_autoHide
+        pageCount = @getPageCount()
+        if pageCount is 1
+          this.hide()
+        else
+          this.show()
 
     getPageNum : ->
       @_pageNum

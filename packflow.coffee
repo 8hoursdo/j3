@@ -12,6 +12,7 @@ _filesCore = [
   'compile'
   'enumerate'
   'pool'
+  'unique'
   'event-manager'
   'datasource'
   'data-view'

@@ -14,6 +14,8 @@ j3.Dropdown = j3.cls j3.Selector,
     @_isDropdown
 
   dropdown : ->
+    if @getDisabled() then return
+
     Dom = j3.Dom
 
     firstTime = !@_elDropdownBox
