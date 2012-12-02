@@ -1,7 +1,7 @@
 {
   "name": "j3",
   "description": "An Useful Javascript Library for Building Website.",
-  "version": "0.3.6",
+  "version": "0.3.7",
   "author": "Fossil Jue <imzshh@gmail.com>",
   "repository": {"type": "git", "url": "git://github.com/imzshh/j3.git"},
   "dependencies": {
