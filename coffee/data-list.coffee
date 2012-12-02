@@ -135,6 +135,17 @@ do (j3) ->
 
       elListItem = Dom.next elListItem
 
+  __refreshActiveAndSelectedItemEl = ->
+    if @_activeItemIndex is -1
+      @_activeItemEl = null
+    else
+      @_activeItemEl = j3.Dom.byIndex @el, @_activeItemIndex
+
+    if @_selectedItemIndex is -1
+      @_selectedItemEl = null
+    else
+      @_selectedItemEl = j3.Dom.byIndex @el, @_selectedItemIndex
+
   j3.DataList = j3.cls j3.View,
     baseCss : 'data-list'
 
@@ -182,16 +193,7 @@ do (j3) ->
       j3.on @el, 'click', this, __el_click
 
       @setDatasource options.datasource
-
-      if @_activeItemIndex is -1
-        @_activeItemEl = null
-      else
-        @_activeItemEl = j3.Dom.byIndex @el, @_activeItemIndex
-
-      if @_selectedItemIndex is -1
-        @_selectedItemEl = null
-      else
-        @_selectedItemEl = j3.Dom.byIndex @el, @_selectedItemIndex
+      __refreshActiveAndSelectedItemEl.call this
 
     onUpdateView : (datasource, eventName, data) ->
       if not @el then return
@@ -199,6 +201,7 @@ do (j3) ->
       buffer = new j3.StringBuilder
       @renderDataListItems buffer, @getDatasource()
       @el.innerHTML = buffer.toString()
+      __refreshActiveAndSelectedItemEl.call this
 
     renderDataListItems : (buffer, datasource) ->
       # 在每次刷新列表的时候重置当前项索引
@@ -317,5 +320,8 @@ do (j3) ->
 
       itemData = @_itemDataSelector model
       j3.indexOf(@_selectedItems, itemData, @_itemDataEquals) >= 0
+
+    getActiveItemEl : ->
+      @_activeItemEl
 
   j3.ext j3.DataList.prototype, j3.DataView
