@@ -165,3 +165,6 @@ do (j3) ->
 
     center : ->
       j3.Dom.center @el
+
+    getVisible : ->
+      @_visible
