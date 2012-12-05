@@ -116,9 +116,7 @@ j3.View = do (j3) ->
 
       # generate dom of view
       if not @parent or _creatingStack == 0
-        if @el
-          j3.Dom.append @ctnr, @el
-        else
+        if not @el
           buffer = new j3.StringBuilder
           @render buffer
           j3.Dom.append @ctnr, buffer.toString()
