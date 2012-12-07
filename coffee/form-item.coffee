@@ -12,10 +12,6 @@ do (j3) ->
   j3.FormItem = FormItem = j3.cls j3.ContainerView,
     baseCss : 'form-item'
 
-    templateBegin : j3.template '<div id="<%=id%>" class="<%=css%>"><label class="form-label" for="<%=controlId%>"><%=label%></label><div class="form-controls">'
-
-    templateEnd : j3.template '<%if(helpText){%><div class="form-help"><%=helpText%></div><%}%></div></div>'
-
     onInit : (options) ->
       @_label = options.label
       @_inline = options.inline
@@ -43,6 +39,29 @@ do (j3) ->
       controlId : @_controlId
       helpText : @_helpText
 
+    renderBegin : (sb, templateData) ->
+      sb.a '<div id="' + templateData.id + '" class="' + templateData.css + '">'
+      sb.a '<label class="form-label" for="' + @_controlId + '">'
+      @renderLabelContent sb
+      sb.a '</label>'
+
+      sb.a '<div class="form-controls">'
+      return
+        
+    renderEnd : (sb, templateData) ->
+      if @_helpText
+        sb.a '<div class="form-help">'
+        sb.e @_helpText
+        sb.a '</div>'
+
+      sb.a '</div>' # end of form-controls
+      sb.a '</div>' # end of form-item
+      return
+
+    renderLabelContent : (sb) ->
+      sb.e @_label
+      return
+
     onCreated : ->
       @elBody = j3.Dom.byIndex @el, 1
 
@@ -54,15 +73,20 @@ do (j3) ->
 
     setDisabled : ->
 
+    getControlId : ->
+      @_controlId
+
   j3.TextboxFormItem = j3.cls j3.FormItem,
     createChildren : (options) ->
       @_textbox = @createFormControl options,
         cls : j3.Textbox
+        id : @getControlId()
         text : options.value
         multiline : options.multiline
         type : options.type
         placeholder : options.placeholder
         disabled : options.disabled
+        autoHeight : options.controlAutoHeight
 
     textbox : ->
       @_textbox
@@ -80,6 +104,7 @@ do (j3) ->
     createChildren : (options) ->
       @_checkbox = @createFormControl options,
         cls : j3.Checkbox
+        id : @getControlId()
         text : options.text
         value : options.value
         bindingMode : options.bindingMode
@@ -98,6 +123,7 @@ do (j3) ->
     createChildren : (options) ->
       @_checkboxList = @createFormControl options,
         cls : j3.CheckboxList
+        id : @getControlId()
         items : options.items
         itemsDatasource : options.itemsDatasource
         itemInline : options.listItemInline
@@ -118,6 +144,7 @@ do (j3) ->
     createChildren : (options) ->
       @_dropdownList = @createFormControl options,
         cls : j3.DropdownList
+        id : @getControlId()
         items : options.items
         itemsDatasource : options.itemsDatasource
         fixedItemsDatasource : options.fixedItemsDatasource
@@ -141,6 +168,7 @@ do (j3) ->
     createChildren : (options) ->
       @_dropdownTree = @createFormControl options,
         cls : j3.DropdownTree
+        id : @getControlId()
         placeholder : options.placeholder
         treeOptions : options.treeOptions
         textName : options.textName
@@ -163,6 +191,7 @@ do (j3) ->
     createChildren : (options) ->
       @_dateSelector = @createFormControl options,
         cls : j3.DateSelector
+        id : @getControlId()
         date : options.value
         placeholder : options.placeholder
         icon : options.controlIcon
@@ -181,6 +210,7 @@ do (j3) ->
     createChildren : (options) ->
       @_beginDateSelector = @createFormControl options,
         cls : j3.DateSelector
+        id : @getControlId()
         date : options.beginValue
         placeholder : options.beginPlaceholder
         name : options.beginName
@@ -210,6 +240,7 @@ do (j3) ->
     createChildren : (options) ->
       @_switch = @createFormControl options,
         cls : j3.Switch
+        id : @getControlId()
         checked : options.value
 
     switch : ->
