@@ -1,0 +1,57 @@
+.bookmark {
+  @bookmarkHeight : 22px;
+
+  .bookmark-icon,
+  .bookmark-label {
+    display: inline-block;
+    height: @baseLineHeight;
+    line-height: @baseLineHeight;
+    .border-radius(2px 2px 2px 0);
+    background-color: @activeColor;
+    vertical-align: top;
+  }
+
+  .bookmark-icon {
+    text-align: center;
+    margin-right: 1px;
+    padding: ((@bookmarkHeight - @baseLineHeight) / 2) 5px;
+  }
+
+  .bookmark-label {
+    color: #fff;
+    padding: ((@bookmarkHeight - @baseLineHeight) / 2) 15px;
+  }
+
+  .bookmark-shadow {
+    display : block;
+    border-top: 8px solid #666;
+    border-left: 8px solid transparent;
+    width: 0px;
+    height: 0px;
+    overflow: hidden;
+  }
+}
+
+.bookmark-with-icon {
+  .bookmark-label {
+    padding-left: 10px;
+    padding-right: 10px;
+    .border-radius(2px);
+  }
+}
+
+.bookmark-gray .bookmark-label,
+.bookmark-with-icon-gray .bookmark-icon {
+  background-color: @grayLight;
+}
+
+.bookmark-warning .bookmark-label,
+.bookmark-with-icon-warning .bookmark-icon {
+  background-color: @primaryColor;
+}
+
+.bookmark-danger .bookmark-label,
+.bookmark-with-icon-danger .bookmark-icon {
+  background-color: @dangerColor;
+}
+

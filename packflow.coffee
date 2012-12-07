@@ -45,6 +45,7 @@ _filesClient = [
   'checkbox-list'
   'textbox'
   'progress-bar'
+  'bookmark'
   'calendar'
   'selector'
   'selector-group'
