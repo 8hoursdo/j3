@@ -128,7 +128,7 @@ do (j3) ->
       return
 
     getText : ->
-      @_text
+      @_text || ''
 
     setText : (text) ->
       text = text || ''
