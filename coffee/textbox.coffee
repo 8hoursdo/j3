@@ -29,6 +29,9 @@ do (j3) ->
     if j3.UA.ie
       __refreshPlaceholder.call this
 
+    if @_multiline and @_autoHeight
+      __adjustHeight.call this
+
     @updateData()
     @fire 'change', this
 
@@ -56,6 +59,19 @@ do (j3) ->
 
       @_elPlaceholder.innerHTML = j3.htmlEncode @_placeholder
 
+  __adjustHeight = ->
+    elInput = @_elInput
+    if elInput.scrollHeight > elInput.offsetHeight - 2
+      if not @_originalHeight
+        @_originalHeight = j3.Dom.height elInput
+      j3.Dom.height elInput, elInput.scrollHeight + 2
+    else if @_originalHeight
+      height = j3.Dom.height elInput
+      if height > @_originalHeight
+        j3.Dom.height elInput, height - 20
+        __adjustHeight.call this
+      
+
   j3.Textbox = j3.cls j3.View,
     baseCss : 'input'
 
@@ -71,6 +87,7 @@ do (j3) ->
       @_multiline = @_type == 'text' && !!options.multiline
       if @_multiline
         @_row = options.row || 3
+      @_autoHeight = !!options.autoHeight
       @_placeholder = options.placeholder || ''
 
     getTemplateData : ->
@@ -129,6 +146,10 @@ do (j3) ->
 
       if j3.UA.ie
         __refreshPlaceholder.call this
+
+      if @_multiline and @_autoHeight
+        __adjustHeight.call this
+
       @_updatingView = false
 
       @updateData()
