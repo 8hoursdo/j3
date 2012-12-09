@@ -269,5 +269,6 @@ do (j3) ->
       __group.call this
 
       @updateViews 'refresh'
+      @fire 'refresh', this
 
   j3.ext j3.CollectionView.prototype, j3.DataView, j3.Datasource, j3.EventManager
