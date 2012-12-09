@@ -75,8 +75,8 @@ do (j3) ->
   j3.Textbox = j3.cls j3.View,
     baseCss : 'input'
 
-    templateInput : j3.template '<div id="<%=id%>" class="input-ctnr"><input type="<%=type%>" class="<%=css%>" name="<%=name%>"<%if(disabled){%> disabled="disabled"<%}%><%if(readOnly){%> readonly="readonly"<%}%><%if(placeholder){%> placeholder="<%-placeholder%>"<%}%> value="<%-text%>" /></div>'
-    templateTextarea : j3.template '<div id="<%=id%>" class="input-ctnr"><textarea class="<%=css%>" name="<%=name%>"<%if(disabled){%> disabled="disabled"<%}%><%if(readOnly){%> readonly="readonly"<%}%><%if(placeholder){%> placeholder="<%-placeholder%>"<%}%> row="<%=row%>"><%-text%></textarea></div>'
+    templateInput : j3.template '<div id="<%=id%>" class="input-ctnr <%=css%>"><input type="<%=type%>" class="<%=inputCss%>" name="<%=name%>"<%if(disabled){%> disabled="disabled"<%}%><%if(readOnly){%> readonly="readonly"<%}%><%if(placeholder){%> placeholder="<%-placeholder%>"<%}%> value="<%-text%>" /></div>'
+    templateTextarea : j3.template '<div id="<%=id%>" class="input-ctnr"><textarea class="<%=inputCss%>" name="<%=name%>"<%if(disabled){%> disabled="disabled"<%}%><%if(readOnly){%> readonly="readonly"<%}%><%if(placeholder){%> placeholder="<%-placeholder%>"<%}%> row="<%=row%>"><%-text%></textarea></div>'
 
     onInit : (options) ->
       @_text = options.text || ''
@@ -92,7 +92,8 @@ do (j3) ->
 
     getTemplateData : ->
       id : @id
-      css : @getCss() +
+      css : @css
+      inputCss : 'input' +
         (if @_disabled then ' disabled' else '') +
         (if @_multiline then ' input-multiline' else '') +
         (if !@_text then ' ' + @baseCss + '-empty')
