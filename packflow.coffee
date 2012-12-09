@@ -60,6 +60,7 @@ _filesClient = [
   'form-item'
   'form-item-group'
   'form-actions'
+  'menu-item'
   'menu'
   'navbar'
   'link-list'
