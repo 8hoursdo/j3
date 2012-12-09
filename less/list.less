@@ -48,14 +48,34 @@
         text-decoration: none;
       }
     }
+
+    a.list-item-disabled {
+      color: @inactiveTextColor;
+      cursor: default;
+
+      &:hover {
+        background-color: transparent;
+      }
+    }
   }
 
   .list-item a:hover {
     background-color: @hoverBgColor;
   }
 
-  .list-item-checked a {
-    background-color: @activeBgColor;
+  .list-item-checked {
+    a {
+      background-color: @activeBgColor;
+    }
+
+    a.list-item-disabled {
+      color: @inactiveTextColor;
+      cursor: default;
+
+      &:hover {
+        background-color: @activeBgColor;
+      }
+    }
   }
 
   .drp-list-divider {
