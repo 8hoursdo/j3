@@ -325,3 +325,62 @@ do (j3) ->
       @_activeItemEl
 
   j3.ext j3.DataList.prototype, j3.DataView
+
+  j3.DataList.render = (sb, options) ->
+    css = 'data-list'
+    if options.checkable
+      css += ' data-list-checkable'
+    if options.css
+      css += ' ' + options.css
+
+    sb.a '<div'
+    if options.id
+      sb.a ' id="'
+      sb.e options.id
+      sb.a '"'
+    sb.a ' class="'
+    sb.e css
+    sb.a '">'
+
+    j3.DataList.renderDataListItems sb, options
+
+    sb.a '</div>'
+
+  j3.DataList.renderDataListItems = (sb, options) ->
+    items = options.items
+    if not items then return
+
+    count = j3.count items
+    checkable = options.checkable
+    j3.forEach items, this, (item, args, index) ->
+      dataListItem =
+        index : index
+        count : count
+        data : item
+        checkable : checkable
+
+      j3.DataList.renderDataListItem sb, dataListItem, options
+
+  j3.DataList.renderDataListItem = (sb, dataListItem, options) ->
+    itemCss = 'list-item'
+    if dataListItem.index is 0
+      itemCss += ' list-item-first'
+    if dataListItem.index is (dataListItem.count - 1)
+      itemCss += ' list-item-last'
+
+    if dataListItem.index % 2
+      itemCss += ' list-item-even'
+
+    if dataListItem.active
+      itemCss += ' list-item-active'
+
+    if dataListItem.checked
+      itemCss += ' list-item-checked'
+
+    if dataListItem.count is 1
+      itemCss += ' list-item-single'
+
+    sb.a '<div class="' + itemCss + '">'
+    options.itemRenderer.call options.context, sb, dataListItem
+    sb.a '</div>'
+
