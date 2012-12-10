@@ -10,7 +10,7 @@
   }
 
   .prg-bar-bg {
-    border: 1px solid @boxBorderColor;
+    border: 1px solid @splitLineColor;
     color: @activeColor;
     height: @progressbarHeight - 2px;
     line-height: @progressbarHeight - 2px;
@@ -25,7 +25,7 @@
   }
 
   .prg-bar-done {
-    background: @activeColor;
+    background-color: @activeColor;
     height: @progressbarHeight;
   }
 
@@ -39,4 +39,34 @@
 .prg-bar-inline {
   display: inline-block;
   width: 200px;
+}
+
+.prg-bar-gray {
+  .prg-bar-bg {
+    color: @grayLight;
+  }
+
+  .prg-bar-done{
+    background-color: @grayLight;
+  }
+}
+
+.prg-bar-warning {
+  .prg-bar-bg {
+    color: @warningColor;
+  }
+
+  .prg-bar-done{
+    background-color: @warningColor;
+  }
+}
+
+.prg-bar-danger {
+  .prg-bar-bg {
+    color: @dangerColor;
+  }
+
+  .prg-bar-done{
+    background-color: @dangerColor;
+  }
 }
