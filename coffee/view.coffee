@@ -21,7 +21,8 @@ j3.View = do (j3) ->
 
   __viewCreated = ->
     # get the dom element of view
-    @el = j3.$ @id
+    if not @el
+      @el = j3.$ @id
 
     if @children
       node = @children.firstNode()
@@ -61,6 +62,8 @@ j3.View = do (j3) ->
 
       if options.id
         _views[options.id] = @
+
+      @el = options.el
         
       # generate an client id automatic if it's not specified
       @id = options.id or ('v_' + (++_idSeed))
@@ -113,9 +116,10 @@ j3.View = do (j3) ->
 
       # generate dom of view
       if not @parent or _creatingStack == 0
-        buffer = new j3.StringBuilder
-        @render buffer
-        j3.Dom.append @ctnr, buffer.toString()
+        if not @el
+          buffer = new j3.StringBuilder
+          @render buffer
+          j3.Dom.append @ctnr, buffer.toString()
 
         __viewCreated.call this
 

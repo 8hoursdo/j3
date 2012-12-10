@@ -1,8 +1,8 @@
 do (j3) ->
   __dataList_beforeItemClick = (sender, args) ->
     selectedItem = args.data
-    if selectedItem.divider
-      # 点击分割线
+    if selectedItem.divider or selectedItem.disabled
+      # 点击分割线 或 被禁用的项
       args.stop = true
       return
     else if selectedItem.cmd
@@ -40,7 +40,7 @@ do (j3) ->
     @close()
 
   # 默认的列表项数据选择器
-  _defaultItemDataSelector = j3.compileSelector ['text', 'value', 'cmd', 'divider']
+  _defaultItemDataSelector = j3.compileSelector ['text', 'value', 'disabled', 'cmd', 'divider']
 
   # 将数据项数组转换为数据集合
   __convertItemsToCollection = (items, datasource) ->
@@ -231,12 +231,16 @@ do (j3) ->
     css : 'drp-list'
 
     onRenderDataListItem : (sb, dataListItem) ->
-      itemData = dataListItem.data
+      itemData = @_itemDataSelector dataListItem.data
 
       if j3.getVal(itemData, 'divider')
         sb.a '<div class="drp-list-divider"></div>'
       else
         textDisplay = j3.getVal(itemData, 'text') or j3.getVal(itemData, 'name') or j3.getVal(itemData, 'value')
-        sb.a '<a>'
+        sb.a '<a'
+        if j3.getVal(itemData, 'disabled')
+          sb.a ' class="list-item-disabled"'
+
+        sb.a '>'
         sb.a textDisplay
         sb.a '</a>'

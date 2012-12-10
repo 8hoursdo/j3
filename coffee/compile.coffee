@@ -21,7 +21,10 @@ do (j3) ->
       return (source) ->
         result = {}
         for name, value of selector
-          val = j3.getVal source, value
+          if j3.isString value
+            val = j3.getVal source, value
+          else
+            val = value source
           if not j3.isUndefined val
             result[name] = val
         result

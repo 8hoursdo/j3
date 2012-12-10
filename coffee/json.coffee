@@ -68,7 +68,7 @@ do (j3) ->
         else
           __objectToJson obj, buffer
       when 'undefined'
-        buffer.append 'undefined'
+        buffer.append 'null'
       else
         __stringToJson obj.toString(), buffer
     return

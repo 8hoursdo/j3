@@ -95,13 +95,12 @@ do (j3) ->
     toUTCString : ->
       DateTime.format @_value, _FORMAT_UTC, yes
 
-    toJson : (buffer) ->
-      if j3.isUndefined buffer
-        buffer = new j3.StringBuilder
-      buffer.append '"'
-      buffer.append @toUTCString()
-      buffer.append '"'
-      
+    toJson : (sb) ->
+      if j3.isUndefined sb
+        sb = new j3.StringBuilder
+      sb.a '"'
+      sb.a @toUTCString()
+      sb.a '"'
 
     getValue : ->
       new Date @_value.getTime()
@@ -243,7 +242,30 @@ do (j3) ->
 
   j3.DateTime = DateTime
 
-  TimeSpan =
+  TimeSpan = (dateTime1, dateTime2) ->
+    if arguments.length is 1
+      span = dateTime1
+    else
+      span = dateTime1.getTime() - dateTime2.getTime()
+
+    if span < 0 then span = span * -1
+    @_span = span || 0
+    return
+
+  j3.ext TimeSpan.prototype,
+    totalSeconds : ->
+      Math.floor @_span / _SECOND
+
+    totalMinutes : ->
+      Math.floor @_span / _MINUTE
+
+    totalHours : ->
+      Math.floor @_span / _HOUR
+
+    totalDays : ->
+      Math.floor @_span / _DAY
+
+  j3.ext TimeSpan,
     format : (span) ->
       if span < _MINUTE
         seconds = Math.floor span / _SECOND

@@ -83,9 +83,12 @@
   .form-label {
     float: none;
     width: auto;
-    display: inline-block;
+    display: block;
     padding-top: 0;
     margin-bottom: @baseSpace;
+    height: @baseLineHeight;
+    overflow: visible;
+    text-align: left;
   }
 
   .form-controls {
@@ -127,6 +130,7 @@
 
 // styles of form actions
 .form-actions {
+  .clearfix();
   padding-top: @formItemSpaceHeight;
   padding-left: @formLabelWidth + 10px;
 }

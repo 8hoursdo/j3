@@ -1,8 +1,8 @@
 do (j3) ->
   __textbox_focus = ->
     @_updatingView = true
-    @el.value = @_text
-    j3.Dom.removeCls @el, @baseCss + '-empty'
+    @_elInput.value = @_text
+    j3.Dom.removeCls @_elInput, @baseCss + '-empty'
     @_updatingView = false
 
     @fire 'focus', this
@@ -10,7 +10,7 @@ do (j3) ->
   __textbox_blur = ->
     @_updatingView = true
     if not @_text
-      j3.Dom.addCls @el, @baseCss + '-empty'
+      j3.Dom.addCls @_elInput, @baseCss + '-empty'
     @_updatingView = false
 
     @fire 'blur', this
@@ -21,18 +21,62 @@ do (j3) ->
 
   __textbox_change = ->
     if @_updatingView then return
-    text = @el.value
+    text = @_elInput.value
     if @_text == text then return
     @_text = text
-    j3.Dom.removeCls @el, @baseCss + '-empty'
+    j3.Dom.removeCls @_elInput, @baseCss + '-empty'
+
+    if j3.UA.ie
+      __refreshPlaceholder.call this
+
+    if @_multiline and @_autoHeight
+      __adjustHeight.call this
+
     @updateData()
     @fire 'change', this
+
+  __refreshPlaceholder = ->
+    @_elInput.placeholder = ''
+
+    if @_text and @_placeholder and @_elPlaceholder
+      j3.Dom.hide @_elPlaceholder
+      return
+  
+    # placeholder为空，隐藏placeholder元素
+    if not @_placeholder
+      if @_elPlaceholder
+        j3.Dom.hide @_elPlaceholder
+
+    else
+      if not @_elPlaceholder
+        @_elPlaceholder = document.createElement 'span'
+        @_elPlaceholder.className = 'input-placeholder'
+        @el.appendChild @_elPlaceholder
+        j3.on @_elPlaceholder, 'click', this, (evt) ->
+          @_elInput.focus()
+      else
+        j3.Dom.show @_elPlaceholder
+
+      @_elPlaceholder.innerHTML = j3.htmlEncode @_placeholder
+
+  __adjustHeight = ->
+    elInput = @_elInput
+    if elInput.scrollHeight > elInput.offsetHeight - 2
+      if not @_originalHeight
+        @_originalHeight = j3.Dom.height elInput
+      j3.Dom.height elInput, elInput.scrollHeight + 2
+    else if @_originalHeight
+      height = j3.Dom.height elInput
+      if height > @_originalHeight
+        j3.Dom.height elInput, height - 20
+        __adjustHeight.call this
+      
 
   j3.Textbox = j3.cls j3.View,
     baseCss : 'input'
 
-    templateInput : j3.template '<input type="<%=type%>" id="<%=id%>" class="<%=css%>" name="<%=name%>"<%if(disabled){%> disabled="disabled"<%}%><%if(readOnly){%> readonly="readonly"<%}%><%if(placeholder){%> placeholder="<%-placeholder%>"<%}%> value="<%-text%>" />'
-    templateTextarea : j3.template '<textarea id="<%=id%>" class="<%=css%>" name="<%=name%>"<%if(disabled){%> disabled="disabled"<%}%><%if(readOnly){%> readonly="readonly"<%}%> row="<%=row%>"><%-text%></textarea>'
+    templateInput : j3.template '<div id="<%=id%>" class="input-ctnr <%=css%>"><input type="<%=type%>" class="<%=inputCss%>" name="<%=name%>"<%if(disabled){%> disabled="disabled"<%}%><%if(readOnly){%> readonly="readonly"<%}%><%if(placeholder){%> placeholder="<%-placeholder%>"<%}%> value="<%-text%>" /></div>'
+    templateTextarea : j3.template '<div id="<%=id%>" class="input-ctnr"><textarea class="<%=inputCss%>" name="<%=name%>"<%if(disabled){%> disabled="disabled"<%}%><%if(readOnly){%> readonly="readonly"<%}%><%if(placeholder){%> placeholder="<%-placeholder%>"<%}%> row="<%=row%>"><%-text%></textarea></div>'
 
     onInit : (options) ->
       @_text = options.text || ''
@@ -43,11 +87,13 @@ do (j3) ->
       @_multiline = @_type == 'text' && !!options.multiline
       if @_multiline
         @_row = options.row || 3
+      @_autoHeight = !!options.autoHeight
       @_placeholder = options.placeholder || ''
 
     getTemplateData : ->
       id : @id
-      css : @getCss() +
+      css : @css
+      inputCss : 'input' +
         (if @_disabled then ' disabled' else '') +
         (if @_multiline then ' input-multiline' else '') +
         (if !@_text then ' ' + @baseCss + '-empty')
@@ -65,20 +111,25 @@ do (j3) ->
       return
 
     onCreated : (options) ->
-      j3.on @el, 'focus', this, __textbox_focus
+      @_elInput = @el.firstChild
 
-      j3.on @el, 'blur', this, __textbox_blur
+      j3.on @_elInput, 'focus', this, __textbox_focus
 
-      j3.on @el, 'keyup', this, __textbox_keyup
+      j3.on @_elInput, 'blur', this, __textbox_blur
 
-      j3.on @el, 'change', this, __textbox_change
+      j3.on @_elInput, 'keyup', this, __textbox_keyup
+
+      j3.on @_elInput, 'change', this, __textbox_change
 
       @setDatasource options.datasource
+      
+      if j3.UA.ie and @_placeholder
+        __refreshPlaceholder.call this
 
       return
 
     getText : ->
-      @_text
+      @_text || ''
 
     setText : (text) ->
       text = text || ''
@@ -88,11 +139,18 @@ do (j3) ->
 
       @_updatingView = true
       if not @_text
-        @el.value = ''
-        j3.Dom.addCls @el, @baseCss + '-empty'
+        @_elInput.value = ''
+        j3.Dom.addCls @_elInput, @baseCss + '-empty'
       else
-        @el.value = @_text
-        j3.Dom.removeCls @el, @baseCss + '-empty'
+        @_elInput.value = @_text
+        j3.Dom.removeCls @_elInput, @baseCss + '-empty'
+
+      if j3.UA.ie
+        __refreshPlaceholder.call this
+
+      if @_multiline and @_autoHeight
+        __adjustHeight.call this
+
       @_updatingView = false
 
       @updateData()
@@ -104,23 +162,34 @@ do (j3) ->
 
     setDisabled : (value) ->
       @_disabled = !!value
-      @el.disabled = @_disabled
-      j3.Dom.toggleCls @el, 'disabled'
+      @_elInput.disabled = @_disabled
+      j3.Dom.toggleCls @_elInput, 'disabled'
 
     getReadOnly : ->
-      @el.readOnly
+      @_elInput.readOnly
 
     setReadOnly : (value) ->
-      @el.readOnly = !!value
+      @_elInput.readOnly = !!value
 
     focus : ->
       if @getDisabled() then return false
 
-      @el.focus()
+      @_elInput.focus()
+      @_elInput.select -1, -1
       true
 
     blur : ->
-      @el.blur()
+      @_elInput.blur()
+
+    getPlaceholder : ->
+      @_placeholder
+
+    setPlaceholder : (value) ->
+      @_placeholder = value || ''
+      if j3.UA.ie
+        __refreshPlaceholder.call this
+      else
+        @_elInput.placeholder = @_placeholder
 
     onUpdateData : ->
       @_datasource.set @name, @_text
@@ -128,6 +197,12 @@ do (j3) ->
     onUpdateView : (datasource, eventName, args) ->
       if args and args.changedData and not args.changedData.hasOwnProperty @name then return
       @setText datasource.get @name
+
+    onSetWidth : (width) ->
+      j3.Dom.offsetWidth @_elInput, width
+
+    onSetHeight : (height) ->
+      j3.Dom.offsetHeight @_elInput, height
 
   j3.ext j3.Textbox.prototype, j3.DataView
 

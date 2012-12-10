@@ -1,3 +1,8 @@
+.input-ctnr {
+  position: relative;
+  display: inline-block;
+}
+
 .input {
   -webkit-appearance: none;
   margin:0;
@@ -26,5 +31,13 @@
 }
 
 .input-empty {
+  color: @placeholderText;
+}
+
+.input-placeholder {
+  position: absolute;
+  top: (28px - 12px) / 2;
+  left: 7px;
+  line-height: 12px;
   color: @placeholderText;
 }
