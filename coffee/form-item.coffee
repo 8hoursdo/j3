@@ -51,7 +51,7 @@ do (j3) ->
     renderEnd : (sb, templateData) ->
       if @_helpText
         sb.a '<div class="form-help">'
-        sb.e @_helpText
+        sb.a @_helpText
         sb.a '</div>'
 
       sb.a '</div>' # end of form-controls
