@@ -4,6 +4,7 @@ do (j3) ->
 
     onInit : (options) ->
       @_text = options.text || ''
+      @_url = options.url
       @_items = options.items || []
 
   MenuItem.render = (sb, options) ->
@@ -12,7 +13,11 @@ do (j3) ->
       css += ' menu-divider'
 
     sb.a '<li class="' + css + '">'
-    sb.a '<a data-cmd="'
+    sb.a '<a'
+    if options.url
+      sb.a ' href="' + options.url + '"'
+
+    sb.a ' data-cmd="'
     sb.a options.name || ''
     sb.a '">'
 
