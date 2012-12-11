@@ -53,10 +53,10 @@ do (j3) ->
         @_data[name] = value
       else
         if options.append
+          changedData = {}
           for name of data
             value = data[name]
             if j3.equals @_data[name], value then continue
-            if not changedData then changedData = {}
             changedData[name] = value
             @_data[name] = value
         else
