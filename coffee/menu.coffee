@@ -8,6 +8,7 @@ do (j3) ->
       @_items = options.items || []
 
     onCreated : (options) ->
+      @_hidden = yes
       j3.on @el, 'click', this, __hMenuClick
         
     popup : (options) ->
@@ -31,7 +32,11 @@ do (j3) ->
       # giv the trigger a chance to decide if a menu item should be hiden or disabled.
       __updateItemsUI.call this
 
-      Dom.show @el
+      @show()
+      if options.width
+        @width options.width
+      else
+        @width(-1)
 
       posX = options.x
       posY = options.y
@@ -39,11 +44,12 @@ do (j3) ->
         posX -= @el.offsetWidth
       Dom.place @el, posX, posY
 
-      j3.regPopup this, 'menu'
+      j3.regPopup this, 'menu', trigger
 
     close : ->
-      j3.Dom.hide @el
+      @hide()
       j3.unregPopup this, 'menu'
+      @fire 'close', this
 
     getContextData : ->
       @_contextData
