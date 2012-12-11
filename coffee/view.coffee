@@ -288,10 +288,21 @@ j3.View = do (j3) ->
       @_fill
 
     show : ->
+      @_hidden = false
       j3.Dom.show @el
 
     hide : ->
+      @_hidden = true
       j3.Dom.hide @el
+
+    getVisible : ->
+      not @_hidden
+
+    setVisible : (value) ->
+      if value
+        @show()
+      else
+        @hide()
 
   j3.ext view.prototype, j3.EventManager
 
