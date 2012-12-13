@@ -9,6 +9,9 @@ do (j3) ->
   j3.Page = j3.cls j3.ContainerView,
     baseCss : 'page'
 
+    getPage : ->
+      this
+
     show : ->
       if _curPage then _curPage.show()
       j3.Page.base().show.apply this, arguments
