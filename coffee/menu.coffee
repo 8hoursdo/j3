@@ -31,6 +31,8 @@ do (j3) ->
 
       # giv the trigger a chance to decide if a menu item should be hiden or disabled.
       __updateItemsUI.call this
+      # hide dividers at first or last of visible menu items, hide duplicate dividers.
+      __hideDividers.call this
 
       @show()
       if options.width
@@ -96,7 +98,9 @@ do (j3) ->
         if cmd and cmd.nodeValue
           evt.stop()
           @close()
-          @fire 'command', this, name : cmd.nodeValue, contextData : @_contextData
+          @fire 'command', this,
+            name : cmd.nodeValue
+            contextData : @_contextData
           return
 
       el = el.parentNode
@@ -104,5 +108,31 @@ do (j3) ->
   __updateItemsUI = ->
     if not @_menuItems then return
     for menuItem in @_menuItems
-      @fire 'updateItemUI', this, item : menuItem
+      @fire 'updateItemUI', this,
+        name : menuItem.name
+        item : menuItem
+        contextData : @_contextData
+
+  __hideDividers = ->
+    for menuItem in @_menuItems
+      if menuItem.getDivider()
+        menuItem.setVisible true
+
+    isFirst = true
+    prevVisibleDividerItem = null
+
+    for menuItem in @_menuItems
+      if menuItem.getDivider()
+        if isFirst or prevVisibleDividerItem
+          menuItem.setVisible false
+        else
+          menuItem.setVisible true
+          prevVisibleDividerItem = menuItem
+      else if menuItem.getVisible()
+        isFirst = false
+        prevVisibleDividerItem = null
+
+    if prevVisibleDividerItem
+      prevVisibleDividerItem.setVisible false
+
 
