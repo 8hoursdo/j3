@@ -61,15 +61,19 @@ do(j3) ->
 
       @_inline = options.inline
 
+      # 进度条颜色
+      @_gray = options.gray
+      @_warning = options.warning
+      @_danger = options.danger
+
     getTemplateData : ->
       id : @id
-      css : @getCss() +
-        (if @_inline then ' prg-bar-inline' else '')
+      css : @css
 
     onRender : (sb, data) ->
       ProgressBar.render sb,
         id : data.id
-        css : data.css
+        css : @getCss()
         min : @_min
         max : @_max
         value : @_value
@@ -77,6 +81,10 @@ do(j3) ->
         processingtext : @_processingtext
         completedText : @_completedText
         indicator : @_indicator
+        inline : @_inline
+        gray : @_gray
+        warning : @_warning
+        danger : @_danger
 
     onCreated : ->
       Dom = j3.Dom
@@ -110,7 +118,6 @@ do(j3) ->
       __getPercentage min : @_min, max : @_max, value : @_value
 
   ProgressBar.render = (sb, options) ->
-    if j3.isUndefined options.css then options.css = 'prg-bar'
     if j3.isUndefined options.indicator then options.indicator = 'percentage'
     if j3.isUndefined options.min then options.min = 0
     if j3.isUndefined options.max then options.max = 100
@@ -119,7 +126,19 @@ do(j3) ->
     options.percentage = __getPercentage options
     text = __getIndicateText options
 
-    sb.a '<div class="' + options.css + '"'
+    css = 'prg-bar'
+    if options.inline
+      css += ' prg-bar-inline'
+    if options.gray
+      css += ' prg-bar-gray'
+    if options.warning
+      css += ' prg-bar-warning'
+    if options.danger
+      css += ' prg-bar-danger'
+    if options.css
+      css += ' ' + options.css
+
+    sb.a '<div class="' + css + '"'
 
     if options.id
       sb.a ' id="' + options.id + '"'

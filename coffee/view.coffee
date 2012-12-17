@@ -78,7 +78,7 @@ j3.View = do (j3) ->
       # send messages to the page if you want notify status changing of the view.
       # @page.fire 'message', this, name : 'msgName', data : 'msgData'
       # handle the 'message' event of the page in the 'onCreated' method if you are instrested at the status changing of other views.
-      @page = options.page || (@parent && @parent.page) || @parent || null
+      @page = options.page || (@parent && @parent.getPage()) || null
 
       # container of this view, it should be a dom element or id of element
       @ctnr = j3.$ options.ctnr
@@ -288,10 +288,28 @@ j3.View = do (j3) ->
       @_fill
 
     show : ->
+      @_hidden = false
       j3.Dom.show @el
 
     hide : ->
+      @_hidden = true
       j3.Dom.hide @el
+
+    getVisible : ->
+      not @_hidden
+
+    setVisible : (value) ->
+      if value
+        @show()
+      else
+        @hide()
+
+    getPage : ->
+      @page or (@parent && @parent.getPage())
+
+    notifyMessage : (name, sender, args) ->
+      page = @getPage()
+      if page then page name, sender, args
 
   j3.ext view.prototype, j3.EventManager
 

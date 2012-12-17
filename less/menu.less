@@ -1,11 +1,12 @@
 .menu {
   position: absolute;
+  z-index: 2400;
   left: 0;
   top: 0;
   float: left;
   border: 1px solid @menuBorderColor;
-  background: @menuBgColor;
-  @shadow: 2px 2px 4px rgba(0,0,0,.2);
+  background-color: @menuBgColor;
+  @shadow: 0px 2px 4px rgba(0,0,0,.2);
   .box-shadow(@shadow);
 }
 
@@ -36,7 +37,7 @@
 
     &:hover {
       color: @menuHoverTextColor;
-      background: @menuHoverBgColor;
+      background-color: @menuHoverBgColor;
     }
   }
 }
@@ -46,4 +47,24 @@
   height: 0;
   line-height: 0;
   margin: (@menuDividerHeight / 2) 0
+}
+
+.menu-dark {
+  background-color: @menuDarkBgColor;
+  border-color: @menuDarkBorderColor;
+  
+  .menu-item {
+    a {
+      color: @menuDarkTextColor;
+
+      &:hover {
+        color: @menuDarkHoverTextColor;
+        background-color: @menuDarkHoverBgColor;
+      }
+    }
+  }
+
+  .menu-divider {
+    border-top-color: @menuDividerColor;
+  }
 }
