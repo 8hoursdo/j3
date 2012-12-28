@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>uploader</title>
+    <link rel="Stylesheet" href="../lib/css/j3.css" />
+</head>
+<body>
+<div id="ctnr" style="margin:100px auto; width:600px;"></div>
+<script type="text/coffeescript">
+j3.ready ->
+  model = new j3.Model
+
+  uploader = new j3.Uploader
+    ctnr : "ctnr"
+    datasource : model
+    name : 'files'
+    autoUpload : yes
+    actionUrl : './upload-handler.htm'
+    selectLocalIndicatorText : 'select file...'
+
+</script>
+<script type="text/javascript" src="./coffee-script.js"></script>
+<script type="text/javascript" src="../lib/js/j3.js"></script>
+</body>
+</html>

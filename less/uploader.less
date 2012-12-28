@@ -1,0 +1,57 @@
+.uploader {
+  border: 1px solid @inputBorderColor;
+  padding: 10px;
+  .border-radius(2px);
+
+  .uploader-icon {
+  }
+
+  .uploader-indicator {
+    clear: both;
+    position: relative;
+    border: 1px dashed @inputBorderColor;
+    padding: 10px;
+    color: @textColor;
+  }
+
+  .uploader-indicator-drop {
+  }
+
+  a.uploader-indicator-select {
+    font-weight: bold;
+    color: @activeColor;
+    text-decoration: none;
+  }
+
+
+  .uploader-file-list {
+    border: none;
+    margin: 0;
+    padding: 0;
+
+    .list-item {
+      clear: both;
+      border: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .list-item-title {
+      float: left;
+      font-size: 12px;
+      margin: 0;
+      padding: 3px 0;
+      line-height: @baseLineHeight;
+      font-weight: normal;
+      word-wrap:break-word;
+      overflow:hidden;
+    }
+  }
+
+  .uploader-file-input {
+    left: 0;
+    top: 0;
+    cursor: pointer;
+    -webkit-appearance: button;
+  }
+}
