@@ -58,6 +58,9 @@ do (j3) ->
   __doRequest = (req) ->
     xhr = __getXHR()
     url = req.url
+    # IE can not pass empty string to xhr.open()
+    if not url then url = location.href
+
     # make async requests as default
     async = req.async isnt false
 
