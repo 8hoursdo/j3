@@ -188,5 +188,15 @@ do (j3) ->
       map[key] = item
 
     map
-        
-        
+
+  j3.without = (list, values) ->
+    result = []
+
+    j3.forEach list, (item) ->
+      if j3.isFunction values
+        if not values item then result.push item
+      else
+        if not j3.tryUntil values, ((value) -> j3.equals item, value)
+          result.push item
+
+    result
