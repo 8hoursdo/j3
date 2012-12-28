@@ -76,7 +76,7 @@ do (j3) ->
     baseCss : 'input'
 
     templateInput : j3.template '<div id="<%=id%>" class="input-ctnr <%=css%>"><input type="<%=type%>" class="<%=inputCss%>" name="<%=name%>"<%if(disabled){%> disabled="disabled"<%}%><%if(readOnly){%> readonly="readonly"<%}%><%if(placeholder){%> placeholder="<%-placeholder%>"<%}%> value="<%-text%>" /></div>'
-    templateTextarea : j3.template '<div id="<%=id%>" class="input-ctnr"><textarea class="<%=inputCss%>" name="<%=name%>"<%if(disabled){%> disabled="disabled"<%}%><%if(readOnly){%> readonly="readonly"<%}%><%if(placeholder){%> placeholder="<%-placeholder%>"<%}%> row="<%=row%>"><%-text%></textarea></div>'
+    templateTextarea : j3.template '<div id="<%=id%>" class="input-ctnr <%=css%>"><textarea class="<%=inputCss%>" name="<%=name%>"<%if(disabled){%> disabled="disabled"<%}%><%if(readOnly){%> readonly="readonly"<%}%><%if(placeholder){%> placeholder="<%-placeholder%>"<%}%> row="<%=row%>"><%-text%></textarea></div>'
 
     onInit : (options) ->
       @_text = options.text || ''
