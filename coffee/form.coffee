@@ -3,7 +3,7 @@ do (j3) ->
     try
       @action 'ok'
     catch ex
-      console.log ex
+      window['console'] && window['console'].log ex
 
     if @_target is 'ajax'
       evt.stop()
