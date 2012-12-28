@@ -61,6 +61,25 @@ j3.ext j3,
       return s.substr(0, i) + "..."
     return s.substr(0, i)
 
+  startsWith : (s, token) ->
+    if not s or not token then return false
+
+    if s.indexOf(token) is 0
+      return true
+
+    return false
+
+  endsWith : (s, token) ->
+    if not s or not token then return false
+
+    pos = s.length - token.length
+    if pos < 0 then return false
+
+    if s.substr(pos) is token
+      return true
+
+    return false
+
 if String.prototype.trim
   j3.trim = (s) ->
     if @isNullOrEmpty s then return ''
