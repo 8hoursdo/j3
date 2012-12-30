@@ -80,6 +80,34 @@ j3.ext j3,
 
     return false
 
+  padLeft : (s, totalWidth, paddingChar) ->
+    if not s then s = ''
+
+    delta = totalWidth-s.length
+    if delta < 0 then return s
+
+    if not paddingChar then paddingChar = '0'
+    if paddingChar.length > 1 then paddingChar = paddingChar.substr 0, 1
+    padding = ''
+    for i in [0...delta]
+      padding += paddingChar
+
+    return padding + s
+
+  padRight : (s, totalWidth, paddingChar) ->
+    if not s then s = ''
+
+    delta = totalWidth-s.length
+    if delta < 0 then return s
+
+    if not paddingChar then paddingChar = '0'
+    if paddingChar.length > 1 then paddingChar = paddingChar.substr 0, 1
+    padding = ''
+    for i in [0...delta]
+      padding += paddingChar
+
+    return s + padding
+
 if String.prototype.trim
   j3.trim = (s) ->
     if @isNullOrEmpty s then return ''
