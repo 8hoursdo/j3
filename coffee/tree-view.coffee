@@ -162,4 +162,6 @@ do (j3) ->
       @_checkedNodes.forEach (node) ->
         selectedItems.push node.getItemData()
 
-      
+    getTopNodeHidden : ->
+      @_topNodeHidden
+
