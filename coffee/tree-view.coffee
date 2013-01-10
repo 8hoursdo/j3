@@ -26,6 +26,24 @@ do (j3) ->
         return
       el = el.parentNode
 
+  __hEl_dblclick = (evt) ->
+    if not @_expandOnDoubleClick then return
+
+    el = evt.src()
+
+    while el and el isnt @el
+      if el.className is 'tree-node-expander'
+        return
+
+      if el.className is 'tree-node-chk'
+        return
+
+      if el.className is 'tree-node'
+        node = el._j3TreeNode
+        node.setExpanded not node.getExpanded()
+        return
+      el = el.parentNode
+
   __hEl_mousemove = (evt) ->
     el = evt.src()
 
@@ -54,6 +72,11 @@ do (j3) ->
       else
         @_checkOnClick = !!options.checkOnClick
 
+      if j3.isUndefined options.expandOnDoubleClick
+        @_expandOnDoubleClick = true
+      else
+        @_expandOnDoubleClick = !!options.expandOnDoubleClick
+
       @_itemDataSelector = j3.compileSelector(options.itemDataSelector || 'id')
 
       @_itemDataEquals = j3.compileEquals(options.itemDataEquals || ['id'])
@@ -77,6 +100,7 @@ do (j3) ->
 
     onCreated : ->
       j3.on @el, 'click', this, __hEl_click
+      j3.on @el, 'dblclick', this, __hEl_dblclick
       j3.on @el, 'mousemove', this, __hEl_mousemove
       j3.on @el, 'mouseout', this, __hEl_mouseout
 
