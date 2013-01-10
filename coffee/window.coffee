@@ -45,6 +45,8 @@ do (j3) ->
     createChildren : (options) ->
       j3.Window.base().createChildren.apply this, arguments
 
+      @createWindowChildren && @createWindowChildren options
+
       if options.actions
         @_windowActions = new j3.WindowActions
           parent : this
