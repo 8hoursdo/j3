@@ -76,6 +76,14 @@ do (j3) ->
       if not req.headers then req.headers = {}
       req.headers['Cache-Control'] = 'no-cache'
 
+    if req.method is 'GET' and req.data
+      querySb = new j3.StringBuilder
+      __serializeToFormUrlencoded req.data, querySb
+      if url.indexOf('?') is -1
+        url += '?' + querySb.toString()
+      else
+        url += '&' + querySb.toString()
+
     xhr.open req.method, url, async, req.username, req.password
 
     # set headers
