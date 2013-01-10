@@ -211,10 +211,12 @@ do (j3) ->
 
       if value
         @fire 'expand', this
-
         tree.onNodeExpand && tree.onNodeExpand args
-
         tree.fire 'nodeExpand', tree, args
+      else
+        @fire 'collapse', this
+        tree.onNodeCollapse && tree.onNodeCollapse args
+        tree.fire 'nodeCollapse', tree, args
 
     expand : (recursive) ->
       @setExpanded true
