@@ -69,6 +69,9 @@ do (j3) ->
     return
 
   j3.on = (el, eventName, context, handler) ->
+    if el.on is j3.EventManager.on
+      return el.on eventName, context, handler
+
     if arguments.length == 3
       handler = context
 
@@ -89,6 +92,9 @@ do (j3) ->
     return
 
   j3.un = (el, eventName, context, handler) ->
+    if el.un is j3.EventManager.on
+      return el.un eventName, context, handler
+
     if arguments.length == 3
       handler = context
 
