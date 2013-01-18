@@ -16,9 +16,10 @@ do (j3) ->
 
     index
 
-  j3.in = (list, item, equals) ->
+  j3.contains = (list, item, equals) ->
     -1 isnt j3.indexOf list, item, equals
 
+  j3.in = j3.contains
   j3.count = (list) ->
     if j3.isArray list
       list.length
