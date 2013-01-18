@@ -89,9 +89,9 @@ do (j3) ->
       res = 0
       for eachRule in sortRules
         if eachRule.bool
-          res = j3.compare !!obj1[eachRule.name], !!obj2[eachRule.name]
+          res = j3.compare !!j3.getVal(obj1, eachRule.name), !!j3.getVal(obj2, eachRule.name)
         else
-          res = j3.compare obj1[eachRule.name], obj2[eachRule.name], eachRule.nullGreat
+          res = j3.compare j3.getVal(obj1, eachRule.name), j3.getVal(obj2, eachRule.name), eachRule.nullGreat
         if eachRule.desc then res *= -1
         
         if res isnt 0 then return res
