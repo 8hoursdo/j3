@@ -1,93 +1,41 @@
 do (j3) ->
   UploadStatus = j3.UploadStatus
 
-  j3.Uploader = Uploader = j3.cls j3.ContainerView,
-    baseCss : "uploader"
+  j3.UploadSelector = UploadSelector = j3.cls j3.ContainerView,
+    baseCss : "upload-selector"
 
     onInit : (options) ->
-      @_enableDrop = options.enableDrop
-      @_actionUrl = options.actionUrl
-      @_dropIndicatorText = options.dragIndicatorText
-      @_selectLocalIndicatorText = options.selectLocalIndicatorText
-      @_removeConfirmText = options.removeConfirmText
+      # 是否允许选择多个文件
+      @_multiple = options.multiple
+
+      # 文件上传的目标地址
+      @_uploadUrl = options.uploadUrl
+
+      # 是否在上传的地址中传递文件名
+      @_passFileNameInActionUrl = options.passFileNameInActionUrl
+
+      # 是否在选择文件后自动上传
       @_autoUpload = options.autoUpload
+
+      # 上下文信息。例如，可以通过此选项设置要将文件上传到哪个文件夹
+      @_contextData = options.contextData
 
       # 保存uploadId和form元素之间的映射
       @_formsMap = {}
       # 保存uploadId和file对象之间的映射
       @_filesMap = {}
 
+      # 保存激活文件选择的触发器
+      @_triggers = []
+
     createChildren : (options) ->
       @_uploadFileCollection = new j3.Collection
-        on :
-          addModel : c : this, h : __uploadFileCollection_change
-          removeModel : c : this, h : __uploadFileCollection_change
-          modelDataChange : c : this, h : __uploadFileCollection_change
-
-      @_uploadFileList = new j3.DataList
-        parent : this
-        css : 'uploader-file-list'
-        datasource : @_uploadFileCollection
-        listItemRenderer : options.fileItemRenderer || __uploadFileList_itemRenderer
-        on :
-          command : c : this, h : __uploadFileList_command
       
     renderChildren : (sb) ->
-      sb.a "<div class='uploader-inner'>"
-      @_uploadFileList.render sb
-      # indicators
-      sb.a "<div class='uploader-indicator'>"
-
-      sb.a "<i class='uploader-icon'></i>"
-
-      if @_enableDrop
-        sb.a "<span class='uploader-indicator-drop'>"
-        sb.a @_dropIndicatorText
-        sb.a "</span>"
-
-      sb.a "<a class='uploader-indicator-select uploader-indicator-select-local' href='javascript:;'>"
-      sb.a @_selectLocalIndicatorText
-      sb.a "</a>"
-
-      sb.a "</div>" # end of uploader-indicator
-      sb.a "</div>" # end of uploader-inner
 
     onCreated : (options) ->
-      @_elInner = j3.Dom.firstChild @el
-      @_elIndicator = j3.Dom.byIndex @_elInner, 1
-      @_elSelectLocal = j3.Dom.byCls @_elIndicator, 'uploader-indicator-select-local'
-      j3.on @_elIndicator, 'click', this, __elIndicator_click
-
-      if true or 'draggable' in @el
-        @el.ondragover = ->
-          return false
-
-        @el.ondragend = ->
-          return false
-
-        @el.ondrop = (evt) =>
-          __elIndicator_drop.call this, evt
-
-      if j3.UA.ie
-        j3.on @_elSelectLocal, 'mouseover', this, __elSelectLocal_mouseover
-      else
-        j3.on @_elSelectLocal, 'click', this, __elSelectLocal_click
-
-      @setDatasource options.datasource
-
-    onUpdateView : (datasource, eventName, args) ->
-      if args and args.changedData and not args.changedData.hasOwnProperty @name then return
-      docs = datasource.get @name
-      list = []
-      if docs
-        for eachDoc in docs
-          list.push
-            id : eachDoc.id
-            name : eachDoc.name
-            docId : eachDoc.docId || eachDoc.id
-            status : eachDoc.status || UploadStatus.succeeded
-            progress : eachDoc.progress
-      @_uploadFileCollection.loadData list
+      if options.trigger
+        @registerTrigger options.trigger
 
     reset : ->
       @_formsMap = {}
@@ -98,40 +46,36 @@ do (j3) ->
     upload : ->
       __tryUpload.call this
 
-  j3.ext Uploader.prototype, j3.DataView
+    getUploading : ->
+      @_uploading
 
-  __uploadFileList_itemRenderer = (sb, dataListItem) ->
-    data = dataListItem.data
+    getLastFileInput : ->
+      @_lastFileInput
 
-    filename = data.get 'name'
-    extname = j3.Path.extname filename
-    if extname then extname = extname.substr 1
+    registerTrigger : (trigger) ->
+      if j3.in @_triggers, trigger then return
+      if j3.UA.ie
+        j3.on trigger, 'mouseover', this, __elSelectLocal_mouseover
+      else
+        j3.on trigger, 'click', this, __elSelectLocal_click
+      @_triggers.push trigger
 
-    links = [
-      cmd : 'remove'
-      icon : 'icon-remove-doc'
-      text : 'remove'
-    ]
-    linksOptions =
-      css : 'action-links pull-right'
-      commandMode : true
+    unregisterTrigger : (trigger) ->
+      if not j3.in @_triggers, trigger then return
+      if j3.UA.ie
+        j3.on trigger, 'mouseover', this, __elSelectLocal_mouseover
+      else
+        j3.on trigger, 'click', this, __elSelectLocal_click
+      j3.remove @_triggers, trigger
 
-    j3.LinkList.render links, linksOptions, sb
+    getUploadUrl : ->
+      @_uploadUrl
 
-    sb.a '<div class="pull-right">'
-    status = data.get 'status'
-    if status is UploadStatus.uploading
-      progress = data.get 'progress'
-      if not j3.isUndefined progress
-        sb.a "#{progress}%"
-    sb.a '</div>'
+    setUploadUrl : (value) ->
+      @_uploadUrl = value
 
-    sb.a '<div class="list-item-title">'
-    sb.a '<i class="icon-files icon-files-small'
-    if extname then sb.a ' icon-files-type-' + extname
-    sb.a '"></i>'
-    sb.e data.get 'name'
-    sb.a '</div>'
+    setContextData : (value) ->
+      @_contextData = value
 
   __createUploadIFrame = ->
     if @_elUplaodIFrameCtnr then return
@@ -142,8 +86,8 @@ do (j3) ->
     sb.a "<iframe class='uploader-iframe' name='#{@id}-iframe'></iframe>"
     sb.a "</div>"
 
-    j3.Dom.append @_elIndicator, sb.toString()
-    @_elUplaodIFrameCtnr = j3.Dom.lastChild @_elIndicator
+    j3.Dom.append @el, sb.toString()
+    @_elUplaodIFrameCtnr = j3.Dom.lastChild @el
 
   __createUploadForm = ->
     __createUploadIFrame.call this
@@ -151,7 +95,10 @@ do (j3) ->
     sb = new j3.StringBuilder
 
     sb.a "<form class='uploader-form' target='#{@id}-iframe' method='POST' enctype='multipart/form-data'>"
-    sb.a "<input type='file' class='uploader-file-input' name='file' multiple='true' title='#{@_selectLocalIndicatorText}' />"
+    sb.a "<input type='file' class='uploader-file-input' name='file'"
+    if @_multiple
+      sb.a " multiple='true'"
+    sb.a " title='#{@_tip}' />"
     sb.a "</form>"
 
     j3.Dom.append @_elUplaodIFrameCtnr, sb.toString()
@@ -162,12 +109,6 @@ do (j3) ->
 
     @_lastFileInput = elFileInput
     form
-
-  __elIndicator_click = (evt) ->
-    el = evt.src()
-    cmd = j3.Dom.data el, 'cmd'
-
-    @fire 'command', this, name : cmd
 
   # 当鼠标移动到选择本地文件时的处理（针对IE浏览器的处理）
   __elSelectLocal_mouseover = (evt) ->
@@ -191,23 +132,6 @@ do (j3) ->
 
     @_lastFileInput.click()
 
-  __elIndicator_drop = (evt) ->
-    evt.preventDefault()
-    files = event.dataTransfer.files
-    if not files then return
-
-    for eachFile in files
-      basename = eachFile.name
-      uploadId = j3.guid()
-      @_uploadFileCollection.insert
-        id : uploadId
-        name : basename
-        status : j3.UploadStatus.waiting
-      @_filesMap[uploadId] = eachFile
-
-    if @_autoUpload
-      __tryUpload.call this
-
   # 选择文件后的处理
   __elFileInput_change = (evt) ->
     input = evt.src()
@@ -222,6 +146,7 @@ do (j3) ->
         @_uploadFileCollection.insert
           id : uploadId
           name : basename
+          contextData : @_contextData
           status : j3.UploadStatus.waiting
         @_filesMap[uploadId] = eachFile
     else
@@ -231,6 +156,7 @@ do (j3) ->
       @_uploadFileCollection.insert
         id : uploadId
         name : basename
+        contextData : @_contextData
         status : j3.UploadStatus.waiting
       @_formsMap[uploadId] = form
 
@@ -256,13 +182,23 @@ do (j3) ->
     id : uploadId
     data : map[uploadId]
 
-  __getActionUrl = (uploadId) ->
+  __getActionUrl = (uploadInfo) ->
     callbackName = '__j3UploadCallback'+@id
-    action = @_actionUrl || ''
+    action = @_uploadUrl || ''
+
+    uploadId = j3.getVal uploadInfo, 'id'
     if j3.indexOf('?') is -1
       action += '?uploadId=' + uploadId
     else
       action += '&uploadId=' + uploadId
+
+    if @_passFileNameInActionUrl
+      action += "&fileName=#{encodeURIComponent(j3.getVal uploadInfo, 'name', '')}"
+
+    contextData = j3.getVal uploadInfo, 'contextData'
+    if contextData
+      for key, val of contextData
+        action += "&#{key}=#{encodeURIComponent val}"
 
     action += '&callback=parent.' + callbackName
     action
@@ -277,11 +213,12 @@ do (j3) ->
     doc = __getUploadFileById.call this, uploadId
     doc.set 'status', UploadStatus.uploading
     @_uploading = yes
+    @fire 'uploadStatusChange', this, data : doc
 
     formData = new FormData
     formData.append 'file', uploadFile
     xhr = new XMLHttpRequest
-    action = __getActionUrl.call this, uploadId
+    action = __getActionUrl.call this, doc
     xhr.open 'POST', action
     xhr.setRequestHeader 'Accept', 'application/json'
 
@@ -310,12 +247,13 @@ do (j3) ->
     doc = __getUploadFileById.call this, uploadId
     doc.set 'status', UploadStatus.uploading
     @_uploading = yes
+    @fire 'uploadStatusChange', this, data : doc
 
     callbackName = '__j3UploadCallback'+@id
     window[callbackName] = (result) =>
       __upload_callback.call this, result
 
-    action = __getActionUrl.call this, uploadId
+    action = __getActionUrl.call this, doc
     uploadForm.action = action
     uploadForm.submit()
 
@@ -341,24 +279,9 @@ do (j3) ->
       ,
         append : yes
 
+    @fire 'uploadStatusChange', this, data : doc
+
     # 尝试上传下一个文件
     __tryUpload.call this
 
-  # 处理数据绑定
-  __uploadFileCollection_change = (sender, args) ->
-    if @isUpdatingView() then return
 
-    docs = []
-    sender.forEach (eachDoc) ->
-      doc = eachDoc.getData()
-      if doc.status is UploadStatus.succeeded
-        doc.id = doc.docId
-      docs.push doc
-
-    @getDatasource().set @name, docs
-
-  __uploadFileList_command = (sender, args) ->
-    fileData = args.data
-
-    j3.MessageBox.confirm null, @_removeConfirmText, this, ->
-      @_uploadFileCollection.removeById fileData.get 'id'

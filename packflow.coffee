@@ -55,6 +55,8 @@ _filesClient = [
   'dropdown-tree'
   'date-selector'
   'switch'
+  'upload-status'
+  'upload-selector'
   'uploader'
   'toolbar'
   'form'
