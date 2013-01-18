@@ -20,6 +20,28 @@ do (j3) ->
     -1 isnt j3.indexOf list, item, equals
 
   j3.in = j3.contains
+
+  j3.remove = (list, item, equals) ->
+    if list.remove
+      return list.remove item, equals
+
+    if equals
+      for eachItem, i in list
+        if equals item, eachItem
+          list.splice i, 1
+          return eachItem
+    else if item.equals
+      for eachItem, i in list
+        if item.equals eachItem
+          list.splice i, 1
+          return eachItem
+    else
+      for eachItem, i in list
+        if item == eachItem
+          list.splice i, 1
+          return eachItem
+    return
+
   j3.count = (list) ->
     if j3.isArray list
       list.length
