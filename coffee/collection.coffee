@@ -100,6 +100,7 @@ do (j3) ->
         @fire 'refresh', this
 
     loadData : (dataList, options) ->
+      dataList = dataList || []
       options = options || {}
 
       silent = options.silent

@@ -91,6 +91,8 @@ j3.View = do (j3) ->
         for optName, optValue of defaultOptions
           if not options.hasOwnProperty optName then options[optName] = optValue
 
+      if not @baseCss then @baseCss = ''
+
       # override the default css class if specified
       if options.css then @css = options.css
 
@@ -152,7 +154,10 @@ j3.View = do (j3) ->
 
     getCss : ->
       if @css
-        @baseCss + ' ' + @css
+        if @baseCss
+          @baseCss + ' ' + @css
+        else
+          @css
       else
         @baseCss
 

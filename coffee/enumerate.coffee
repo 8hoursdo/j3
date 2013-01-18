@@ -16,8 +16,31 @@ do (j3) ->
 
     index
 
-  j3.in = (list, item, equals) ->
+  j3.contains = (list, item, equals) ->
     -1 isnt j3.indexOf list, item, equals
+
+  j3.in = j3.contains
+
+  j3.remove = (list, item, equals) ->
+    if list.remove
+      return list.remove item, equals
+
+    if equals
+      for eachItem, i in list
+        if equals item, eachItem
+          list.splice i, 1
+          return eachItem
+    else if item.equals
+      for eachItem, i in list
+        if item.equals eachItem
+          list.splice i, 1
+          return eachItem
+    else
+      for eachItem, i in list
+        if item == eachItem
+          list.splice i, 1
+          return eachItem
+    return
 
   j3.count = (list) ->
     if j3.isArray list
@@ -188,5 +211,15 @@ do (j3) ->
       map[key] = item
 
     map
-        
-        
+
+  j3.without = (list, values) ->
+    result = []
+
+    j3.forEach list, (item) ->
+      if j3.isFunction values
+        if not values item then result.push item
+      else
+        if not j3.tryUntil values, ((value) -> j3.equals item, value)
+          result.push item
+
+    result

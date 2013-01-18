@@ -114,7 +114,11 @@ j3.List = j3.cls
     this
 
   remove : (value) ->
-    @removeNode @findNode value
+    node = @findNode value
+    if not node then return null
+    removedValue = node.value
+    @removeNode node
+    removedValue
 
   clear : ->
     node = @_first
@@ -131,10 +135,15 @@ j3.List = j3.cls
     @_first = @_last = null
     @_count = 0
 
-  findNode : (value) ->
+  findNode : (value, equals) ->
     node = @_first
 
-    if j3.isFunction value
+    if equals
+      while node
+        if equals value, node.value
+          return node
+        node = node.next
+    else if j3.isFunction value
       while node
         if value node.value
           return node

@@ -27,6 +27,9 @@ j3.Dom = do ->
       if not node then return null
       node.nodeValue
 
+    setAttr : (el, name, value) ->
+      el.attributes[name] = value
+
     data : (el, name, value) ->
       if arguments.length is 3
         @attr el, "data-#{name}", value
@@ -36,6 +39,9 @@ j3.Dom = do ->
         el.dataset[name]
       else
         @attr el, "data-#{name}"
+
+    setData : (el, name, value) ->
+      @setAttr el, "data-#{name}", value
 
     hasCls : (el, cls) ->
       j3.include el.className, cls, ' '
@@ -260,6 +266,9 @@ j3.Dom = do ->
       if y < 0
         y = 0
       @place el, x, y
+
+  Dom.getAttr = Dom.attr
+  Dom.getData = Dom.data
 
   __width_ie = (el, width) ->
     if arguments.length is 2

@@ -25,6 +25,7 @@ _filesCore = [
 _filesClient = [
   'json'
   'dom'
+  'path'
   'event'
   'dd'
   'http'
@@ -54,6 +55,9 @@ _filesClient = [
   'dropdown-tree'
   'date-selector'
   'switch'
+  'upload-status'
+  'upload-selector'
+  'uploader'
   'toolbar'
   'form'
   'form-divider'

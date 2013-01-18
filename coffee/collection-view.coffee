@@ -249,10 +249,6 @@ do (j3) ->
           @_datasource.forEach this, (model) ->
             models.push model.getData()
 
-      # sort
-      if @_sortBy
-        models.sort j3.compileSortBy(@_sortBy)
-
       @_models = []
       @_idxId = {}
       Model = @getModel()
@@ -264,6 +260,10 @@ do (j3) ->
         if @_idName
           id = model[@_idName]
           @_idxId[id] = newModel
+
+      # sort
+      if @_sortBy
+        @_models.sort j3.compileSortBy(@_sortBy)
 
       # group
       __group.call this

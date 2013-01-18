@@ -358,6 +358,7 @@ do (j3) ->
         count : count
         data : item
         checkable : checkable
+        contextData : options.contextData
 
       j3.DataList.renderDataListItem sb, dataListItem, options
 

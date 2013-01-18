@@ -72,6 +72,10 @@ do (j3) ->
       sortRule =
         name : sortInfo[0]
 
+      if sortRule.name.indexOf('?') is 0
+        sortRule.name = sortRule.name.substr 1
+        sortRule.bool = true
+
       if sortInfo.length > 1
         for info in sortInfo.slice 1
           if info is 'desc'
@@ -84,7 +88,10 @@ do (j3) ->
     return (obj1, obj2) ->
       res = 0
       for eachRule in sortRules
-        res = j3.compare obj1[eachRule.name], obj2[eachRule.name], eachRule.nullGreat
+        if eachRule.bool
+          res = j3.compare !!j3.getVal(obj1, eachRule.name), !!j3.getVal(obj2, eachRule.name)
+        else
+          res = j3.compare j3.getVal(obj1, eachRule.name), j3.getVal(obj2, eachRule.name), eachRule.nullGreat
         if eachRule.desc then res *= -1
         
         if res isnt 0 then return res

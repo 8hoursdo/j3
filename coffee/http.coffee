@@ -58,6 +58,9 @@ do (j3) ->
   __doRequest = (req) ->
     xhr = __getXHR()
     url = req.url
+    # IE can not pass empty string to xhr.open()
+    if not url then url = location.href
+
     # make async requests as default
     async = req.async isnt false
 
@@ -72,6 +75,14 @@ do (j3) ->
       # for safari iOS 6
       if not req.headers then req.headers = {}
       req.headers['Cache-Control'] = 'no-cache'
+
+    if req.method is 'GET' and req.data
+      querySb = new j3.StringBuilder
+      __serializeToFormUrlencoded req.data, querySb
+      if url.indexOf('?') is -1
+        url += '?' + querySb.toString()
+      else
+        url += '&' + querySb.toString()
 
     xhr.open req.method, url, async, req.username, req.password
 

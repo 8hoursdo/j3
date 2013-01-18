@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>uploader</title>
+    <link rel="Stylesheet" href="../lib/css/j3.css" />
+</head>
+<body>
+
+<script type="text/javascript" src="../lib/js/j3.js"></script>
+<script type="text/coffeescript">
+  j3.ready ->
+    queryString = location.search.substr 1
+    query = {}
+    kvStrings = queryString.split '&'
+    for eachKvStr in kvStrings
+      kv = eachKvStr.split '='
+      key = kv[0]
+      if key
+        query[key] = kv[1]
+
+    result =
+      uploadId : query['uploadId']
+      document :
+        id : j3.guid()
+
+    setTimeout ->
+      eval("#{query['callback']}(#{j3.toJson result})")
+    , 5000
+</script>
+<script type="text/javascript" src="./coffee-script.js"></script>
+</body>
+</html>
