@@ -61,6 +61,8 @@ do (j3) ->
         @updateViews 'add', args
         @fire 'addModel', this, args
 
+      return model
+
     remove : (model, options) ->
       if not model then return
 
@@ -81,6 +83,8 @@ do (j3) ->
         @fire 'removeModel', this, args
       if newActiveModel
         @setActive newActiveModel, options
+
+      return model
 
     removeById : (id, options) ->
       model = @getById id

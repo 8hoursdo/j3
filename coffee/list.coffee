@@ -7,13 +7,13 @@ j3.List = j3.cls
     @_first
 
   first : ->
-    @_first.value
+    @_first && @_first.value
 
   lastNode : ->
     @_last
 
   last : ->
-    @_last.value
+    @_last && @_last.value
 
   count : ->
     @_count
@@ -161,8 +161,8 @@ j3.List = j3.cls
 
     null
 
-  contains : (value) ->
-    null != @findNode value
+  contains : (value, equals) ->
+    null != @findNode value, equals
 
   getNodeAt : (index) ->
     if index < 0 or index > @_count

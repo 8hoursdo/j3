@@ -98,6 +98,8 @@ j3.equals = (obj1, obj2) ->
   if j3.isDate obj1 then return obj1.getTime() is obj2.getTime()
 
   if j3.isArray obj1
+    if not obj2 then return false
+
     if obj1.length isnt obj2.length then return false
 
     i = -1

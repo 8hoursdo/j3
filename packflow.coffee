@@ -56,6 +56,7 @@ _filesClient = [
   'date-selector'
   'switch'
   'upload-status'
+  'upload-queue'
   'upload-selector'
   'uploader'
   'toolbar'

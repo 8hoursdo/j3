@@ -76,6 +76,8 @@ do (j3) ->
       if not options.silent
         @updateViews 'groupAdd', group : group
 
+      return group
+
     removeGroup : (group, options) ->
       if not group then return
 
@@ -93,6 +95,8 @@ do (j3) ->
 
       if newActiveGroup
         @setActiveGroup newActiveGroup, options
+
+      return group
 
     removeGroupById : (id, options) ->
       group = @getGroupById id
@@ -128,6 +132,8 @@ do (j3) ->
       if not options.silent
         @updateViews 'add', model : model
 
+      return model
+
     remove : (model, options) ->
       if not model then return
 
@@ -147,6 +153,8 @@ do (j3) ->
         @updateViews 'remove', model : model
       if newActiveModel
         @setActive newActiveModel, options
+
+      return model
 
     removeById : (id, options) ->
       model = @getById id

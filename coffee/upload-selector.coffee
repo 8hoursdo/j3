@@ -14,6 +14,9 @@ do (j3) ->
       # 是否在上传的地址中传递文件名
       @_passFileNameInActionUrl = options.passFileNameInActionUrl
 
+      # 上传队列
+      @_uploadQueue = options.uploadQueue
+
       # 是否在选择文件后自动上传
       @_autoUpload = options.autoUpload
 
@@ -77,6 +80,15 @@ do (j3) ->
     setContextData : (value) ->
       @_contextData = value
 
+    canTriggerFileSelect : ->
+      !!window.FormData
+
+    triggerFileSelect : ->
+      if not @_lastFileInput or @_lastFileInput.value
+        __createUploadForm.call this
+
+      @_lastFileInput.click()
+
   __createUploadIFrame = ->
     if @_elUplaodIFrameCtnr then return
 
@@ -127,10 +139,7 @@ do (j3) ->
 
   # 当鼠标点击选择本地文件时的处理（非IE浏览器有效）
   __elSelectLocal_click = (evt) ->
-    if not @_lastFileInput or @_lastFileInput.value
-      __createUploadForm.call this
-
-    @_lastFileInput.click()
+    @triggerFileSelect()
 
   # 选择文件后的处理
   __elFileInput_change = (evt) ->
@@ -143,145 +152,27 @@ do (j3) ->
       for eachFile in input.files
         basename = eachFile.name
         uploadId = j3.guid()
-        @_uploadFileCollection.insert
+        uploadInfo =
           id : uploadId
           name : basename
           contextData : @_contextData
           status : j3.UploadStatus.waiting
-        @_filesMap[uploadId] = eachFile
+          uploadUrl : @_uploadUrl
+          passFileNameInActionUrl : @_passFileNameInActionUrl
+          file : eachFile
+        @_uploadQueue.addUpload uploadInfo
     else
       basename = j3.Path.basename input.value
       form = input.parentNode
       uploadId = j3.guid()
-      @_uploadFileCollection.insert
+      uploadModel = @_uploadFileCollection.insert
         id : uploadId
         name : basename
         contextData : @_contextData
         status : j3.UploadStatus.waiting
-      @_formsMap[uploadId] = form
-
-    if @_autoUpload
-      __tryUpload.call this
-
-  # 尝试上传文件，如果正在上传则直接返回，否则上传下一个文件
-  __tryUpload = ->
-    if window.FormData
-      __tryUploadByFormData.call this
-    else
-      __tryUploadByFormSubmit.call this
-
-  __getNextUpload = (map) ->
-    if @_uploading is yes then return null
-
-    nextDoc = @_uploadFileCollection.tryUntil (model) ->
-      model.get('status') is UploadStatus.waiting
-
-    if not nextDoc then return null
-    uploadId = nextDoc.get 'id'
-
-    id : uploadId
-    data : map[uploadId]
-
-  __getActionUrl = (uploadInfo) ->
-    callbackName = '__j3UploadCallback'+@id
-    action = @_uploadUrl || ''
-
-    uploadId = j3.getVal uploadInfo, 'id'
-    if j3.indexOf('?') is -1
-      action += '?uploadId=' + uploadId
-    else
-      action += '&uploadId=' + uploadId
-
-    if @_passFileNameInActionUrl
-      action += "&fileName=#{encodeURIComponent(j3.getVal uploadInfo, 'name', '')}"
-
-    contextData = j3.getVal uploadInfo, 'contextData'
-    if contextData
-      for key, val of contextData
-        action += "&#{key}=#{encodeURIComponent val}"
-
-    action += '&callback=parent.' + callbackName
-    action
-
-  __tryUploadByFormData = ->
-    upload = __getNextUpload.call this, @_filesMap
-    if not upload then return
-    uploadId = upload.id
-    uploadFile = upload.data
-    if not uploadFile then return
-
-    doc = __getUploadFileById.call this, uploadId
-    doc.set 'status', UploadStatus.uploading
-    @_uploading = yes
-    @fire 'uploadStatusChange', this, data : doc
-
-    formData = new FormData
-    formData.append 'file', uploadFile
-    xhr = new XMLHttpRequest
-    action = __getActionUrl.call this, doc
-    xhr.open 'POST', action
-    xhr.setRequestHeader 'Accept', 'application/json'
-
-    xhr.onload = =>
-      if xhr.status is 200
-        __upload_callback.call this,
-          j3.fromJson xhr.responseText
-      else
-        __upload_callback.call this,
-          err : 'Error'
-          msg : 'UploadError'
-    xhr.upload.onprogress = (evt) =>
-      if not event.lengthComputable then return
-      progress = (event.loaded / event.total * 100 | 0)
-      doc = __getUploadFileById.call this, uploadId
-      doc.set 'progress', progress
-    xhr.send formData
-
-  __tryUploadByFormSubmit = ->
-    upload = __getNextUpload.call this, @_formsMap
-    if not upload then return
-    uploadId = upload.id
-    uploadForm = upload.data
-    if not uploadForm then return
-
-    doc = __getUploadFileById.call this, uploadId
-    doc.set 'status', UploadStatus.uploading
-    @_uploading = yes
-    @fire 'uploadStatusChange', this, data : doc
-
-    callbackName = '__j3UploadCallback'+@id
-    window[callbackName] = (result) =>
-      __upload_callback.call this, result
-
-    action = __getActionUrl.call this, doc
-    uploadForm.action = action
-    uploadForm.submit()
-
-  # 根据id获取上传文件模型
-  __getUploadFileById = (id) ->
-    @_uploadFileCollection.tryUntil (model) ->
-      model.get('id') is id
-
-  # 上传完成后的回调处理
-  __upload_callback = (data) ->
-    @_uploading = false
-
-    doc = __getUploadFileById.call this, data.uploadId
-    if not doc then return
-
-    if data.err
-      j3.MessageBar.error data.msg
-      doc.set 'status', UploadStatus.failed
-    else
-      doc.set
-        status : UploadStatus.succeeded
-        docId : data.document._id || data.document.id
-      ,
-        append : yes
-
-    @fire 'uploadStatusChange', this, data : doc
-
-    # 尝试上传下一个文件
-    __tryUpload.call this
-
+        uploadUrl : @_uploadUrl
+        passFileNameInActionUrl : @_passFileNameInActionUrl
+        form : form
+      @_uploadQueue.addUpload uploadInfo
+    return
 
