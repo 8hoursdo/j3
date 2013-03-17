@@ -206,11 +206,16 @@ do (j3) ->
   j3.toMap = (list, keyName) ->
     map = {}
 
-    j3.forEach list, (item) ->
-      key = j3.getVal item, keyName
-      map[key] = item
+    if j3.isFunction keyName
+      j3.forEach list, (item) ->
+        key = keyName item
+        map[key] = item
+    else
+      j3.forEach list, (item) ->
+        key = j3.getVal item, keyName
+        map[key] = item
 
-    map
+    return map
 
   j3.without = (list, values) ->
     result = []

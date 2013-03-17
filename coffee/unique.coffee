@@ -1,7 +1,8 @@
 do (j3) ->
-  j3.Unique = Unique = (options) ->
+  j3.Unique = Unique = (options = {}) ->
     @_array = []
     @_ignoreEmpty = options.ignoreEmpty
+    return
 
   Unique.prototype.getArray = ->
     @_array

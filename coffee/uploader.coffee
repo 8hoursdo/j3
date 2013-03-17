@@ -127,8 +127,8 @@ do (j3) ->
     sb.a '</div>'
 
     sb.a '<div class="list-item-title">'
-    sb.a '<i class="icon-files icon-files-small'
-    if extname then sb.a ' icon-files-type-' + extname
+    sb.a '<i class="icon-files-small'
+    if extname then sb.a ' icon-files-small-type-' + extname
     sb.a '"></i>'
     sb.e data.get 'name'
     sb.a '</div>'

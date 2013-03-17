@@ -98,9 +98,12 @@ do (j3) ->
         if cmd and cmd.nodeValue
           evt.stop()
           @close()
-          @fire 'command', this,
+          cmdArgs =
             name : cmd.nodeValue
             contextData : @_contextData
+
+          @onCommand && @onCommand cmdArgs
+          @fire 'command', this, cmdArgs
           return
 
       el = el.parentNode
