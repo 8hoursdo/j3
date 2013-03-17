@@ -27,6 +27,9 @@ j3.isUndefined = (obj) ->
 j3.isBoolean = (obj) ->
   typeof obj is 'boolean'
 
+j3.isNumber = (obj) ->
+  typeof obj is 'number'
+
 j3.isFunction = (obj) ->
   typeof obj is 'function'
 
