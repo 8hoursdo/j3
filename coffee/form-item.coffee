@@ -25,7 +25,7 @@ do (j3) ->
       @_controlId = options.controlId
 
       options.datasource ?= @parent.getDatasource()
-      @_datasource = options.datasource
+      @_formItemDatasource = options.datasource
 
     getTemplateData : ->
       id : @id
@@ -66,7 +66,7 @@ do (j3) ->
       @elBody = j3.Dom.byIndex @el, 1
 
     getDatasource : ->
-      @_datasource
+      @_formItemDatasource
 
     createFormControl : (formItemOptions, formControlOptions) ->
       new formControlOptions.cls j3.ext(__getDefaultFormControlOption(this, formItemOptions), formControlOptions)
@@ -75,6 +75,51 @@ do (j3) ->
 
     getControlId : ->
       @_controlId
+
+  j3.TextFormItem = TextFormItem = j3.cls j3.FormItem,
+    onInit : (options) ->
+      TextFormItem.base().onInit.call this, options
+      @name = options.name
+
+    createChildren : (options) ->
+      text = ''
+      if options.datasource
+        text = options.datasource.get @name
+
+      @_text = @createFormControl options,
+        cls : j3.HtmlView
+        id : @getControlId()
+        tagName : 'div'
+        css : 'form-item-text'
+        innerHTML : j3.htmlEncode text
+
+    onCreated : (options) ->
+      TextFormItem.base().onCreated.call this, options
+
+      @_elText = @_text.el
+      if options.datasource
+        @setDatasource options.datasource
+
+    val : ->
+      datasource = @getDatasource()
+      if not datasource
+        return null
+      else
+        return datasource.get @name
+
+    setDisabled : (value) ->
+      if value
+        j3.Dom.addCls @_elText, 'form-item-text-disabled'
+      else
+        j3.Dom.removeCls @_elText, 'form-item-text-disabled'
+
+    onUpdateView : (datasource, eventName, args) ->
+      if args and args.changedData and not args.changedData.hasOwnProperty @name then return
+
+      @_elText.innerHTML = j3.htmlEncode(datasource.get @name)
+      return
+
+  j3.ext j3.TextFormItem.prototype, j3.DataView
 
   j3.TextboxFormItem = j3.cls j3.FormItem,
     createChildren : (options) ->
