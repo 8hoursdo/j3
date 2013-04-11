@@ -142,6 +142,10 @@ do (j3) ->
 
       @setActive @getAt(index), options
 
+    setActiveById : (id, options) ->
+      @getById id, (model) =>
+        @setActive model, options
+
     notifyModelChange : (changeName, args) ->
       @updateViews changeName, args
       @fire changeName, this, args
