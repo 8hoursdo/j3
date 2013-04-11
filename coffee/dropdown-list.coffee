@@ -9,9 +9,13 @@ do (j3) ->
       # 点击命令项
       args.stop = true
       @close()
-      @fire 'command', this,
+
+      commandArgs =
         name : selectedItem.cmd
         data : selectedItem
+      if @onCommand
+        @onCommand commandArgs
+      @fire 'command', this, commandArgs
       return
 
   # 列表项点击的事件处理
