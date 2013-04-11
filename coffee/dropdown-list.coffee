@@ -83,7 +83,7 @@ do (j3) ->
     true
 
   # 当数据源发生改变时调用
-  __itemsDatasource_onRefresh = ->
+  __itemsDatasource_onChange = ->
     __refreshControlViaSelectedValue.call this
 
   # 根据选中值，更新控件
@@ -142,7 +142,9 @@ do (j3) ->
         __doSetSelectedValue.call this, options.value
       @setDatasource options.datasource
 
-      @_itemsDatasource.on 'refresh', this, __itemsDatasource_onRefresh
+      @_itemsDatasource.on 'refresh', this, __itemsDatasource_onChange
+      @_itemsDatasource.on 'addModel', this, __itemsDatasource_onChange
+      @_itemsDatasource.on 'removeModel', this, __itemsDatasource_onChange
 
     onCreateDropdownBox : (elBox) ->
       if @_fixedItemsDatasource
