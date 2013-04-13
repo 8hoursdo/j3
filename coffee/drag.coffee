@@ -83,6 +83,7 @@ do (j3) ->
     @_startY = @_curY = evt.pageY()
 
     body = document.body
+    j3.on body, 'keydown', this, __body_keydown
     j3.on body, 'mousemove', this, __body_mousemove
     j3.on body, 'mouseup', this, __body_mouseup
 
@@ -115,6 +116,13 @@ do (j3) ->
     @fire 'dragStart', this
     @_draging = true
 
+  __cancelDrag = ->
+    __cleanupDrag.call this
+    if not @_draging then return
+    @onDragCancel && @onDragCancel()
+    @fire 'dragCancel', this
+    @_draging = false
+
   __body_mousemove = (evt) ->
     @_curX = evt.pageX()
     @_curY = evt.pageY()
@@ -131,16 +139,23 @@ do (j3) ->
     @onDrag()
 
   __body_mouseup = (evt) ->
+    __cleanupDrag.call this
+    if not @_draging then return
+    @onDragEnd && @onDragEnd()
+    @fire 'dragEnd', this
+    @_draging = false
+
+  __body_keydown = (evt) ->
+    if evt.event.keyCode is 27  # esc
+      __cancelDrag.call this
+
+  __cleanupDrag = ->
     body = document.body
     j3.un body, 'mousemove', this, __body_mousemove
     j3.un body, 'mouseup', this, __body_mouseup
 
     clearTimeout @_beginDragTimeout
     if not @_draging then return
-
     body.onselectstart = @_oldSelectStart
     j3.Dom.removeCls body, 'selectDisabled'
-    
-    @onDragEnd && @onDragEnd()
-    @fire 'dragEnd', this
-    @_draging = false
+
