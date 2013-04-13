@@ -319,6 +319,21 @@ j3.View = do (j3) ->
       page = @getPage()
       if page then page name, sender, args
 
+    destory : ->
+      @onDestory && @onDestory()
+      @destoryChildren()
+      if @parent then @parent.getChildren().remove this
+      if @el then j3.Dom.remove @el
+
+    destoryChildren : ->
+      if !@children then return
+
+      node = @children.firstNode()
+      while node
+        node.value.destory()
+        node = node.next
+      return
+
   j3.ext view.prototype, j3.EventManager
 
   __setWidth = (width) ->
