@@ -27,7 +27,7 @@ _filesClient = [
   'dom'
   'path'
   'event'
-  'dd'
+  'drag'
   'http'
   'data-items-view'
   'overlay'

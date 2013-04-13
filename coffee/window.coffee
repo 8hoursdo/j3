@@ -86,7 +86,7 @@ do (j3) ->
       j3.on @_elClose, 'click', this, __elClose_click
       j3.on @el, 'blur', this, __el_blur
 
-      @_dd = new j3.DD
+      @_dd = new j3.Drag
         el : @el
         trigger : @_elWndHeader
         invalidTriggerTypes : 'A'
