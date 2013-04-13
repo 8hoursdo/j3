@@ -309,6 +309,9 @@ j3.View = do (j3) ->
       else
         @hide()
 
+    toggleVisible : ->
+      @setVisible(!@getVisible())
+
     getPage : ->
       @page or (@parent && @parent.getPage())
 
