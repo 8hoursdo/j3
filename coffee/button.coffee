@@ -64,8 +64,10 @@ do(j3) ->
 
     onCreated : (options) ->
       j3.on @el, 'click', this, __btn_click
-      j3.on @el, 'mouseover', this, __btn_mouseover
-      j3.on @el, 'mouseout', this, __btn_mouseout
+
+      if not j3.UA.supportTouch
+        j3.on @el, 'mouseover', this, __btn_mouseover
+        j3.on @el, 'mouseout', this, __btn_mouseout
 
     getPrimary : ->
       @_primary

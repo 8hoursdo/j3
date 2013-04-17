@@ -11,6 +11,12 @@ do (j3) ->
     onRender : (sb) ->
       sb.a '<' + @_tagName
 
+      sb.a ' id="' + @id + '"'
+
+      css = @getCss()
+      if css
+        sb.a ' class="' + @css + '"'
+
       for attrName, attrValue of @_attributes
         sb.a ' ' + attrName + '="' + attrValue + '"'
 
@@ -19,5 +25,5 @@ do (j3) ->
         return
 
       sb.a '>'
-      sb.a @_innerHTML
+      sb.a @_innerHTML || ''
       sb.a '</' + @_tagName + '>'
