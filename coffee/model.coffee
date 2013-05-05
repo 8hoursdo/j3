@@ -17,9 +17,9 @@ do (j3) ->
     has : (name) ->
       @_data.hasOwnProperty name
 
-    getData : ->
+    getData : (fields) ->
       if @_data
-        j3.clone @_data
+        j3.clone @_data, fields
       else
         {}
 

@@ -10,10 +10,10 @@
 
     a {
       display: block;
-      line-height: @baseLineHeight + 4px;
+      padding-top: 2px;
+      padding-bottom: 2px;
       color: @activeColor;
       text-decoration: none;
-      cursor: pointer;
       font-weight: normal;
 
       &:hover {
@@ -23,6 +23,15 @@
       i {
         display: inline-block;
         .square(@baseLineHeight);
+        vertical-align: top;
+      }
+    }
+
+    a.disabled {
+      color: @inactiveTextColor;
+
+      &:hover {
+        text-decoration: none;
       }
     }
   }

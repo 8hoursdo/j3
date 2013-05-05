@@ -164,6 +164,7 @@ j3.View = do (j3) ->
     getTemplateData : ->
       id : @id
       css : @getCss()
+      baseCss : @baseCss
       view : @
 
     getChildren : ->
@@ -216,6 +217,8 @@ j3.View = do (j3) ->
       @canLayout && canLayout = @canLayout()
       if not canLayout then return
 
+      @beforeLayout && @beforeLayout()
+
       # 设置正在布局标志
       @_layouting = yes
 
@@ -239,13 +242,13 @@ j3.View = do (j3) ->
       __setWidth.call this, rect.width
       __setHeight.call this, rect.height
 
+      @onLayout && @onLayout rect
+
       # 对子控件进行布局
       @layoutChildren()
       
       # 布局结束
       @_layouting = no
-
-      @onLayouted? rect
       return
 
     # 对子控件进行布局
