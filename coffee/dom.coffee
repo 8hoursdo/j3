@@ -27,8 +27,16 @@ j3.Dom = do ->
       if not node then return null
       node.nodeValue
 
+    getAttr : (el, name) ->
+      node = el.attributes[name]
+      if not node then return null
+      node.nodeValue
+
     setAttr : (el, name, value) ->
       el.attributes[name] = value
+
+    removeAttr : (el, name) ->
+      el.removeAttribute name
 
     data : (el, name, value) ->
       if arguments.length is 3
@@ -40,8 +48,17 @@ j3.Dom = do ->
       else
         @attr el, "data-#{name}"
 
+    getData : (el, name) ->
+      if el.dataset
+        el.dataset[name]
+      else
+        @getAttr el, "data-#{name}"
+
     setData : (el, name, value) ->
       @setAttr el, "data-#{name}", value
+
+    removeData : (el, name) ->
+      @removeAttr el, "data-#{name}"
 
     hasCls : (el, cls) ->
       j3.include el.className, cls, ' '
@@ -266,6 +283,28 @@ j3.Dom = do ->
       if y < 0
         y = 0
       @place el, x, y
+
+    disableLink : (el, disabledCls) ->
+      if not disabledCls then disabledCls = 'disabled'
+
+      if @hasCls el, disabledCls
+        return
+
+      @addCls el, disabledCls
+      @setData el, 'href', el.href
+      @removeAttr el, 'href'
+      return
+
+    enableLink : (el, disabledCls) ->
+      if not disabledCls then disabledCls = 'disabled'
+
+      if not @hasCls el, disabledCls
+        return
+
+      @removeCls el, disabledCls
+      el.href = @getData el, 'href'
+      @removeData el, 'href'
+      return
 
   Dom.getAttr = Dom.attr
   Dom.getData = Dom.data

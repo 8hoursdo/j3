@@ -11,7 +11,7 @@ if typeof exports isnt 'undefined'
 else
   root.j3 = j3
 
-j3.version = '0.3.20'
+j3.version = '0.4.2'
 
 j3.fnRetFalse = -> false
 
@@ -78,7 +78,7 @@ j3.clone = (obj, properties, ignoreUndefined) ->
   if j3.isFunction obj.clone then return obj.clone properties
 
   res = {}
-  if arguments.length == 1
+  if not properties
     for prop of obj
       res[prop] = j3.clone obj[prop]
   else

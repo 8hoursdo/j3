@@ -13,9 +13,13 @@ do (j3) ->
         data = Dom.data el, 'data'
 
         evt.stop()
-        @fire 'command', this, src : el, name : cmd, data : data
+        if __isLinkEnabled el
+          @fire 'command', this, src : el, name : cmd, data : data
         return
       el = el.parentNode
+
+  __isLinkEnabled = (el) ->
+    !!el.href
 
   __refreshLinks = ->
     sb = new j3.StringBuilder
@@ -108,6 +112,10 @@ do (j3) ->
         sb.a ' first'
       if j3.getVal model, 'isHighlight'
         sb.a ' highlight'
+
+      itemCss = j3.getVal model, 'css'
+      if itemCss
+        sb.a ' ' + itemCss
       sb.a '">'
 
       sb.a '<a'

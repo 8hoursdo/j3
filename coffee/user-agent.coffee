@@ -66,6 +66,6 @@ j3.UA = do ->
   else if o.webkit
     o.webkit = version
 
-  o.supportTouch = document.documentElement.hasOwnProperty 'ontouchstart'
+  o.supportTouch = document.documentElement and document.documentElement.hasOwnProperty and document.documentElement.hasOwnProperty 'ontouchstart'
 
   o

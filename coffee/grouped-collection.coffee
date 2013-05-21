@@ -1,5 +1,10 @@
 do (j3) ->
   __insertModelToGroup = (model, group) ->
+    if model.group is group then return
+
+    if model.group
+      model.group.items.remove model
+
     model.group = group
 
     items = group.items
@@ -285,6 +290,12 @@ do (j3) ->
             targetNode = __getFirstNodeGreatThan @_groupList, group, @_groupSortBy
             groupNode = @_groupList.findNode group
             @_groupList.insertNode groupNode, targetNode
+      else
+        model = args.model
+        groupId = @_groupBy model
+        group = @getGroupById groupId
+        if group
+          __insertModelToGroup model, group
 
       @updateViews changeName, args
       @fire changeName, this, args

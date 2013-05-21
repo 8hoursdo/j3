@@ -71,6 +71,12 @@ do (j3) ->
     onDrag : ->
       j3.Dom.place @getIndicator(), @_curPosX, @_curPosY
 
+    getDisabled : ->
+      @_disabled
+
+    setDisabled : (value) ->
+      @_disabled = !!value
+
   j3.ext Drag.prototype, j3.EventManager
 
   __trigger_mousedown = (evt) ->

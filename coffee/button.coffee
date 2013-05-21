@@ -29,11 +29,12 @@ do(j3) ->
   __hideTooltip = ->
     if not @_tooltip then return
     @_tooltip.hide()
+    @_tooltip = null
     
   j3.Button = j3.cls j3.View,
     baseCss : 'btn'
 
-    template : j3.template '<<%=linkButton?"a":"button"%> <%if(linkButton){%>href="<%=url%>"<%}else{%>type="<%=primary ? "submit" : "button"%>"<%}%> id="<%=id%>" class="<%=css%>"<%if(disabled){%> disabled="disabled"<%}%>><%if(icon){%><i class="<%=icon%>"></i><%}%><%=text%></<%=linkButton?"a":"button"%>>'
+    template : j3.template '<<%=linkButton?"a":"button"%> <%if(linkButton){%>href="<%=url%>"<%}else{%>type="<%=primary ? "submit" : "button"%>"<%}%> id="<%=id%>" class="<%=css%>"<%if(disabled){%> disabled="disabled"<%}%>><%if(icon){%><i class="<%=icon%>"></i><%}%><%if(icon && text){%><%=" "%><%}%><%=text%></<%=linkButton?"a":"button"%>>'
 
     onInit : (options) ->
       @_text = options.text || ''
@@ -63,6 +64,9 @@ do(j3) ->
       url : @_url
 
     onCreated : (options) ->
+      if @_icon
+        @_elIcon = @el.firstChild
+
       j3.on @el, 'click', this, __btn_click
 
       if not j3.UA.supportTouch
@@ -122,8 +126,22 @@ do(j3) ->
 
     blur : ->
       @el.blur()
-      
 
+    setIcon : (value) ->
+      @_icon = value
+      @_elIcon.className = value
 
+    getTip : ->
+      @_tip
 
+    setTip : (value) ->
+      @_tip = value
+
+    showTip : ->
+      __showTooltip.call this
+      return
+
+    hideTip : ->
+      __hideTooltip.call this
+      return
 
