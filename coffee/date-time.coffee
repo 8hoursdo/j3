@@ -112,6 +112,18 @@ do (j3) ->
       if !dateTime then return false
       @_value.getTime() is dateTime._value.getTime()
 
+    lt : (dateTime) ->
+      j3.DateTime.lt this, dateTime
+
+    lte : (dateTime) ->
+      j3.DateTime.lte this, dateTime
+
+    gt : (dateTime) ->
+      j3.DateTime.gt this, dateTime
+
+    gte : (dateTime) ->
+      j3.DateTime.gte this, dateTime
+
     clone : ->
       new DateTime @_value.getTime()
       
