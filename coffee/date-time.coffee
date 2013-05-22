@@ -235,10 +235,16 @@ do (j3) ->
       t2 = if dateTime2 then dateTime2.getTime() else 0
       t1 < t2
 
+    lte : (dateTime1, dateTime2) ->
+      @lt(dateTime1, dateTime2) || @equals(dateTime1, dateTime2)
+
     gt : (dateTime1, dateTime2) ->
       t1 = if dateTime1 then dateTime1.getTime() else 0
       t2 = if dateTime2 then dateTime2.getTime() else 0
       t1 > t2
+
+    gte : (dateTime1, dateTime2) ->
+      @gt(dateTime1, dateTime2) || @equals(dateTime1, dateTime2)
 
   j3.DateTime = DateTime
 
