@@ -112,6 +112,18 @@ do (j3) ->
       if !dateTime then return false
       @_value.getTime() is dateTime._value.getTime()
 
+    lt : (dateTime) ->
+      j3.DateTime.lt this, dateTime
+
+    lte : (dateTime) ->
+      j3.DateTime.lte this, dateTime
+
+    gt : (dateTime) ->
+      j3.DateTime.gt this, dateTime
+
+    gte : (dateTime) ->
+      j3.DateTime.gte this, dateTime
+
     clone : ->
       new DateTime @_value.getTime()
       
@@ -235,10 +247,16 @@ do (j3) ->
       t2 = if dateTime2 then dateTime2.getTime() else 0
       t1 < t2
 
+    lte : (dateTime1, dateTime2) ->
+      @lt(dateTime1, dateTime2) || @equals(dateTime1, dateTime2)
+
     gt : (dateTime1, dateTime2) ->
       t1 = if dateTime1 then dateTime1.getTime() else 0
       t2 = if dateTime2 then dateTime2.getTime() else 0
       t1 > t2
+
+    gte : (dateTime1, dateTime2) ->
+      @gt(dateTime1, dateTime2) || @equals(dateTime1, dateTime2)
 
   j3.DateTime = DateTime
 
